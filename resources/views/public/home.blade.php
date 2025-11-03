@@ -244,7 +244,127 @@ h1, h2, h3, h4, h5, h6 {
     flex-shrink: 0;
 }
 
-/* Admission Timeline */
+/* Admission Process Section */
+.admission-process-section {
+    padding: 6rem 0;
+    background: white;
+}
+
+.admission-image-container {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    aspect-ratio: 9 / 16;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.admission-process-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.admission-process-content {
+    padding: 2rem 0;
+}
+
+.admission-process-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+}
+
+.admission-process-intro {
+    font-size: 1.2rem;
+    color: var(--color-dark);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.admission-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.admission-step-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(166, 96, 96, 0.3);
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 0.5rem;
+}
+
+.step-description {
+    font-size: 1rem;
+    color: var(--color-dark);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.admission-cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(166, 96, 96, 0.3);
+}
+
+.admission-cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(166, 96, 96, 0.4);
+    color: white;
+}
+
+/* Responsive pour Processus d'Admission */
+@media (max-width: 991px) {
+    .admission-process-section .row {
+        flex-direction: column-reverse;
+    }
+    
+    .admission-image-container {
+        max-width: 100%;
+        margin-top: 2rem;
+    }
+    
+    .admission-process-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* Admission Timeline (old) */
 .admission-section {
     padding: 6rem 0;
     background: linear-gradient(135deg, var(--color-black) 0%, var(--color-dark) 100%);
@@ -847,52 +967,68 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 </section>
 
-<!-- Admission Timeline -->
-<section class="admission-section">
+<!-- Processus d'Admission Section -->
+<section class="admission-process-section">
     <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <h2 class="section-title">Processus d'Admission</h2>
-            <p class="section-subtitle">Quatre étapes simples pour rejoindre l'excellence</p>
-        </div>
-        
-        <div class="timeline-container">
-            <div class="timeline-item" data-aos="fade-right">
-                <div class="timeline-number">1</div>
-                <div class="timeline-content">
-                    <h4 class="timeline-title">Inscription en Ligne</h4>
-                    <p class="timeline-description">Créez votre compte et soumettez votre dossier de candidature en quelques clics.</p>
+        <div class="row align-items-center g-5">
+            <!-- Image à gauche (9:16) -->
+            <div class="col-lg-5" data-aos="fade-right">
+                <div class="admission-image-container">
+                    @php
+                        $admissionImage = \App\Models\Setting::get('admission_process_image', 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop');
+                        $admissionImageUrl = $admissionImage ? (str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage)) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop';
+                    @endphp
+                    <img src="{{ $admissionImageUrl }}" alt="Processus d'Admission IESCA" class="admission-process-image">
                 </div>
             </div>
             
-            <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
-                <div class="timeline-number">2</div>
-                <div class="timeline-content">
-                    <h4 class="timeline-title">Vérification Administrative</h4>
-                    <p class="timeline-description">Notre équipe examine votre dossier sous 48h.</p>
+            <!-- Contenu à droite -->
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="admission-process-content">
+                    <h2 class="admission-process-title">Processus d'Admission</h2>
+                    <p class="admission-process-intro">Quatre étapes simples pour rejoindre l'excellence à l'IESCA</p>
+                    
+                    <div class="admission-steps">
+                        <div class="admission-step-item" data-aos="fade-up" data-aos-delay="100">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4 class="step-title">Inscription en Ligne</h4>
+                                <p class="step-description">Créez votre compte et soumettez votre dossier de candidature en quelques clics.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="admission-step-item" data-aos="fade-up" data-aos-delay="200">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4 class="step-title">Vérification Administrative</h4>
+                                <p class="step-description">Notre équipe examine votre dossier sous 48h.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="admission-step-item" data-aos="fade-up" data-aos-delay="300">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4 class="step-title">Évaluation du Comité</h4>
+                                <p class="step-description">Le comité d'admission étudie votre profil académique.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="admission-step-item" data-aos="fade-up" data-aos-delay="400">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4 class="step-title">Décision d'Admission</h4>
+                                <p class="step-description">Recevez votre décision par email.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4" data-aos="fade-up" data-aos-delay="500">
+                        <a href="{{ route('admission') }}" class="admission-cta-button">
+                            Commencer Ma Candidature →
+                        </a>
+                    </div>
                 </div>
             </div>
-            
-            <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
-                <div class="timeline-number">3</div>
-                <div class="timeline-content">
-                    <h4 class="timeline-title">Évaluation du Comité</h4>
-                    <p class="timeline-description">Le comité d'admission étudie votre profil académique.</p>
-                </div>
-            </div>
-            
-            <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
-                <div class="timeline-number">4</div>
-                <div class="timeline-content">
-                    <h4 class="timeline-title">Décision d'Admission</h4>
-                    <p class="timeline-description">Recevez votre décision par email.</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="400">
-            <a href="{{ route('admission') }}" class="cta-button">
-                Commencer Ma Candidature
-            </a>
         </div>
     </div>
 </section>

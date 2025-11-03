@@ -27,8 +27,31 @@
                 </div>
             </div>
 
+            <!-- Admission Process Image Upload -->
+            <div class="mb-4 p-4 border rounded">
+                <h5 class="mb-3">📸 Image du Processus d'Admission</h5>
+                <div class="mb-3">
+                    @php
+                        $admissionImage = \App\Models\Setting::get('admission_process_image', '');
+                    @endphp
+                    @if($admissionImage)
+                        <div class="mb-3">
+                            <p class="mb-2"><strong>Image actuelle:</strong></p>
+                            <img src="{{ str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage) }}" 
+                                 alt="Image Processus d'Admission" 
+                                 style="max-width: 300px; max-height: 500px; border: 1px solid #ddd; padding: 10px; border-radius: 10px; object-fit: cover;">
+                            <p class="text-muted mt-2"><small>Format recommandé: 9:16 (portrait), max 5MB</small></p>
+                        </div>
+                    @else
+                        <p class="text-muted"><small>Format recommandé: 9:16 (portrait), max 5MB. Exemple: 900x1600px</small></p>
+                    @endif
+                    <input type="file" class="form-control" name="admission_process_image" accept="image/*">
+                    <small class="text-muted d-block mt-2">📐 Format: 9:16 (portrait vertical) - Exemple: 900x1600px</small>
+                </div>
+            </div>
+
             @foreach($settings as $setting)
-                @if($setting->cle === 'logo')
+                @if(in_array($setting->cle, ['logo', 'admission_process_image']))
                     @continue
                 @endif
                 <div class="mb-3">
