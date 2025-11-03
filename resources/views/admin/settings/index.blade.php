@@ -7,10 +7,30 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('admin.settings.update') }}" method="POST">
+        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
+            <!-- Logo Upload -->
+            <div class="mb-4 p-4 border rounded">
+                <h5 class="mb-3">🎨 Logo de l'IESCA</h5>
+                <div class="mb-3">
+                    @php
+                        $logo = \App\Models\Setting::get('logo', '');
+                    @endphp
+                    @if($logo)
+                        <div class="mb-3">
+                            <img src="{{ asset('storage/' . $logo) }}" alt="Logo actuel" style="max-height: 100px; border: 1px solid #ddd; padding: 10px; border-radius: 10px;">
+                        </div>
+                    @endif
+                    <input type="file" class="form-control" name="logo" accept="image/*">
+                    <small class="text-muted">Format recommandé: PNG ou JPG, max 2MB</small>
+                </div>
+            </div>
+
             @foreach($settings as $setting)
+                @if($setting->cle === 'logo')
+                    @continue
+                @endif
                 <div class="mb-3">
                     <label for="{{ $setting->cle }}" class="form-label">
                         <strong>{{ ucfirst(str_replace('_', ' ', $setting->cle)) }}</strong>
@@ -27,6 +47,11 @@
                                    onchange="document.getElementById('{{ $setting->cle }}').value = this.value"
                                    oninput="this.previousElementSibling.value = this.value; this.previousElementSibling.setAttribute('name', '{{ $setting->cle }}');">
                         </div>
+                    @elseif(str_starts_with($setting->cle, 'social_'))
+                        <input type="url" class="form-control" id="{{ $setting->cle }}" 
+                               name="{{ $setting->cle }}" value="{{ $setting->valeur }}" 
+                               placeholder="https://...">
+                        <small class="text-muted">Laissez vide pour masquer ce réseau social</small>
                     @elseif(in_array($setting->cle, ['homepage_title', 'banner_image']))
                         <input type="text" class="form-control" id="{{ $setting->cle }}" 
                                name="{{ $setting->cle }}" value="{{ $setting->valeur }}">

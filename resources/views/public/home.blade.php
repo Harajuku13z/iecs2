@@ -18,11 +18,13 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section {
     position: relative;
     min-height: 90vh;
-    background: linear-gradient(135deg, rgba(166, 96, 96, 0.97) 0%, rgba(13, 13, 13, 0.95) 100%),
-                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover fixed;
+    background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%),
+                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover;
     color: white;
     overflow: hidden;
     margin-top: 0;
+    display: flex;
+    align-items: center;
 }
 
 .hero-section::before {
@@ -46,7 +48,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-content {
     position: relative;
     z-index: 2;
-    padding: 6rem 0 4rem;
+    padding: 4rem 0;
 }
 
 .hero-title {
@@ -116,22 +118,6 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 15px 40px rgba(166, 96, 96, 0.4);
 }
 
-/* Wave Divider */
-.wave-divider {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-}
-
-.wave-divider svg {
-    position: relative;
-    display: block;
-    width: calc(100% + 1.3px);
-    height: 80px;
-}
 
 /* Premium Stats */
 .stats-container {
@@ -211,11 +197,18 @@ h1, h2, h3, h4, h5, h6 {
     object-fit: cover;
 }
 
+.about-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .about-content h2 {
     font-size: 3rem;
     font-weight: 900;
     color: var(--color-black);
     margin-bottom: 2rem;
+    margin-top: 0;
 }
 
 .about-content p {
@@ -352,6 +345,14 @@ h1, h2, h3, h4, h5, h6 {
 .news-section {
     padding: 6rem 0;
     background: var(--color-light);
+}
+
+.news-section .section-title {
+    color: var(--color-black) !important;
+}
+
+.news-section .section-subtitle {
+    color: var(--color-dark) !important;
 }
 
 .news-card {
@@ -682,45 +683,18 @@ h1, h2, h3, h4, h5, h6 {
                         </p>
                     </div>
                     
-                    <!-- Premium Search Box -->
-                    <div class="premium-search" data-aos="fade-up" data-aos-delay="200">
-                        <h4 class="text-center text-dark mb-4" style="font-weight: 700;">Trouvez Votre Formation Idéale</h4>
-                        <form action="{{ route('formations') }}" method="GET">
-                            <div class="row g-3">
-                                <div class="col-md-5">
-                                    <select class="form-select search-input" name="filiere_id" required>
-                                        <option value="">🎓 Sélectionnez une filière</option>
-                                        @foreach(\App\Models\Filiere::all() as $filiere)
-                                            <option value="{{ $filiere->id }}">{{ $filiere->nom }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-select search-input" name="niveau_id" required>
-                                        <option value="">📚 Niveau d'études</option>
-                                        @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
-                                            <option value="{{ $niveau->id }}">{{ $niveau->nom }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <button type="submit" class="btn search-button w-100">
-                                        Rechercher
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                    <!-- Hero CTA Buttons -->
+                    <div class="d-flex gap-3 justify-content-center flex-wrap" data-aos="fade-up" data-aos-delay="200">
+                        <a href="{{ route('formations') }}" class="btn btn-lg" style="background: white; color: var(--color-primary); padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s;">
+                            En savoir plus
+                        </a>
+                        <a href="{{ route('admission') }}" class="btn btn-lg" style="background: var(--color-primary); color: white; padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(166, 96, 96, 0.4); transition: all 0.3s;">
+                            Admission
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Wave Divider -->
-    <div class="wave-divider">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#F2F2F2"></path>
-        </svg>
     </div>
 </section>
 

@@ -16,8 +16,16 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        foreach ($request->except('_token') as $cle => $valeur) {
+        foreach ($request->except(['_token', 'logo']) as $cle => $valeur) {
             Setting::where('cle', $cle)->update(['valeur' => $valeur]);
+        }
+
+        // Gestion de l'upload du logo
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = 'logo-' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public', $filename);
+            Setting::where('cle', 'logo')->update(['valeur' => $filename]);
         }
 
         return redirect()->route('admin.settings.index')
