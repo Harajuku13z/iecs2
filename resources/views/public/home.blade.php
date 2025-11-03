@@ -256,7 +256,8 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     aspect-ratio: 9 / 16;
-    max-width: 400px;
+    max-width: 100%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -814,40 +815,40 @@ h1, h2, h3, h4, h5, h6 {
                         <div class="container">
                             <h4 class="text-center text-dark mb-4" style="font-weight: 700;">Trouvez Votre Formation Idéale</h4>
                             <form id="formationSearchForm" action="{{ route('formations') }}" method="GET">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label class="form-label text-dark mb-2" style="font-weight: 600;">📚 Choisissez votre niveau d'étude</label>
-                                    <select class="form-select search-input" id="niveauSelect" name="niveau_id" required>
-                                        <option value="">Sélectionnez un niveau</option>
-                                        @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
-                                            <option value="{{ $niveau->id }}" data-niveau="{{ $niveau->nom }}">
-                                                @if($niveau->nom == 'Je prépare mon bac')
-                                                    🎯 Je prépare mon bac
-                                                @elseif($niveau->nom == 'Bac')
-                                                    🎓 Bac
-                                                @else
-                                                    {{ $niveau->nom }}
-                                                @endif
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <small class="text-muted d-block mt-1">De la préparation du bac à la Licence 3</small>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label text-dark mb-2" style="font-weight: 600;">📚 Choisissez votre niveau d'étude</label>
+                                        <select class="form-select search-input" id="niveauSelect" name="niveau_id" required>
+                                            <option value="">Sélectionnez un niveau</option>
+                                            @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
+                                                <option value="{{ $niveau->id }}" data-niveau="{{ $niveau->nom }}">
+                                                    @if($niveau->nom == 'Je prépare mon bac')
+                                                        🎯 Je prépare mon bac
+                                                    @elseif($niveau->nom == 'Bac')
+                                                        🎓 Bac
+                                                    @else
+                                                        {{ $niveau->nom }}
+                                                    @endif
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-muted d-block mt-1">De la préparation du bac à la Licence 3</small>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label text-dark mb-2" style="font-weight: 600;">🎓 Choisissez la filière qui vous intéresse</label>
+                                        <select class="form-select search-input" id="filiereSelect" name="filiere_id" required disabled>
+                                            <option value="">Sélectionnez d'abord un niveau</option>
+                                            @foreach(\App\Models\Filiere::all() as $filiere)
+                                                <option value="{{ $filiere->id }}" data-filiere="{{ $filiere->nom }}">{{ $filiere->nom }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button type="submit" class="btn search-button w-100" id="searchButton" disabled>
+                                            🔍 Voir les formations
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-md-5">
-                                    <label class="form-label text-dark mb-2" style="font-weight: 600;">🎓 Choisissez la filière qui vous intéresse</label>
-                                    <select class="form-select search-input" id="filiereSelect" name="filiere_id" required disabled>
-                                        <option value="">Sélectionnez d'abord un niveau</option>
-                                        @foreach(\App\Models\Filiere::all() as $filiere)
-                                            <option value="{{ $filiere->id }}" data-filiere="{{ $filiere->nom }}">{{ $filiere->nom }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3 d-flex align-items-end">
-                                    <button type="submit" class="btn search-button w-100" id="searchButton" disabled>
-                                        🔍 Voir les formations
-                                    </button>
-                                </div>
-                            </div>
                             </form>
                         </div>
                     </div>
@@ -973,7 +974,7 @@ h1, h2, h3, h4, h5, h6 {
         <div class="row align-items-center g-5">
             <!-- Image à gauche (9:16) -->
             <div class="col-lg-5" data-aos="fade-right">
-                <div class="admission-image-container">
+                <div class="admission-image-container" style="max-width: 400px;">
                     @php
                         $admissionImage = \App\Models\Setting::get('admission_process_image', 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop');
                         $admissionImageUrl = $admissionImage ? (str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage)) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop';
@@ -984,7 +985,7 @@ h1, h2, h3, h4, h5, h6 {
             
             <!-- Contenu à droite -->
             <div class="col-lg-7" data-aos="fade-left">
-                <div class="admission-process-content">
+                <div class="admission-process-content" style="max-width: 100%; overflow: hidden;">
                     <h2 class="admission-process-title">Processus d'Admission</h2>
                     <p class="admission-process-intro">Quatre étapes simples pour rejoindre l'excellence à l'IESCA</p>
                     
@@ -1192,37 +1193,72 @@ h1, h2, h3, h4, h5, h6 {
     const niveauSelect = document.getElementById('niveauSelect');
     const filiereSelect = document.getElementById('filiereSelect');
     const searchButton = document.getElementById('searchButton');
+    const formationForm = document.getElementById('formationSearchForm');
+    
+    if (!niveauSelect || !filiereSelect || !searchButton || !formationForm) {
+      console.error('Éléments du formulaire non trouvés');
+      return;
+    }
     
     // Stocker toutes les filières
     const allFilieres = [
       @foreach(\App\Models\Filiere::all() as $filiere)
-        {id: {{ $filiere->id }}, nom: "{{ $filiere->nom }}"},
+        {id: {{ $filiere->id }}, nom: "{{ addslashes($filiere->nom) }}"},
       @endforeach
     ];
+    
+    // Fonction pour activer/désactiver le bouton
+    function updateSearchButton() {
+      if (niveauSelect.value && filiereSelect.value && !filiereSelect.disabled) {
+        searchButton.disabled = false;
+        searchButton.style.opacity = '1';
+        searchButton.style.cursor = 'pointer';
+      } else {
+        searchButton.disabled = true;
+        searchButton.style.opacity = '0.6';
+        searchButton.style.cursor = 'not-allowed';
+      }
+    }
     
     // Quand un niveau est sélectionné, activer le select filière
     niveauSelect.addEventListener('change', function() {
       if (this.value) {
         filiereSelect.disabled = false;
+        filiereSelect.style.opacity = '1';
         filiereSelect.innerHTML = '<option value="">Sélectionnez une filière</option>';
         allFilieres.forEach(function(filiere) {
-          filiereSelect.innerHTML += '<option value="' + filiere.id + '">' + filiere.nom + '</option>';
+          const option = document.createElement('option');
+          option.value = filiere.id;
+          option.textContent = filiere.nom;
+          filiereSelect.appendChild(option);
         });
       } else {
         filiereSelect.disabled = true;
+        filiereSelect.style.opacity = '0.6';
         filiereSelect.innerHTML = '<option value="">Sélectionnez d\'abord un niveau</option>';
         searchButton.disabled = true;
+        searchButton.style.opacity = '0.6';
+        searchButton.style.cursor = 'not-allowed';
       }
+      updateSearchButton();
     });
     
     // Quand une filière est sélectionnée, activer le bouton
     filiereSelect.addEventListener('change', function() {
-      if (this.value && niveauSelect.value) {
-        searchButton.disabled = false;
-      } else {
-        searchButton.disabled = true;
+      updateSearchButton();
+    });
+    
+    // Validation du formulaire avant soumission
+    formationForm.addEventListener('submit', function(e) {
+      if (!niveauSelect.value || !filiereSelect.value || filiereSelect.disabled) {
+        e.preventDefault();
+        alert('Veuillez sélectionner un niveau et une filière avant de rechercher.');
+        return false;
       }
     });
+    
+    // Initialiser l'état du bouton
+    updateSearchButton();
   });
 </script>
 @endsection
