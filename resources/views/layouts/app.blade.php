@@ -97,23 +97,31 @@
         <div class="container">
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
-                    <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: #C09F5F;">IESCA</h5>
+                    <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--color-primary, #A66060);">IESCA</h5>
                     <p style="opacity: 0.8; line-height: 1.8;">Institut d'Enseignement Supérieur de la Côte Africaine - Excellence académique et innovation.</p>
+                    <div style="margin-top: 1.5rem;">
+                        <strong style="color: var(--color-primary, #A66060);">Année Académique 2025-2026</strong><br>
+                        <small style="opacity: 0.7;">Inscriptions ouvertes</small>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <h6 style="font-weight: 700; margin-bottom: 1.5rem;">Liens Rapides</h6>
                     <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('formations') }}" style="color: white; opacity: 0.8; text-decoration: none;">Nos Formations</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('admission') }}" style="color: white; opacity: 0.8; text-decoration: none;">Admission</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('login') }}" style="color: white; opacity: 0.8; text-decoration: none;">Connexion</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('formations') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Nos Formations</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('admission') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Admission</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('login') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Connexion</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h6 style="font-weight: 700; margin-bottom: 1.5rem;">Contact</h6>
-                    <p style="opacity: 0.8; line-height: 1.8;">
-                        📍 Abidjan, Côte d'Ivoire<br>
-                        📧 contact@iesca.com<br>
-                        📞 +225 XX XX XX XX XX
+                    <p style="opacity: 0.8; line-height: 2;">
+                        <strong>📍 Adresse:</strong><br>
+                        {{ \App\Models\Setting::get('address', '112, Avenue de France (Poto poto)') }}<br><br>
+                        <strong>📞 Téléphones:</strong><br>
+                        {{ \App\Models\Setting::get('phone1', '+242 06 541 98 61') }}<br>
+                        {{ \App\Models\Setting::get('phone2', '+242 05 022 64 08') }}<br><br>
+                        <strong>📧 Email:</strong><br>
+                        {{ \App\Models\Setting::get('email', 'institutenseignementsupérieur@gmail.com') }}
                     </p>
                 </div>
             </div>

@@ -765,41 +765,61 @@ h1, h2, h3, h4, h5, h6 {
                     <h2>À Propos de l'IESCA</h2>
                     <p>
                         L'Institut d'Enseignement Supérieur de la Côte Africaine (IESCA) est un établissement d'excellence 
-                        dédié à la formation de leaders et d'innovateurs pour l'Afrique de demain.
+                        situé au 112, Avenue de France (Poto poto), dédié à la formation de leaders et d'innovateurs.
                     </p>
                     <p>
-                        Fondé avec la vision de transformer l'éducation supérieure en Afrique, l'IESCA combine rigueur 
-                        académique, innovation pédagogique et engagement communautaire pour offrir une expérience 
-                        d'apprentissage unique.
+                        Nous offrons des formations de qualité en Licence dans 4 domaines clés : Sciences et Administration 
+                        des Affaires, Génie Informatique, Sciences Juridiques et Sciences Commerciales.
                     </p>
                     
                     <div class="about-features">
                         <div class="feature-item">
-                            <div class="feature-icon">🎓</div>
+                            <div class="feature-icon">💻</div>
                             <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Excellence Académique</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Programmes certifiés internationaux</p>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Salle d'Informatique</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Équipements modernes et performants</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">💼</div>
+                            <div class="feature-icon">📚</div>
                             <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Insertion Professionnelle</h5>
-                                <p style="color: var(--color-dark); margin: 0;">95% de taux d'employabilité</p>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Bibliothèque</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Ressources académiques complètes</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">🌍</div>
+                            <div class="feature-icon">❄️</div>
                             <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Réseau International</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Partenariats avec 50+ universités</p>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Classes Climatisées</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Confort optimal pour l'apprentissage</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">🚀</div>
+                            <div class="feature-icon">👨‍🏫</div>
                             <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Innovation & Recherche</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Laboratoires de pointe</p>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Formation Complète</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Cours théoriques et pratiques</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📹</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Caméras de Surveillance</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Sécurité assurée 24/7</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🏢</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Stage Garanti</h5>
+                                <p style="color: var(--color-dark); margin: 0;">En fin de formation</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💻</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Ordinateur à Crédit</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Facilité de paiement disponible</p>
                             </div>
                         </div>
                     </div>
