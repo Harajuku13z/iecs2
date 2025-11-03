@@ -8,14 +8,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
+        :root {
+            --color-primary: #A66060;
+            --color-secondary: #9E5A59;
+            --color-light: #F2F2F2;
+            --color-dark: #595959;
+            --color-black: #0D0D0D;
+        }
         body {
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            padding: 0 !important;
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background: rgba(165, 28, 48, 0.98); backdrop-filter: blur(10px); box-shadow: 0 2px 20px rgba(0,0,0,0.1);">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: var(--color-primary); backdrop-filter: blur(10px); box-shadow: 0 2px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">IESCA</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -76,7 +88,7 @@
     </nav>
 
     <!-- Content -->
-    <main class="py-4">
+    <main>
         @yield('content')
     </main>
 

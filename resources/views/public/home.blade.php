@@ -6,13 +6,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
-:root {
-    --harvard-crimson: #A51C30;
-    --harvard-dark: #1E1E1E;
-    --harvard-gold: #C09F5F;
-    --soft-white: #FAFAFA;
-}
-
 * {
     font-family: 'Inter', sans-serif;
 }
@@ -21,14 +14,15 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
 }
 
-/* Hero Section */
+/* Hero Section - Collé au header */
 .hero-section {
     position: relative;
-    min-height: 100vh;
-    background: linear-gradient(135deg, rgba(165, 28, 48, 0.97) 0%, rgba(30, 30, 30, 0.95) 100%),
+    min-height: 90vh;
+    background: linear-gradient(135deg, rgba(166, 96, 96, 0.97) 0%, rgba(13, 13, 13, 0.95) 100%),
                 url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover fixed;
     color: white;
     overflow: hidden;
+    margin-top: 0;
 }
 
 .hero-section::before {
@@ -39,8 +33,8 @@ h1, h2, h3, h4, h5, h6 {
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 50%, rgba(192, 159, 95, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, rgba(165, 28, 48, 0.2) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(158, 90, 89, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(166, 96, 96, 0.2) 0%, transparent 50%);
     animation: pulse 15s ease-in-out infinite;
 }
 
@@ -52,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-content {
     position: relative;
     z-index: 2;
-    padding: 8rem 0 4rem;
+    padding: 6rem 0 4rem;
 }
 
 .hero-title {
@@ -100,27 +94,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .search-input:focus {
-    border-color: var(--harvard-crimson);
-    box-shadow: 0 0 0 4px rgba(165, 28, 48, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(166, 96, 96, 0.1);
     outline: none;
 }
 
 .search-button {
     height: 60px;
-    background: linear-gradient(135deg, var(--harvard-crimson) 0%, #8B1520 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     border: none;
     border-radius: 16px;
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(165, 28, 48, 0.3);
+    box-shadow: 0 10px 30px rgba(166, 96, 96, 0.3);
 }
 
 .search-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(165, 28, 48, 0.4);
-    background: linear-gradient(135deg, #8B1520 0%, var(--harvard-crimson) 100%);
+    box-shadow: 0 15px 40px rgba(166, 96, 96, 0.4);
 }
 
 /* Wave Divider */
@@ -142,9 +135,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Premium Stats */
 .stats-container {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    background: var(--color-light);
     padding: 5rem 0;
-    position: relative;
 }
 
 .stat-card {
@@ -153,7 +145,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 3rem 2rem;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    border: 1px solid rgba(165, 28, 48, 0.1);
+    border: 1px solid rgba(166, 96, 96, 0.1);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -166,7 +158,7 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, var(--harvard-crimson), var(--harvard-gold));
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
     transform: scaleX(0);
     transition: transform 0.4s ease;
 }
@@ -177,13 +169,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .stat-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 60px rgba(165, 28, 48, 0.15);
+    box-shadow: 0 20px 60px rgba(166, 96, 96, 0.15);
 }
 
 .stat-number {
     font-size: 4rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--harvard-crimson), var(--harvard-gold));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -193,18 +185,77 @@ h1, h2, h3, h4, h5, h6 {
 
 .stat-label {
     font-size: 1.1rem;
-    color: #666;
+    color: var(--color-dark);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
+/* About Section */
+.about-section {
+    padding: 6rem 0;
+    background: white;
+}
+
+.about-image {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    height: 100%;
+    min-height: 400px;
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about-content h2 {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--color-black);
+    margin-bottom: 2rem;
+}
+
+.about-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-dark);
+    margin-bottom: 1.5rem;
+}
+
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
 /* Admission Timeline */
 .admission-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, var(--harvard-dark) 0%, #2d2d2d 100%);
+    background: linear-gradient(135deg, var(--color-black) 0%, var(--color-dark) 100%);
     color: white;
-    position: relative;
 }
 
 .section-header {
@@ -244,7 +295,7 @@ h1, h2, h3, h4, h5, h6 {
     flex-shrink: 0;
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, var(--harvard-crimson), var(--harvard-gold));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -252,7 +303,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2rem;
     font-weight: 900;
     margin-right: 2rem;
-    box-shadow: 0 10px 30px rgba(165, 28, 48, 0.4);
+    box-shadow: 0 10px 30px rgba(166, 96, 96, 0.4);
     position: relative;
 }
 
@@ -264,7 +315,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateX(-50%);
     width: 2px;
     height: 80px;
-    background: linear-gradient(180deg, var(--harvard-gold), transparent);
+    background: linear-gradient(180deg, var(--color-secondary), transparent);
 }
 
 .timeline-item:last-child .timeline-number::after {
@@ -300,7 +351,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Premium News Cards */
 .news-section {
     padding: 6rem 0;
-    background: var(--soft-white);
+    background: var(--color-light);
 }
 
 .news-card {
@@ -339,7 +390,7 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     top: 1rem;
     left: 1rem;
-    background: rgba(165, 28, 48, 0.95);
+    background: var(--color-primary);
     color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 50px;
@@ -347,7 +398,6 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    backdrop-filter: blur(10px);
 }
 
 .news-content {
@@ -358,27 +408,24 @@ h1, h2, h3, h4, h5, h6 {
     color: #999;
     font-size: 0.9rem;
     margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 .news-title {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--harvard-dark);
+    color: var(--color-black);
     line-height: 1.3;
 }
 
 .news-description {
-    color: #666;
+    color: var(--color-dark);
     line-height: 1.7;
     margin-bottom: 1.5rem;
 }
 
 .read-more {
-    color: var(--harvard-crimson);
+    color: var(--color-primary);
     font-weight: 600;
     text-decoration: none;
     display: inline-flex;
@@ -391,84 +438,154 @@ h1, h2, h3, h4, h5, h6 {
     gap: 1rem;
 }
 
-/* Events Section */
+/* Events Section with Calendar */
 .events-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
+    background: white;
+}
+
+.events-list {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.events-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.events-list::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 10px;
 }
 
 .event-card {
     background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
     box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    border-left: 5px solid var(--harvard-crimson);
+    border-left: 5px solid var(--color-primary);
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
 }
 
 .event-card:hover {
     transform: translateX(10px);
-    box-shadow: 0 10px 40px rgba(165, 28, 48, 0.15);
+    box-shadow: 0 10px 40px rgba(166, 96, 96, 0.15);
 }
 
-.event-date-box {
-    flex-shrink: 0;
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, var(--harvard-crimson), var(--harvard-gold));
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.event-date-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     color: white;
-}
-
-.event-day {
-    font-size: 2.5rem;
-    font-weight: 900;
-    line-height: 1;
-}
-
-.event-month {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-.event-content {
-    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 .event-title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 700;
+    color: var(--color-black);
     margin-bottom: 0.5rem;
-    color: var(--harvard-dark);
 }
 
 .event-info {
-    display: flex;
-    gap: 2rem;
-    color: #666;
-    font-size: 0.95rem;
+    color: var(--color-dark);
+    font-size: 0.9rem;
 }
 
-.event-info span {
+.calendar-container {
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(166, 96, 96, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.calendar-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-black);
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.calendar-nav button {
+    background: var(--color-primary);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.calendar-nav button:hover {
+    background: var(--color-secondary);
+    transform: scale(1.1);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-dark);
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.calendar-day:hover {
+    background: var(--color-light);
+}
+
+.calendar-day.has-event {
+    background: var(--color-primary);
+    color: white;
+    font-weight: 700;
+}
+
+.calendar-day.today {
+    border: 2px solid var(--color-primary);
 }
 
 /* CTA Section */
 .cta-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, var(--harvard-crimson) 0%, var(--harvard-dark) 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-black) 100%);
     color: white;
     position: relative;
     overflow: hidden;
@@ -481,7 +598,7 @@ h1, h2, h3, h4, h5, h6 {
     right: -20%;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(192, 159, 95, 0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(158, 90, 89, 0.2) 0%, transparent 70%);
     border-radius: 50%;
 }
 
@@ -504,7 +621,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .cta-button {
     background: white;
-    color: var(--harvard-crimson);
+    color: var(--color-primary);
     padding: 1.2rem 3rem;
     border-radius: 50px;
     font-size: 1.2rem;
@@ -519,29 +636,13 @@ h1, h2, h3, h4, h5, h6 {
 .cta-button:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 50px rgba(0,0,0,0.4);
-    color: var(--harvard-crimson);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fade-in-up {
-    animation: fadeInUp 0.8s ease forwards;
+    color: var(--color-primary);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .hero-content {
-        padding: 6rem 0 3rem;
+        padding: 4rem 0 3rem;
     }
     
     .premium-search {
@@ -552,46 +653,17 @@ h1, h2, h3, h4, h5, h6 {
         height: 50px;
     }
     
-    .stat-number {
-        font-size: 3rem;
+    .about-features {
+        grid-template-columns: 1fr;
     }
     
     .timeline-item {
         flex-direction: column;
-        align-items: flex-start;
     }
     
     .timeline-number {
         margin-bottom: 1rem;
     }
-    
-    .event-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .event-info {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-}
-
-/* Scroll animations */
-[data-aos] {
-    opacity: 0;
-    transition-property: transform, opacity;
-}
-
-[data-aos].aos-animate {
-    opacity: 1;
-}
-
-[data-aos="fade-up"] {
-    transform: translate3d(0, 50px, 0);
-}
-
-[data-aos="fade-up"].aos-animate {
-    transform: translate3d(0, 0, 0);
 }
 </style>
 
@@ -647,7 +719,7 @@ h1, h2, h3, h4, h5, h6 {
     <!-- Wave Divider -->
     <div class="wave-divider">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#ffffff"></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#F2F2F2"></path>
         </svg>
     </div>
 </section>
@@ -684,6 +756,64 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 </section>
 
+<!-- About Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="about-content">
+                    <h2>À Propos de l'IESCA</h2>
+                    <p>
+                        L'Institut d'Enseignement Supérieur de la Côte Africaine (IESCA) est un établissement d'excellence 
+                        dédié à la formation de leaders et d'innovateurs pour l'Afrique de demain.
+                    </p>
+                    <p>
+                        Fondé avec la vision de transformer l'éducation supérieure en Afrique, l'IESCA combine rigueur 
+                        académique, innovation pédagogique et engagement communautaire pour offrir une expérience 
+                        d'apprentissage unique.
+                    </p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🎓</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Excellence Académique</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Programmes certifiés internationaux</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💼</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Insertion Professionnelle</h5>
+                                <p style="color: var(--color-dark); margin: 0;">95% de taux d'employabilité</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🌍</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Réseau International</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Partenariats avec 50+ universités</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🚀</div>
+                            <div>
+                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Innovation & Recherche</h5>
+                                <p style="color: var(--color-dark); margin: 0;">Laboratoires de pointe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800" alt="Campus IESCA">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Admission Timeline -->
 <section class="admission-section">
     <div class="container">
@@ -697,7 +827,7 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="timeline-number">1</div>
                 <div class="timeline-content">
                     <h4 class="timeline-title">Inscription en Ligne</h4>
-                    <p class="timeline-description">Créez votre compte et soumettez votre dossier de candidature en quelques clics via notre plateforme sécurisée.</p>
+                    <p class="timeline-description">Créez votre compte et soumettez votre dossier de candidature en quelques clics.</p>
                 </div>
             </div>
             
@@ -705,7 +835,7 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="timeline-number">2</div>
                 <div class="timeline-content">
                     <h4 class="timeline-title">Vérification Administrative</h4>
-                    <p class="timeline-description">Notre équipe examine minutieusement votre dossier sous 48h et vérifie l'authenticité de vos documents.</p>
+                    <p class="timeline-description">Notre équipe examine votre dossier sous 48h.</p>
                 </div>
             </div>
             
@@ -713,7 +843,7 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="timeline-number">3</div>
                 <div class="timeline-content">
                     <h4 class="timeline-title">Évaluation du Comité</h4>
-                    <p class="timeline-description">Le comité d'admission étudie votre profil académique et votre motivation pour intégrer l'IESCA.</p>
+                    <p class="timeline-description">Le comité d'admission étudie votre profil académique.</p>
                 </div>
             </div>
             
@@ -721,7 +851,7 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="timeline-number">4</div>
                 <div class="timeline-content">
                     <h4 class="timeline-title">Décision d'Admission</h4>
-                    <p class="timeline-description">Recevez votre décision par email et commencez votre parcours d'excellence avec nous.</p>
+                    <p class="timeline-description">Recevez votre décision par email.</p>
                 </div>
             </div>
         </div>
@@ -738,8 +868,8 @@ h1, h2, h3, h4, h5, h6 {
 <section class="news-section">
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--harvard-dark);">Actualités IESCA</h2>
-            <p class="section-subtitle" style="color: #666;">Restez informé de nos dernières nouvelles</p>
+            <h2 class="section-title" style="color: var(--color-black);">Actualités IESCA</h2>
+            <p class="section-subtitle" style="color: var(--color-dark);">Restez informé de nos dernières nouvelles</p>
         </div>
         
         <div class="row g-4">
@@ -756,18 +886,12 @@ h1, h2, h3, h4, h5, h6 {
                         </div>
                         <div class="news-content">
                             <div class="news-date">
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-                                </svg>
-                                {{ $actu->date_publication->format('d M Y') }}
+                                📅 {{ $actu->date_publication->format('d M Y') }}
                             </div>
                             <h3 class="news-title">{{ $actu->titre }}</h3>
                             <p class="news-description">{{ Str::limit($actu->description, 120) }}</p>
                             <a href="#" class="read-more">
-                                Lire la suite
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                                </svg>
+                                Lire la suite →
                             </a>
                         </div>
                     </div>
@@ -776,7 +900,6 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="col-12">
                     <div class="text-center p-5">
                         <h4>Aucune actualité pour le moment</h4>
-                        <p class="text-muted">Revenez bientôt pour nos dernières nouvelles !</p>
                     </div>
                 </div>
             @endforelse
@@ -784,44 +907,85 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 </section>
 
-<!-- Events Section -->
+<!-- Events Section with Calendar -->
 <section class="events-section">
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--harvard-dark);">Calendrier des Événements</h2>
-            <p class="section-subtitle" style="color: #666;">Ne manquez aucun de nos événements</p>
+            <h2 class="section-title" style="color: var(--color-black);">Calendrier des Événements</h2>
+            <p class="section-subtitle" style="color: var(--color-dark);">Ne manquez aucun de nos événements</p>
         </div>
         
-        <div class="row">
-            <div class="col-lg-10 mx-auto">
-                @php
-                    $evenements = \App\Models\Evenement::publie()->aVenir()->take(4)->get();
-                @endphp
-                
-                @forelse($evenements as $event)
-                    <div class="event-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-                        <div class="event-date-box">
-                            <div class="event-day">{{ $event->date_debut->format('d') }}</div>
-                            <div class="event-month">{{ $event->date_debut->format('M') }}</div>
-                        </div>
-                        <div class="event-content">
+        <div class="row g-4">
+            <!-- Events List -->
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="events-list">
+                    @php
+                        $evenements = \App\Models\Evenement::publie()->aVenir()->get();
+                    @endphp
+                    
+                    @forelse($evenements as $event)
+                        <div class="event-card">
+                            <div class="event-date-badge">
+                                {{ $event->date_debut->format('d M Y') }} - {{ $event->date_debut->format('H:i') }}
+                            </div>
                             <h3 class="event-title">{{ $event->titre }}</h3>
                             <p class="mb-2">{{ $event->description }}</p>
                             <div class="event-info">
                                 @if($event->lieu)
-                                    <span>📍 {{ $event->lieu }}</span>
+                                    <div>📍 {{ $event->lieu }}</div>
                                 @endif
-                                <span>🕐 {{ $event->date_debut->format('H:i') }}</span>
-                                <span class="badge bg-secondary">{{ $event->type }}</span>
+                                <div><span class="badge" style="background: var(--color-secondary);">{{ $event->type }}</span></div>
                             </div>
                         </div>
+                    @empty
+                        <div class="text-center p-5">
+                            <h4>Aucun événement programmé</h4>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+            
+            <!-- Calendar -->
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h3 class="calendar-title">{{ now()->format('F Y') }}</h3>
+                        <div class="calendar-nav">
+                            <button>‹</button>
+                            <button>›</button>
+                        </div>
                     </div>
-                @empty
-                    <div class="text-center p-5">
-                        <h4>Aucun événement programmé</h4>
-                        <p class="text-muted">Consultez régulièrement cette section !</p>
+                    
+                    <div class="calendar-grid">
+                        <!-- Day Headers -->
+                        @foreach(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] as $day)
+                            <div class="calendar-day-header">{{ $day }}</div>
+                        @endforeach
+                        
+                        <!-- Calendar Days -->
+                        @php
+                            $startOfMonth = now()->startOfMonth();
+                            $daysInMonth = now()->daysInMonth;
+                            $startDay = $startOfMonth->dayOfWeek == 0 ? 7 : $startOfMonth->dayOfWeek;
+                            $eventDays = \App\Models\Evenement::publie()
+                                ->whereMonth('date_debut', now()->month)
+                                ->get()
+                                ->pluck('date_debut')
+                                ->map(fn($date) => $date->day)
+                                ->toArray();
+                        @endphp
+                        
+                        @for($i = 1; $i < $startDay; $i++)
+                            <div class="calendar-day"></div>
+                        @endfor
+                        
+                        @for($day = 1; $day <= $daysInMonth; $day++)
+                            <div class="calendar-day {{ in_array($day, $eventDays) ? 'has-event' : '' }} {{ $day == now()->day ? 'today' : '' }}">
+                                {{ $day }}
+                            </div>
+                        @endfor
                     </div>
-                @endforelse
+                </div>
             </div>
         </div>
     </div>
