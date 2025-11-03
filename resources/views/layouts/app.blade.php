@@ -9,11 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
         :root {
-            --color-primary: #A66060;
-            --color-secondary: #9E5A59;
-            --color-light: #F2F2F2;
-            --color-dark: #595959;
-            --color-black: #0D0D0D;
+            --color-primary: {{ \App\Models\Setting::get('color_primary', '#A66060') }};
+            --color-secondary: {{ \App\Models\Setting::get('color_secondary', '#9E5A59') }};
+            --color-light: {{ \App\Models\Setting::get('color_light', '#F2F2F2') }};
+            --color-dark: {{ \App\Models\Setting::get('color_dark', '#595959') }};
+            --color-black: {{ \App\Models\Setting::get('color_black', '#0D0D0D') }};
         }
         body {
             overflow-x: hidden;

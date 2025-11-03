@@ -19,7 +19,15 @@
                         <small class="text-muted d-block">{{ $setting->description }}</small>
                     @endif
                     
-                    @if(in_array($setting->cle, ['homepage_title', 'banner_image']))
+                    @if(str_starts_with($setting->cle, 'color_'))
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color" id="{{ $setting->cle }}" 
+                                   name="{{ $setting->cle }}" value="{{ $setting->valeur }}" style="width: 80px;">
+                            <input type="text" class="form-control" value="{{ $setting->valeur }}" 
+                                   onchange="document.getElementById('{{ $setting->cle }}').value = this.value"
+                                   oninput="this.previousElementSibling.value = this.value; this.previousElementSibling.setAttribute('name', '{{ $setting->cle }}');">
+                        </div>
+                    @elseif(in_array($setting->cle, ['homepage_title', 'banner_image']))
                         <input type="text" class="form-control" id="{{ $setting->cle }}" 
                                name="{{ $setting->cle }}" value="{{ $setting->valeur }}">
                     @elseif($setting->cle === 'inscription_start_date')
