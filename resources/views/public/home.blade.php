@@ -4,20 +4,31 @@
 
 @section('content')
 <style>
-.hero-section {
-    position: relative;
-    height: 85vh;
-    background: linear-gradient(135deg, rgba(165, 29, 42, 0.95) 0%, rgba(45, 49, 66, 0.95) 100%),
-                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover;
-    display: flex;
-    align-items: center;
-    color: white;
-    overflow: hidden;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --harvard-crimson: #A51C30;
+    --harvard-dark: #1E1E1E;
+    --harvard-gold: #C09F5F;
+    --soft-white: #FAFAFA;
 }
 
-.hero-content {
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Hero Section */
+.hero-section {
     position: relative;
-    z-index: 2;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(165, 28, 48, 0.97) 0%, rgba(30, 30, 30, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover fixed;
+    color: white;
+    overflow: hidden;
 }
 
 .hero-section::before {
@@ -27,266 +38,708 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(192, 159, 95, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(165, 28, 48, 0.2) 0%, transparent 50%);
+    animation: pulse 15s ease-in-out infinite;
 }
 
-.search-box {
-    background: white;
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    margin-top: 2rem;
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
 }
 
-.search-box .form-select,
-.search-box .btn {
-    height: 55px;
-    border-radius: 10px;
-}
-
-.timeline-step {
+.hero-content {
     position: relative;
-    padding-left: 3rem;
-    padding-bottom: 2rem;
+    z-index: 2;
+    padding: 8rem 0 4rem;
 }
 
-.timeline-step::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, #a51d2a 0%, #2d3142 100%);
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    text-shadow: 2px 4px 20px rgba(0,0,0,0.3);
 }
 
-.timeline-step::after {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 0;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #a51d2a;
-    border: 3px solid white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+.hero-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    opacity: 0.95;
+    margin-bottom: 3rem;
+    letter-spacing: 0.5px;
 }
 
-.timeline-step:last-child::before {
-    display: none;
+/* Premium Search Box */
+.premium-search {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 
+        0 25px 50px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(255,255,255,0.1) inset;
+    transform: translateY(0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.news-card {
+.premium-search:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+
+.search-input {
+    height: 60px;
+    border: 2px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 0 1.5rem;
+    font-size: 1rem;
     transition: all 0.3s ease;
+    background: white;
+}
+
+.search-input:focus {
+    border-color: var(--harvard-crimson);
+    box-shadow: 0 0 0 4px rgba(165, 28, 48, 0.1);
+    outline: none;
+}
+
+.search-button {
+    height: 60px;
+    background: linear-gradient(135deg, var(--harvard-crimson) 0%, #8B1520 100%);
     border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    height: 100%;
-}
-
-.news-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.news-card img {
-    height: 220px;
-    object-fit: cover;
-}
-
-.event-card {
-    border-left: 4px solid #a51d2a;
-    border-radius: 10px;
+    border-radius: 16px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
     transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(165, 28, 48, 0.3);
 }
 
-.event-card:hover {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transform: translateX(5px);
+.search-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(165, 28, 48, 0.4);
+    background: linear-gradient(135deg, #8B1520 0%, var(--harvard-crimson) 100%);
+}
+
+/* Wave Divider */
+.wave-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.wave-divider svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 80px;
+}
+
+/* Premium Stats */
+.stats-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 5rem 0;
+    position: relative;
 }
 
 .stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
     text-align: center;
-    padding: 2rem;
-    border-radius: 15px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #e9ecef;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(165, 28, 48, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--harvard-crimson), var(--harvard-gold));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.stat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(165, 28, 48, 0.15);
 }
 
 .stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #a51d2a;
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--harvard-crimson), var(--harvard-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     line-height: 1;
+    margin-bottom: 1rem;
 }
 
-.category-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
+.stat-label {
+    font-size: 1.1rem;
+    color: #666;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.btn-harvard {
-    background: #a51d2a;
+/* Admission Timeline */
+.admission-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--harvard-dark) 0%, #2d2d2d 100%);
     color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    position: relative;
 }
 
-.btn-harvard:hover {
-    background: #8a1723;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(165, 29, 42, 0.3);
+.section-header {
+    text-align: center;
+    margin-bottom: 5rem;
 }
 
 .section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #2d3142;
-    position: relative;
-    padding-bottom: 1rem;
-    margin-bottom: 3rem;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, white, rgba(255,255,255,0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.section-title::after {
+.section-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+.timeline-container {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.timeline-number {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--harvard-crimson), var(--harvard-gold));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-right: 2rem;
+    box-shadow: 0 10px 30px rgba(165, 28, 48, 0.4);
+    position: relative;
+}
+
+.timeline-number::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, #a51d2a 0%, #2d3142 100%);
-    border-radius: 2px;
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(180deg, var(--harvard-gold), transparent);
+}
+
+.timeline-item:last-child .timeline-number::after {
+    display: none;
+}
+
+.timeline-content {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateX(10px);
+}
+
+.timeline-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-description {
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+/* Premium News Cards */
+.news-section {
+    padding: 6rem 0;
+    background: var(--soft-white);
+}
+
+.news-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.news-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+}
+
+.news-image {
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+}
+
+.news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.news-card:hover .news-image img {
+    transform: scale(1.1);
+}
+
+.news-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(165, 28, 48, 0.95);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+}
+
+.news-content {
+    padding: 2rem;
+}
+
+.news-date {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.news-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--harvard-dark);
+    line-height: 1.3;
+}
+
+.news-description {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.read-more {
+    color: var(--harvard-crimson);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: gap 0.3s ease;
+}
+
+.read-more:hover {
+    gap: 1rem;
+}
+
+/* Events Section */
+.events-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
+}
+
+.event-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    border-left: 5px solid var(--harvard-crimson);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.event-card:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 40px rgba(165, 28, 48, 0.15);
+}
+
+.event-date-box {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--harvard-crimson), var(--harvard-gold));
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.event-day {
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.event-month {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.event-content {
+    flex: 1;
+}
+
+.event-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--harvard-dark);
+}
+
+.event-info {
+    display: flex;
+    gap: 2rem;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.event-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--harvard-crimson) 0%, var(--harvard-dark) 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(192, 159, 95, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
+}
+
+.cta-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+.cta-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.cta-button {
+    background: white;
+    color: var(--harvard-crimson);
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+    color: var(--harvard-crimson);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content {
+        padding: 6rem 0 3rem;
+    }
+    
+    .premium-search {
+        padding: 1.5rem;
+    }
+    
+    .search-input, .search-button {
+        height: 50px;
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+    }
+    
+    .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .timeline-number {
+        margin-bottom: 1rem;
+    }
+    
+    .event-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .event-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Scroll animations */
+[data-aos] {
+    opacity: 0;
+    transition-property: transform, opacity;
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+}
+
+[data-aos="fade-up"] {
+    transform: translate3d(0, 50px, 0);
+}
+
+[data-aos="fade-up"].aos-animate {
+    transform: translate3d(0, 0, 0);
 }
 </style>
 
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto hero-content">
-                <h1 class="display-3 fw-bold mb-4" data-aos="fade-up">
-                    {{ \App\Models\Setting::get('homepage_title', 'Excellence Académique et Innovation') }}
-                </h1>
-                <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">
-                    Institut d'Enseignement Supérieur de la Côte Africaine - Façonnons l'avenir de l'éducation
-                </p>
-                
-                <!-- Search Box -->
-                <div class="search-box" data-aos="fade-up" data-aos-delay="200">
-                    <form action="{{ route('formations') }}" method="GET">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <select class="form-select" name="filiere_id">
-                                    <option value="">Choisir une filière</option>
-                                    @foreach(\App\Models\Filiere::all() as $filiere)
-                                        <option value="{{ $filiere->id }}">{{ $filiere->nom }}</option>
-                                    @endforeach
-                                </select>
+        <div class="hero-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center">
+                        <h1 class="hero-title" data-aos="fade-up">
+                            Façonnons l'Avenir<br>de l'Excellence
+                        </h1>
+                        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
+                            Institut d'Enseignement Supérieur de la Côte Africaine
+                        </p>
+                    </div>
+                    
+                    <!-- Premium Search Box -->
+                    <div class="premium-search" data-aos="fade-up" data-aos-delay="200">
+                        <h4 class="text-center text-dark mb-4" style="font-weight: 700;">Trouvez Votre Formation Idéale</h4>
+                        <form action="{{ route('formations') }}" method="GET">
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <select class="form-select search-input" name="filiere_id" required>
+                                        <option value="">🎓 Sélectionnez une filière</option>
+                                        @foreach(\App\Models\Filiere::all() as $filiere)
+                                            <option value="{{ $filiere->id }}">{{ $filiere->nom }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-select search-input" name="niveau_id" required>
+                                        <option value="">📚 Niveau d'études</option>
+                                        @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
+                                            <option value="{{ $niveau->id }}">{{ $niveau->nom }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn search-button w-100">
+                                        Rechercher
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <select class="form-select" name="niveau_id">
-                                    <option value="">Niveau d'études</option>
-                                    @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
-                                        <option value="{{ $niveau->id }}">{{ $niveau->nom }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-harvard w-100">
-                                    🔍 Rechercher ma formation
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Wave Divider -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#ffffff"></path>
+        </svg>
+    </div>
 </section>
 
 <!-- Stats Section -->
-<section class="py-5 bg-light">
+<section class="stats-container">
     <div class="container">
         <div class="row g-4">
             <div class="col-md-3" data-aos="fade-up">
                 <div class="stat-card">
                     <div class="stat-number">{{ \App\Models\Filiere::count() }}+</div>
-                    <p class="text-muted mb-0 fw-semibold">Filières</p>
+                    <div class="stat-label">Filières</div>
                 </div>
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
                 <div class="stat-card">
                     <div class="stat-number">{{ \App\Models\User::where('role', 'enseignant')->count() }}+</div>
-                    <p class="text-muted mb-0 fw-semibold">Enseignants</p>
+                    <div class="stat-label">Enseignants</div>
                 </div>
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
                 <div class="stat-card">
-                    <div class="stat-number">{{ \App\Models\User::where('role', 'etudiant')->count() }}+</div>
-                    <p class="text-muted mb-0 fw-semibold">Étudiants</p>
+                    <div class="stat-number">{{ \App\Models\User::where('role', 'etudiant')->count() }}K+</div>
+                    <div class="stat-label">Étudiants</div>
                 </div>
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
                 <div class="stat-card">
                     <div class="stat-number">95%</div>
-                    <p class="text-muted mb-0 fw-semibold">Taux de réussite</p>
+                    <div class="stat-label">Réussite</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Admission Process -->
-<section class="py-5">
+<!-- Admission Timeline -->
+<section class="admission-section">
     <div class="container">
-        <h2 class="section-title text-center" data-aos="fade-up">Processus d'Admission</h2>
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">Processus d'Admission</h2>
+            <p class="section-subtitle">Quatre étapes simples pour rejoindre l'excellence</p>
+        </div>
         
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="timeline-step" data-aos="fade-right">
-                    <h4 class="fw-bold mb-2">1. Inscription en ligne</h4>
-                    <p class="text-muted">Créez votre compte et soumettez votre dossier de candidature en ligne.</p>
-                </div>
-                
-                <div class="timeline-step" data-aos="fade-right" data-aos-delay="100">
-                    <h4 class="fw-bold mb-2">2. Vérification des documents</h4>
-                    <p class="text-muted">Notre équipe administrative examine votre dossier sous 48h.</p>
-                </div>
-                
-                <div class="timeline-step" data-aos="fade-right" data-aos-delay="200">
-                    <h4 class="fw-bold mb-2">3. Étude du dossier</h4>
-                    <p class="text-muted">Le comité d'admission évalue votre candidature.</p>
-                </div>
-                
-                <div class="timeline-step" data-aos="fade-right" data-aos-delay="300">
-                    <h4 class="fw-bold mb-2">4. Notification de décision</h4>
-                    <p class="text-muted">Recevez votre décision d'admission par email.</p>
-                </div>
-                
-                <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="400">
-                    <a href="{{ route('admission') }}" class="btn btn-harvard btn-lg">
-                        📝 Commencer ma candidature
-                    </a>
+        <div class="timeline-container">
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <h4 class="timeline-title">Inscription en Ligne</h4>
+                    <p class="timeline-description">Créez votre compte et soumettez votre dossier de candidature en quelques clics via notre plateforme sécurisée.</p>
                 </div>
             </div>
+            
+            <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <h4 class="timeline-title">Vérification Administrative</h4>
+                    <p class="timeline-description">Notre équipe examine minutieusement votre dossier sous 48h et vérifie l'authenticité de vos documents.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <h4 class="timeline-title">Évaluation du Comité</h4>
+                    <p class="timeline-description">Le comité d'admission étudie votre profil académique et votre motivation pour intégrer l'IESCA.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <h4 class="timeline-title">Décision d'Admission</h4>
+                    <p class="timeline-description">Recevez votre décision par email et commencez votre parcours d'excellence avec nous.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="400">
+            <a href="{{ route('admission') }}" class="cta-button">
+                Commencer Ma Candidature
+            </a>
         </div>
     </div>
 </section>
 
 <!-- News Section -->
-<section class="py-5 bg-light">
+<section class="news-section">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title mb-0" data-aos="fade-up">Actualités IESCA</h2>
-            <a href="#" class="btn btn-outline-secondary">Toutes les actualités →</a>
+        <div class="section-header text-dark" data-aos="fade-up">
+            <h2 class="section-title" style="color: var(--harvard-dark);">Actualités IESCA</h2>
+            <p class="section-subtitle" style="color: #666;">Restez informé de nos dernières nouvelles</p>
         </div>
         
         <div class="row g-4">
@@ -294,42 +747,49 @@
                 $actualites = \App\Models\Actualite::publie()->recent()->take(3)->get();
             @endphp
             
-            @if($actualites->count() > 0)
-                @foreach($actualites as $actu)
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-                        <div class="card news-card shadow-sm">
-                            <img src="{{ $actu->image ?? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800' }}" 
-                                 class="card-img-top" alt="{{ $actu->titre }}">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="category-badge bg-primary text-white">{{ $actu->categorie }}</span>
-                                    <small class="text-muted">{{ $actu->date_publication->format('d/m/Y') }}</small>
-                                </div>
-                                <h5 class="card-title fw-bold">{{ $actu->titre }}</h5>
-                                <p class="card-text text-muted">{{ Str::limit($actu->description, 100) }}</p>
-                                <a href="#" class="btn btn-link text-decoration-none p-0">Lire la suite →</a>
+            @forelse($actualites as $actu)
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                    <div class="news-card">
+                        <div class="news-image">
+                            <img src="{{ $actu->image ?? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800' }}" alt="{{ $actu->titre }}">
+                            <div class="news-badge">{{ $actu->categorie }}</div>
+                        </div>
+                        <div class="news-content">
+                            <div class="news-date">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                </svg>
+                                {{ $actu->date_publication->format('d M Y') }}
                             </div>
+                            <h3 class="news-title">{{ $actu->titre }}</h3>
+                            <p class="news-description">{{ Str::limit($actu->description, 120) }}</p>
+                            <a href="#" class="read-more">
+                                Lire la suite
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                </svg>
+                            </a>
                         </div>
                     </div>
-                @endforeach
-            @else
+                </div>
+            @empty
                 <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <h5>📰 Aucune actualité pour le moment</h5>
-                        <p class="mb-0">Revenez bientôt pour découvrir nos dernières nouvelles !</p>
+                    <div class="text-center p-5">
+                        <h4>Aucune actualité pour le moment</h4>
+                        <p class="text-muted">Revenez bientôt pour nos dernières nouvelles !</p>
                     </div>
                 </div>
-            @endif
+            @endforelse
         </div>
     </div>
 </section>
 
-<!-- Events Calendar -->
-<section class="py-5">
+<!-- Events Section -->
+<section class="events-section">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title mb-0" data-aos="fade-up">Calendrier des Événements</h2>
-            <a href="#" class="btn btn-outline-secondary">Voir le calendrier →</a>
+        <div class="section-header text-dark" data-aos="fade-up">
+            <h2 class="section-title" style="color: var(--harvard-dark);">Calendrier des Événements</h2>
+            <p class="section-subtitle" style="color: #666;">Ne manquez aucun de nos événements</p>
         </div>
         
         <div class="row">
@@ -338,66 +798,60 @@
                     $evenements = \App\Models\Evenement::publie()->aVenir()->take(4)->get();
                 @endphp
                 
-                @if($evenements->count() > 0)
-                    @foreach($evenements as $event)
-                        <div class="card event-card shadow-sm mb-3" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-md-2 text-center border-end">
-                                        <div class="text-danger fw-bold" style="font-size: 2rem;">{{ $event->date_debut->format('d') }}</div>
-                                        <div class="text-muted">{{ $event->date_debut->format('M Y') }}</div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <h5 class="fw-bold mb-1">{{ $event->titre }}</h5>
-                                        <p class="text-muted mb-2">{{ $event->description }}</p>
-                                        @if($event->lieu)
-                                            <small class="text-muted">📍 {{ $event->lieu }}</small>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-3 text-end">
-                                        <span class="badge bg-secondary mb-2">{{ $event->type }}</span>
-                                        <br>
-                                        <small class="text-muted">🕐 {{ $event->date_debut->format('H:i') }}</small>
-                                    </div>
-                                </div>
+                @forelse($evenements as $event)
+                    <div class="event-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                        <div class="event-date-box">
+                            <div class="event-day">{{ $event->date_debut->format('d') }}</div>
+                            <div class="event-month">{{ $event->date_debut->format('M') }}</div>
+                        </div>
+                        <div class="event-content">
+                            <h3 class="event-title">{{ $event->titre }}</h3>
+                            <p class="mb-2">{{ $event->description }}</p>
+                            <div class="event-info">
+                                @if($event->lieu)
+                                    <span>📍 {{ $event->lieu }}</span>
+                                @endif
+                                <span>🕐 {{ $event->date_debut->format('H:i') }}</span>
+                                <span class="badge bg-secondary">{{ $event->type }}</span>
                             </div>
                         </div>
-                    @endforeach
-                @else
-                    <div class="alert alert-info text-center">
-                        <h5>📅 Aucun événement programmé</h5>
-                        <p class="mb-0">Consultez régulièrement cette section pour ne rien manquer !</p>
                     </div>
-                @endif
+                @empty
+                    <div class="text-center p-5">
+                        <h4>Aucun événement programmé</h4>
+                        <p class="text-muted">Consultez régulièrement cette section !</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-5" style="background: linear-gradient(135deg, #a51d2a 0%, #2d3142 100%);">
+<section class="cta-section">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-8 text-white" data-aos="fade-right">
-                <h2 class="fw-bold mb-3">Prêt à rejoindre l'excellence ?</h2>
-                <p class="lead mb-0">Les inscriptions sont ouvertes à partir du {{ \App\Models\Setting::get('inscription_start_date', '2025-01-15') }}</p>
+            <div class="col-lg-8 cta-content" data-aos="fade-right">
+                <h2 class="cta-title">Prêt à Rejoindre l'Excellence ?</h2>
+                <p class="cta-subtitle">Les inscriptions sont ouvertes. Commencez votre parcours vers le succès.</p>
             </div>
-            <div class="col-md-4 text-end" data-aos="fade-left">
-                <a href="{{ route('admission') }}" class="btn btn-light btn-lg px-4 py-3">
-                    Postuler maintenant
+            <div class="col-lg-4 text-end" data-aos="fade-left">
+                <a href="{{ route('admission') }}" class="cta-button">
+                    Postuler Maintenant
                 </a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- AOS Animation Library -->
+<!-- AOS Library -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
   AOS.init({
-    duration: 800,
-    once: true
+    duration: 1000,
+    once: true,
+    offset: 100
   });
 </script>
 @endsection
