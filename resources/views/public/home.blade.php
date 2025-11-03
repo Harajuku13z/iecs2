@@ -689,14 +689,34 @@ h1, h2, h3, h4, h5, h6 {
                         </p>
                     </div>
                     
-                    <!-- Hero CTA Buttons -->
-                    <div class="d-flex gap-3 justify-content-center flex-wrap" data-aos="fade-up" data-aos-delay="200">
-                        <a href="{{ route('formations') }}" class="btn btn-lg" style="background: white; color: var(--color-primary); padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s;">
-                            En savoir plus
-                        </a>
-                        <a href="{{ route('admission') }}" class="btn btn-lg" style="background: var(--color-primary); color: white; padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 30px rgba(166, 96, 96, 0.4); transition: all 0.3s;">
-                            Admission
-                        </a>
+                    <!-- Premium Search Box - Style Voyage -->
+                    <div class="premium-search" data-aos="fade-up" data-aos-delay="200">
+                        <h4 class="text-center text-dark mb-4" style="font-weight: 700;">Trouvez Votre Formation Idéale</h4>
+                        <form action="{{ route('formations') }}" method="GET">
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <select class="form-select search-input" name="filiere_id" required>
+                                        <option value="">🎓 Sélectionnez une filière</option>
+                                        @foreach(\App\Models\Filiere::all() as $filiere)
+                                            <option value="{{ $filiere->id }}">{{ $filiere->nom }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-select search-input" name="niveau_id" required>
+                                        <option value="">📚 Niveau d'études</option>
+                                        @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
+                                            <option value="{{ $niveau->id }}">{{ $niveau->nom }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn search-button w-100">
+                                        🔍 Rechercher
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
