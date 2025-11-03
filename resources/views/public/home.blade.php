@@ -1048,14 +1048,21 @@ h1, h2, h3, h4, h5, h6 {
     const filiereSelect = document.getElementById('filiereSelect');
     const searchButton = document.getElementById('searchButton');
     
+    // Stocker toutes les filières
+    const allFilieres = [
+      @foreach(\App\Models\Filiere::all() as $filiere)
+        {id: {{ $filiere->id }}, nom: "{{ $filiere->nom }}"},
+      @endforeach
+    ];
+    
     // Quand un niveau est sélectionné, activer le select filière
     niveauSelect.addEventListener('change', function() {
       if (this.value) {
         filiereSelect.disabled = false;
         filiereSelect.innerHTML = '<option value="">Sélectionnez une filière</option>';
-        @foreach(\App\Models\Filiere::all() as $filiere)
-          filiereSelect.innerHTML += '<option value="{{ $filiere->id }}">{{ $filiere->nom }}</option>';
-        @endforeach
+        allFilieres.forEach(function(filiere) {
+          filiereSelect.innerHTML += '<option value="' + filiere.id + '">' + filiere.nom + '</option>';
+        });
       } else {
         filiereSelect.disabled = true;
         filiereSelect.innerHTML = '<option value="">Sélectionnez d\'abord un niveau</option>';
