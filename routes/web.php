@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CandidatureController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ActualiteController;
 use App\Http\Controllers\Admin\EvenementController;
+use App\Http\Controllers\Public\FormationController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -18,9 +19,7 @@ Route::get('/', function () {
     return view('public.home');
 })->name('home');
 
-Route::get('/formations', function () {
-    return view('public.formations');
-})->name('formations');
+Route::get('/formations', [FormationController::class, 'index'])->name('formations');
 
 Route::get('/admission', function () {
     return view('public.admission');
