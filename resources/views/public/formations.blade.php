@@ -228,7 +228,29 @@
                             </div>
                         </div>
                         
-                        @if($classes->count() > 0)
+                        @if(isset($suggestL1) && $suggestL1)
+                            <div class="alert alert-warning border border-warning">
+                                <h5 class="mb-3">💡 Information importante</h5>
+                                <p class="mb-3">Pour intégrer l'IESCA, vous devez avoir le Baccalauréat. Si vous êtes en préparation du bac ou bachelier, vous pouvez postuler pour la <strong>L1 (Licence 1)</strong>.</p>
+                                
+                                @if($suggestedClasses->count() > 0)
+                                    <h5 class="mt-4 mb-3" style="color: var(--color-black); font-weight: 700;">Formations L1 disponibles pour cette filière</h5>
+                                    <ul class="classes-list">
+                                        @foreach($suggestedClasses as $classe)
+                                            <li>
+                                                <div>
+                                                    <strong style="font-size: 1.1rem;">{{ $classe->nom }}</strong>
+                                                    <small class="d-block text-muted">{{ $classe->filiere->nom }} - {{ $classe->niveau->nom }}</small>
+                                                </div>
+                                                <a href="{{ route('admission') }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
+                                                    Postuler →
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                        @elseif($classes->count() > 0)
                             <h4 class="mb-3" style="color: var(--color-black); font-weight: 700;">Classes Disponibles</h4>
                             <ul class="classes-list">
                                 @foreach($classes as $classe)

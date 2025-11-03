@@ -28,7 +28,21 @@ class FormationController extends Controller
                             ->where('niveau_id', $niveau_id)
                             ->get();
             
-            return view('public.formations', compact('niveaux', 'filieres', 'niveau', 'filiere', 'classes', 'niveau_id', 'filiere_id'));
+            // Pour "Je prépare mon bac" ou "Bac", suggérer L1
+            $suggestL1 = in_array($niveau->nom, ['Je prépare mon bac', 'Bac']);
+            $l1Niveau = null;
+            $suggestedClasses = collect();
+            
+            if ($suggestL1) {
+                $l1Niveau = Niveau::where('nom', 'L1 (Licence 1)')->first();
+                if ($l1Niveau) {
+                    $suggestedClasses = Classe::where('filiere_id', $filiere_id)
+                                            ->where('niveau_id', $l1Niveau->id)
+                                            ->get();
+                }
+            }
+            
+            return view('public.formations', compact('niveaux', 'filieres', 'niveau', 'filiere', 'classes', 'niveau_id', 'filiere_id', 'suggestL1', 'l1Niveau', 'suggestedClasses'));
         }
         
         // Sinon afficher toutes les filières
