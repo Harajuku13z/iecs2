@@ -37,11 +37,11 @@ class AdminSeeder extends Seeder
 
         // Create Niveaux
         $niveaux = [
-            ['nom' => 'L1', 'ordre' => 1],
-            ['nom' => 'L2', 'ordre' => 2],
-            ['nom' => 'L3', 'ordre' => 3],
-            ['nom' => 'M1', 'ordre' => 4],
-            ['nom' => 'M2', 'ordre' => 5],
+            ['nom' => 'Je prépare mon bac', 'ordre' => 1],
+            ['nom' => 'Bac', 'ordre' => 2],
+            ['nom' => 'L1 (Licence 1)', 'ordre' => 3],
+            ['nom' => 'L2 (Licence 2)', 'ordre' => 4],
+            ['nom' => 'L3 (Licence 3)', 'ordre' => 5],
         ];
 
         foreach ($niveaux as $niveau) {

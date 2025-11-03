@@ -35,8 +35,8 @@ class IESCADataSeeder extends Seeder
         foreach ($filieres as $filiereData) {
             $filiere = Filiere::create($filiereData);
             
-            // Créer les classes pour chaque niveau de licence
-            foreach (Niveau::whereIn('nom', ['L1', 'L2', 'L3'])->get() as $niveau) {
+            // Créer les classes pour chaque niveau de licence (L1, L2, L3 seulement)
+            foreach (Niveau::whereIn('nom', ['L1 (Licence 1)', 'L2 (Licence 2)', 'L3 (Licence 3)'])->orderBy('ordre')->get() as $niveau) {
                 Classe::create([
                     'nom' => $niveau->nom . ' - ' . substr($filiere->nom, 0, 15),
                     'filiere_id' => $filiere->id,

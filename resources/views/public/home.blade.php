@@ -700,9 +700,18 @@ h1, h2, h3, h4, h5, h6 {
                                     <select class="form-select search-input" id="niveauSelect" name="niveau_id" required>
                                         <option value="">Sélectionnez un niveau</option>
                                         @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
-                                            <option value="{{ $niveau->id }}" data-niveau="{{ $niveau->nom }}">{{ $niveau->nom }}</option>
+                                            <option value="{{ $niveau->id }}" data-niveau="{{ $niveau->nom }}">
+                                                @if($niveau->nom == 'Je prépare mon bac')
+                                                    🎯 Je prépare mon bac
+                                                @elseif($niveau->nom == 'Bac')
+                                                    🎓 Bac
+                                                @else
+                                                    {{ $niveau->nom }}
+                                                @endif
+                                            </option>
                                         @endforeach
                                     </select>
+                                    <small class="text-muted d-block mt-1">De la préparation du bac à la Licence 3</small>
                                 </div>
                                 <div class="col-md-5">
                                     <label class="form-label text-dark mb-2" style="font-weight: 600;">🎓 Choisissez la filière qui vous intéresse</label>
