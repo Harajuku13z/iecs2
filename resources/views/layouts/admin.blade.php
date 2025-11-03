@@ -92,6 +92,16 @@
                                 ⚙️ Paramètres
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.actualites.index') }}">
+                                📰 Actualités
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.evenements.index') }}">
+                                📅 Événements
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>

@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\CoursController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CandidatureController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\ActualiteController;
+use App\Http\Controllers\Admin\EvenementController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -44,6 +46,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    
+    Route::resource('actualites', ActualiteController::class);
+    Route::resource('evenements', EvenementController::class);
 });
 
 // Enseignant Routes
