@@ -352,7 +352,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .news-section .section-subtitle {
-    color: var(--color-dark) !important;
+    color: var(--color-black) !important;
+}
+
+.news-section h2,
+.news-section h3,
+.news-section p {
+    color: var(--color-black) !important;
 }
 
 .news-card {
@@ -863,7 +869,7 @@ h1, h2, h3, h4, h5, h6 {
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
             <h2 class="section-title" style="color: var(--color-black);">Actualités IESCA</h2>
-            <p class="section-subtitle" style="color: var(--color-dark);">Restez informé de nos dernières nouvelles</p>
+            <p class="section-subtitle" style="color: var(--color-black); font-weight: 500;">Restez informé de nos dernières nouvelles</p>
         </div>
         
         <div class="row g-4">
