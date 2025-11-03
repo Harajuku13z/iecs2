@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'enseignant', 'etudiant', 'candidat'])->default('candidat');
-            $table->foreignId('classe_id')->nullable()->constrained('classes')->onDelete('set null');
+            $table->unsignedBigInteger('classe_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
