@@ -47,16 +47,32 @@ class CandidatureController extends Controller
         $validated = $request->validate([
             'statut' => 'required|in:soumis,verifie,admis,rejete',
             'commentaire_admin' => 'nullable|string',
-            'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,gif,zip,rar|max:5120',
+            'doc_identite' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_diplome' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_releve' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_lettre' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_photo' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'doc_cv' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        // Upload documents
+        // Upload documents (nommés)
+        $docFields = [
+            'doc_identite' => 'Pièce d\'identité',
+            'doc_diplome' => 'Diplôme',
+            'doc_releve' => 'Relevé de notes',
+            'doc_lettre' => 'Lettre de motivation',
+            'doc_photo' => 'Photo',
+            'doc_cv' => 'CV',
+        ];
         $savedDocs = [];
-        if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $file) {
-                $filename = 'cand-' . time() . '-' . $file->getClientOriginalName();
+        foreach ($docFields as $field => $label) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $filename = 'cand-' . time() . '-' . $field . '-' . $file->getClientOriginalName();
                 \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('candidatures', $file, $filename);
                 $savedDocs[] = [
+                    'key' => $field,
+                    'label' => $label,
                     'path' => 'candidatures/' . $filename,
                     'name' => $file->getClientOriginalName(),
                 ];

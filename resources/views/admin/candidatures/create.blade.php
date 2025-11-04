@@ -58,10 +58,31 @@
             </div>
 
             <h5 class="mb-2">Documents</h5>
-            <div class="mb-3">
-                <label class="form-label">Ajouter des documents (PDF, Images, ZIP)</label>
-                <input type="file" name="documents[]" class="form-control" multiple accept=".pdf,.jpg,.jpeg,.png,.gif,.zip,.rar">
-                <small class="text-muted">Vous pouvez sélectionner plusieurs fichiers.</small>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Pièce d'identité</label>
+                    <input type="file" name="doc_identite" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Diplôme</label>
+                    <input type="file" name="doc_diplome" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Relevé de notes</label>
+                    <input type="file" name="doc_releve" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Lettre de motivation</label>
+                    <input type="file" name="doc_lettre" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Photo</label>
+                    <input type="file" name="doc_photo" class="form-control" accept=".jpg,.jpeg,.png">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">CV (optionnel)</label>
+                    <input type="file" name="doc_cv" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Commentaire admin</label>
