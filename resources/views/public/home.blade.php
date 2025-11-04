@@ -998,10 +998,10 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="col-12">
                     <div class="text-center">
                         <h1 class="hero-title" data-aos="fade-up">
-                            Façonnons l'Avenir<br>de l'Excellence
+                            {{ \App\Models\Setting::get('hero_title', 'Façonnons l\'Avenir de l\'Excellence') }}
                         </h1>
                         <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
-                            Institut d'Enseignement Supérieur de la Côte Africaine
+                            {{ \App\Models\Setting::get('hero_subtitle', 'Institut d\'Enseignement Supérieur de la Côte Africaine') }}
                         </p>
                     </div>
                     
@@ -1091,72 +1091,34 @@ h1, h2, h3, h4, h5, h6 {
         <div class="row align-items-center g-5">
             <div class="col-lg-6" data-aos="fade-right">
                 <div class="about-content">
-                    <h2>À Propos de l'IESCA</h2>
+                    <h2>{{ \App\Models\Setting::get('about_title', 'À Propos de l\'IESCA') }}</h2>
                     <p>
-                        L'Institut d'Enseignement Supérieur de la Côte Africaine (IESCA) est un établissement d'excellence 
-                        situé au 112, Avenue de France (Poto poto), dédié à la formation de leaders et d'innovateurs.
+                        {{ \App\Models\Setting::get('about_text1', 'L\'Institut d\'Enseignement Supérieur de la Côte Africaine (IESCA) est un établissement d\'excellence situé au 112, Avenue de France (Poto poto), dédié à la formation de leaders et d\'innovateurs.') }}
                     </p>
                     <p>
-                        Nous offrons des formations de qualité en Licence dans 4 domaines clés : Sciences et Administration 
-                        des Affaires, Génie Informatique, Sciences Juridiques et Sciences Commerciales.
+                        {{ \App\Models\Setting::get('about_text2', 'Nous offrons des formations de qualité en Licence dans 4 domaines clés : Sciences et Administration des Affaires, Génie Informatique, Sciences Juridiques et Sciences Commerciales.') }}
                     </p>
                     
                     <div class="about-features">
-                        <div class="feature-item">
-                            <div class="feature-icon">💻</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Salle d'Informatique</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Équipements modernes et performants</p>
+                        @for($i = 1; $i <= 7; $i++)
+                            <div class="feature-item">
+                                <div class="feature-icon">{{ \App\Models\Setting::get('about_feature_' . $i . '_icon', ['💻', '📚', '❄️', '👨‍🏫', '📹', '🏢', '💻'][$i-1]) }}</div>
+                                <div>
+                                    <h5 style="font-weight: 700; margin-bottom: 0.5rem;">{{ \App\Models\Setting::get('about_feature_' . $i . '_title', ['Salle d\'Informatique', 'Bibliothèque', 'Classes Climatisées', 'Formation Complète', 'Caméras de Surveillance', 'Stage Garanti', 'Ordinateur à Crédit'][$i-1]) }}</h5>
+                                    <p style="color: var(--color-dark); margin: 0;">{{ \App\Models\Setting::get('about_feature_' . $i . '_description', ['Équipements modernes et performants', 'Ressources académiques complètes', 'Confort optimal pour l\'apprentissage', 'Cours théoriques et pratiques', 'Sécurité assurée 24/7', 'En fin de formation', 'Facilité de paiement disponible'][$i-1]) }}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">📚</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Bibliothèque</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Ressources académiques complètes</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">❄️</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Classes Climatisées</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Confort optimal pour l'apprentissage</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">👨‍🏫</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Formation Complète</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Cours théoriques et pratiques</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">📹</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Caméras de Surveillance</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Sécurité assurée 24/7</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🏢</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Stage Garanti</h5>
-                                <p style="color: var(--color-dark); margin: 0;">En fin de formation</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">💻</div>
-                            <div>
-                                <h5 style="font-weight: 700; margin-bottom: 0.5rem;">Ordinateur à Crédit</h5>
-                                <p style="color: var(--color-dark); margin: 0;">Facilité de paiement disponible</p>
-                            </div>
-                        </div>
+                        @endfor
                     </div>
                 </div>
             </div>
             <div class="col-lg-6" data-aos="fade-left">
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800" alt="Campus IESCA">
+                    @php
+                        $aboutImage = \App\Models\Setting::get('about_image', '');
+                        $aboutImageUrl = $aboutImage ? asset('storage/' . $aboutImage) : 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800';
+                    @endphp
+                    <img src="{{ $aboutImageUrl }}" alt="Campus IESCA">
                 </div>
             </div>
         </div>
@@ -1167,7 +1129,7 @@ h1, h2, h3, h4, h5, h6 {
 <section class="filieres-scroll-section">
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--color-black);">Découvrez nos formations d'excellence</h2>
+            <h2 class="section-title" style="color: var(--color-black) !important; background: none !important; -webkit-background-clip: unset !important; -webkit-text-fill-color: var(--color-black) !important; background-clip: unset !important;">{{ \App\Models\Setting::get('filieres_title', 'Découvrez nos formations d\'excellence') }}</h2>
         </div>
         
         <div class="filieres-scroll-container" data-aos="fade-up" data-aos-delay="100">

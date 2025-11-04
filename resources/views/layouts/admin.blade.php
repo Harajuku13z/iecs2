@@ -88,6 +88,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.home-content.index') }}">
+                                📝 Contenus Page d'Accueil
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.settings.index') }}">
                                 ⚙️ Paramètres
                             </a>

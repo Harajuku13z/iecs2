@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CandidatureController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ActualiteController;
 use App\Http\Controllers\Admin\EvenementController;
+use App\Http\Controllers\Admin\HomeContentController;
 use App\Http\Controllers\Public\FormationController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    
+    Route::get('/home-content', [HomeContentController::class, 'index'])->name('home-content.index');
+    Route::post('/home-content', [HomeContentController::class, 'update'])->name('home-content.update');
     
     Route::resource('actualites', ActualiteController::class);
     Route::resource('evenements', EvenementController::class);
