@@ -252,13 +252,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .admission-image-container {
     position: relative;
-    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    aspect-ratio: 9 / 16;
-    max-width: 100%;
     width: 100%;
-    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .admission-process-image {
@@ -266,10 +265,15 @@ h1, h2, h3, h4, h5, h6 {
     height: 100%;
     object-fit: cover;
     display: block;
+    min-height: 600px;
 }
 
 .admission-process-content {
-    padding: 2rem 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .admission-process-title {
@@ -356,8 +360,15 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .admission-image-container {
-        max-width: 100%;
-        margin-top: 2rem;
+        min-height: 500px;
+    }
+    
+    .admission-process-image {
+        min-height: 500px;
+    }
+    
+    .admission-process-content {
+        padding: 2rem 1.5rem !important;
     }
     
     .admission-process-title {
@@ -970,11 +981,11 @@ h1, h2, h3, h4, h5, h6 {
 
 <!-- Processus d'Admission Section -->
 <section class="admission-process-section">
-    <div class="container">
-        <div class="row align-items-center g-5">
+    <div class="container-fluid px-0">
+        <div class="row g-0 align-items-center">
             <!-- Image à gauche (9:16) -->
-            <div class="col-lg-5" data-aos="fade-right">
-                <div class="admission-image-container" style="max-width: 400px;">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="admission-image-container" style="width: 100%; height: 100%; min-height: 600px;">
                     @php
                         $admissionImage = \App\Models\Setting::get('admission_process_image', 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop');
                         $admissionImageUrl = $admissionImage ? (str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage)) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop';
@@ -984,8 +995,8 @@ h1, h2, h3, h4, h5, h6 {
             </div>
             
             <!-- Contenu à droite -->
-            <div class="col-lg-7" data-aos="fade-left">
-                <div class="admission-process-content" style="max-width: 100%; overflow: hidden;">
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="admission-process-content" style="width: 100%; padding: 3rem;">
                     <h2 class="admission-process-title">Processus d'Admission</h2>
                     <p class="admission-process-intro">Quatre étapes simples pour rejoindre l'excellence à l'IESCA</p>
                     
