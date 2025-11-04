@@ -18,12 +18,8 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section {
     position: relative;
     min-height: 90vh;
-    @php
-        $heroImage = \App\Models\Setting::get('hero_image', '');
-        $heroImageUrl = $heroImage ? asset('storage/' . $heroImage) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920';
-    @endphp
     background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%),
-                url('{{ $heroImageUrl }}') center/cover;
+                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover;
     color: white;
     overflow: hidden;
     margin-top: 0;
@@ -920,16 +916,7 @@ h1, h2, h3, h4, h5, h6 {
 /* CTA Section */
 .cta-section {
     padding: 6rem 0;
-    @php
-        $ctaBgImage = \App\Models\Setting::get('cta_background_image', '');
-        $ctaBgImageUrl = $ctaBgImage ? asset('storage/' . $ctaBgImage) : '';
-    @endphp
-    @if($ctaBgImageUrl)
-        background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%),
-                    url('{{ $ctaBgImageUrl }}') center/cover;
-    @else
-        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-black) 100%);
-    @endif
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-black) 100%);
     color: white;
     position: relative;
     overflow: hidden;
@@ -1012,7 +999,11 @@ h1, h2, h3, h4, h5, h6 {
 </style>
 
 <!-- Hero Section -->
-<section class="hero-section">
+@php
+    $heroImage = \App\Models\Setting::get('hero_image', '');
+    $heroImageUrl = $heroImage ? asset('storage/' . $heroImage) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920';
+@endphp
+<section class="hero-section" style="background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%), url('{{ $heroImageUrl }}') center/cover;">
     <div class="container">
         <div class="hero-content">
             <div class="row justify-content-center">
@@ -1372,7 +1363,11 @@ h1, h2, h3, h4, h5, h6 {
 </section>
 
 <!-- CTA Section -->
-<section class="cta-section">
+@php
+    $ctaBgImage = \App\Models\Setting::get('cta_background_image', '');
+    $ctaBgImageUrl = $ctaBgImage ? asset('storage/' . $ctaBgImage) : '';
+@endphp
+<section class="cta-section" style="@if($ctaBgImageUrl)background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%), url('{{ $ctaBgImageUrl }}') center/cover;@else background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-black) 100%);@endif">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 cta-content" data-aos="fade-right">
