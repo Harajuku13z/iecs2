@@ -134,6 +134,14 @@ h1, h2, h3, h4, h5, h6 {
     background: white;
 }
 
+.filieres-scroll-section .section-title {
+    color: var(--color-black) !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: var(--color-black) !important;
+    background-clip: unset !important;
+}
+
 .filieres-scroll-container {
     position: relative;
     overflow: hidden;
@@ -1129,7 +1137,7 @@ h1, h2, h3, h4, h5, h6 {
 <section class="filieres-scroll-section">
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--color-black) !important; background: none !important; -webkit-background-clip: unset !important; -webkit-text-fill-color: var(--color-black) !important; background-clip: unset !important;">{{ \App\Models\Setting::get('filieres_title', 'Découvrez nos formations d\'excellence') }}</h2>
+            <h2 class="section-title">{{ \App\Models\Setting::get('filieres_title', 'Découvrez nos formations d\'excellence') }}</h2>
         </div>
         
         <div class="filieres-scroll-container" data-aos="fade-up" data-aos-delay="100">
