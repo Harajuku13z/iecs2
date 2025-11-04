@@ -462,7 +462,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 80px;
     height: 80px;
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    border-radius: 20px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -492,7 +492,7 @@ h1, h2, h3, h4, h5, h6 {
     flex: 1;
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 2rem;
     border: 1px solid rgba(255,255,255,0.1);
     transition: all 0.3s ease;
