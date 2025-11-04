@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -24,7 +25,7 @@ class SettingController extends Controller
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $filename = 'logo-' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             Setting::updateOrCreate(
                 ['cle' => 'logo'],
                 ['valeur' => $filename, 'description' => 'Logo de l\'IESCA']
@@ -35,7 +36,7 @@ class SettingController extends Controller
         if ($request->hasFile('admission_process_image')) {
             $file = $request->file('admission_process_image');
             $filename = 'admission-process-' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             Setting::updateOrCreate(
                 ['cle' => 'admission_process_image'],
                 ['valeur' => $filename, 'description' => 'Image du processus d\'admission (format 9:16)']

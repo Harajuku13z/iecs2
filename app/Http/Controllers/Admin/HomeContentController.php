@@ -24,7 +24,7 @@ class HomeContentController extends Controller
         if ($request->hasFile('hero_image')) {
             $file = $request->file('hero_image');
             $filename = 'hero-' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             Setting::updateOrCreate(
                 ['cle' => 'hero_image'],
                 ['valeur' => $filename, 'description' => 'Image de fond du hero']
@@ -40,7 +40,7 @@ class HomeContentController extends Controller
         if ($request->hasFile('about_image')) {
             $file = $request->file('about_image');
             $filename = 'about-' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             Setting::updateOrCreate(
                 ['cle' => 'about_image'],
                 ['valeur' => $filename, 'description' => 'Image section À Propos']
@@ -82,7 +82,7 @@ class HomeContentController extends Controller
         if ($request->hasFile('cta_background_image')) {
             $file = $request->file('cta_background_image');
             $filename = 'cta-bg-' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             Setting::updateOrCreate(
                 ['cle' => 'cta_background_image'],
                 ['valeur' => $filename, 'description' => 'Image de fond section CTA']

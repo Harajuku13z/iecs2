@@ -45,7 +45,7 @@ class EvenementController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = 'evenement-' . time() . '-' . $file->getClientOriginalName();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             $validated['image'] = $filename;
         }
 
@@ -109,7 +109,7 @@ class EvenementController extends Controller
             
             $file = $request->file('image');
             $filename = 'evenement-' . time() . '-' . $file->getClientOriginalName();
-            $path = $file->storeAs('public', $filename);
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
             $validated['image'] = $filename;
         }
 
