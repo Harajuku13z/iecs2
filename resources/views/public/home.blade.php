@@ -72,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
     border-radius: 8px;
-    padding: 1.5rem 2rem;
+    padding: 1rem 1.5rem;
     box-shadow: 
         0 25px 50px rgba(0,0,0,0.3),
         0 0 0 1px rgba(255,255,255,0.1) inset;
@@ -88,13 +88,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .search-input {
-    height: 50px;
+    height: 45px;
     border: 2px solid #e8e8e8;
     border-radius: 6px;
-    padding: 0 1.25rem;
-    font-size: 0.95rem;
+    padding: 0 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
     background: white;
+    cursor: pointer;
 }
 
 .search-input:focus {
@@ -104,13 +105,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .search-button {
-    height: 50px;
+    height: 45px;
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     border: none;
     border-radius: 6px;
     color: white;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
     box-shadow: 0 10px 30px rgba(166, 96, 96, 0.3);
 }
@@ -946,7 +947,7 @@ h1, h2, h3, h4, h5, h6 {
     <div class="container">
         <div class="hero-content">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
+                <div class="col-12">
                     <div class="text-center">
                         <h1 class="hero-title" data-aos="fade-up">
                             Façonnons l'Avenir<br>de l'Excellence
@@ -958,14 +959,17 @@ h1, h2, h3, h4, h5, h6 {
                     
                     <!-- Premium Search Box - Style Voyage -->
                     <div class="premium-search" data-aos="fade-up" data-aos-delay="200">
-                        <h4 class="text-center text-dark mb-3" style="font-weight: 700; font-size: 1.5rem;">Trouvez Votre Formation Idéale</h4>
+                        <h4 class="text-center text-dark mb-2" style="font-weight: 700; font-size: 1.3rem;">Trouvez Votre Formation Idéale</h4>
                         <form id="formationSearchForm" action="{{ route('formations') }}" method="GET">
-                            <div class="row g-3 align-items-end">
+                            <div class="row g-2 align-items-end">
                                 <div class="col-md-4">
-                                    <label class="form-label text-dark mb-2" style="font-weight: 600; font-size: 0.9rem;">📚 Choisissez votre niveau d'étude</label>
-                                    <select class="form-select search-input" id="niveauSelect" name="niveau_id" required style="height: 50px;">
+                                    <label class="form-label text-dark mb-1" style="font-weight: 600; font-size: 0.85rem;">📚 Niveau d'étude</label>
+                                    <select class="form-select search-input" id="niveauSelect" name="niveau_id" required style="height: 45px; font-size: 0.9rem;">
                                         <option value="">Sélectionnez un niveau</option>
-                                        @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niveau)
+                                        @php
+                                            $niveaux = \App\Models\Niveau::orderBy('ordre')->get();
+                                        @endphp
+                                        @foreach($niveaux as $niveau)
                                             <option value="{{ $niveau->id }}" data-niveau="{{ $niveau->nom }}">
                                                 @if($niveau->nom == 'Je prépare mon bac')
                                                     🎯 Je prépare mon bac
@@ -979,8 +983,8 @@ h1, h2, h3, h4, h5, h6 {
                                     </select>
                                 </div>
                                 <div class="col-md-5">
-                                    <label class="form-label text-dark mb-2" style="font-weight: 600; font-size: 0.9rem;">🎓 Choisissez la filière qui vous intéresse</label>
-                                    <select class="form-select search-input" id="filiereSelect" name="filiere_id" required disabled style="height: 50px;">
+                                    <label class="form-label text-dark mb-1" style="font-weight: 600; font-size: 0.85rem;">🎓 Filière</label>
+                                    <select class="form-select search-input" id="filiereSelect" name="filiere_id" required disabled style="height: 45px; font-size: 0.9rem;">
                                         <option value="">Sélectionnez d'abord un niveau</option>
                                         @foreach(\App\Models\Filiere::all() as $filiere)
                                             <option value="{{ $filiere->id }}" data-filiere="{{ $filiere->nom }}">{{ $filiere->nom }}</option>
@@ -988,8 +992,8 @@ h1, h2, h3, h4, h5, h6 {
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn search-button w-100" id="searchButton" disabled style="height: 50px;">
-                                        🔍 Voir les formations
+                                    <button type="submit" class="btn search-button w-100" id="searchButton" disabled style="height: 45px; font-size: 0.95rem;">
+                                        🔍 Rechercher
                                     </button>
                                 </div>
                             </div>
@@ -1206,7 +1210,7 @@ h1, h2, h3, h4, h5, h6 {
 <section class="news-section">
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--color-black);">Actualités IESCA</h2>
+            <h2 class="section-title" style="color: var(--color-black) !important;">Actualités IESCA</h2>
             <p class="section-subtitle" style="color: var(--color-black); font-weight: 500;">Restez informé de nos dernières nouvelles</p>
         </div>
         
