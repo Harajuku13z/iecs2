@@ -92,6 +92,14 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 30px 60px rgba(0,0,0,0.4);
 }
 
+/* Site button */
+.btn-site {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: #fff;
+    border: none;
+}
+.btn-site:hover { opacity: 0.9; color: #fff; }
+
 .search-input {
     height: 45px;
     border: 2px solid #e8e8e8;
@@ -1163,44 +1171,7 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 </section>
 
-<!-- Filières Horizontal Scroll Section -->
-<section class="filieres-scroll-section">
-    <div class="container">
-        <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title">{{ \App\Models\Setting::get('filieres_title', 'Découvrez nos formations d\'excellence') }}</h2>
-        </div>
-        
-        <div class="filieres-scroll-container" data-aos="fade-up" data-aos-delay="100">
-            <div class="filieres-scroll-wrapper">
-                @foreach(\App\Models\Filiere::all() as $filiere)
-                    <div class="filiere-scroll-card">
-                        <div class="filiere-card-image">
-                            @if($filiere->image)
-                                <img src="{{ asset('storage/' . $filiere->image) }}" alt="{{ $filiere->nom }}">
-                            @else
-                                <div class="filiere-card-placeholder">
-                                    <div class="filiere-card-icon">🎓</div>
-                                </div>
-                            @endif
-                        </div>
-                        <h3 class="filiere-card-title">{{ $filiere->nom }}</h3>
-                                <p class="filiere-card-description">{{ Str::limit($filiere->description ?? 'Formation d\'excellence', 100) }}</p>
-                                @if($filiere->specialites && $filiere->specialites->count())
-                                    <div class="d-flex flex-wrap gap-1 mb-3 mt-1">
-                                        @foreach($filiere->specialites as $specialite)
-                                            <span class="badge bg-light text-dark border">{{ $specialite->nom }}</span>
-                                        @endforeach
-                                    </div>
-                                @endif
-                                <a href="{{ route('formations', ['filiere_id' => $filiere->id]) }}" class="btn btn-outline-primary w-100">
-                                    En savoir plus
-                                </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
+<!-- Filières Horizontal Scroll Section removed per request -->
 
 <!-- Filières en vedette (3 grandes cartes) -->
 @php
@@ -1211,8 +1182,8 @@ h1, h2, h3, h4, h5, h6 {
     <div class="container">
         <div class="row g-4">
             @foreach($featuredFilieres as $f)
-                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-                    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 12px;">
+                <div class="col-12 col-md-6 col-lg-4 d-flex" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                    <div class="card border-0 shadow-sm overflow-hidden h-100 d-flex flex-column" style="border-radius: 12px;">
                             <div style="position: relative; aspect-ratio: 16 / 9; background:#f7f7f7;">
                                 @if($f->image)
                                     <img src="{{ asset('storage/' . $f->image) }}" alt="{{ $f->nom }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
@@ -1224,7 +1195,7 @@ h1, h2, h3, h4, h5, h6 {
                                 <h4 class="mb-1" style="font-weight:800;">{{ $f->nom }}</h4>
                             </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body d-flex flex-column">
                             <p class="text-muted">{{ Str::limit($f->description ?? 'Formation d\'excellence', 110) }}</p>
                             @if($f->specialites && $f->specialites->count())
                                 <div class="d-flex flex-wrap gap-1 mb-3">
@@ -1236,7 +1207,7 @@ h1, h2, h3, h4, h5, h6 {
                                     @endif
                                 </div>
                             @endif
-                            <a href="{{ route('formations', ['filiere_id' => $f->id]) }}" class="btn btn-outline-primary w-100">En savoir plus</a>
+                            <a href="{{ route('formations', ['filiere_id' => $f->id]) }}" class="btn btn-site w-100 mt-auto">En savoir plus</a>
                             </div>
                     </div>
                 </div>
