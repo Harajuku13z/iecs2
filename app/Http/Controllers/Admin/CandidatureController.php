@@ -167,7 +167,14 @@ class CandidatureController extends Controller
             'statut' => 'required|in:soumis,verifie,admis,rejete',
         ]);
 
-        $candidature->update(['statut' => $request->statut]);
+        $data = ['statut' => $request->statut];
+        if ($request->statut === 'verifie') {
+            $data['verified_by'] = auth()->id();
+        }
+        if (in_array($request->statut, ['admis', 'rejete'], true)) {
+            $data['decided_by'] = auth()->id();
+        }
+        $candidature->update($data);
 
         // Email notification
         Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
@@ -186,6 +193,12 @@ class CandidatureController extends Controller
         Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
 
         return back()->with('success', "Date d'évaluation planifiée et email envoyé.");
+    }
+
+    public function markEvaluated(Candidature $candidature)
+    {
+        $candidature->update(['evaluated_by' => auth()->id()]);
+        return back()->with('success', "Évaluation validée.");
     }
 
     public function remind(Candidature $candidature)

@@ -34,6 +34,9 @@
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Vérification Administrative</div>
                             Notre équipe examine votre dossier sous 48h.
+                            @if($candidature->verified_by)
+                                <div class="small text-muted mt-1">Validé par: <strong>{{ optional(\App\Models\User::find($candidature->verified_by))->name }}</strong></div>
+                            @endif
                         </div>
                         <form action="{{ route('admin.candidatures.updateStatus', $candidature) }}" method="POST" class="ms-3">
                             @csrf @method('PATCH')
@@ -53,12 +56,24 @@
                             @if($candidature->evaluation_date)
                                 <div class="mt-2 small">Prévu le: <strong>{{ \Carbon\Carbon::parse($candidature->evaluation_date)->format('d/m/Y H:i') }}</strong></div>
                             @endif
+                            <div class="mt-2 d-flex gap-2">
+                                <form action="{{ route('admin.candidatures.markEvaluated', $candidature) }}" method="POST">
+                                    @csrf @method('PATCH')
+                                    <button class="btn btn-sm btn-outline-success" @disabled($candidature->evaluated_by)>Valider l'évaluation</button>
+                                </form>
+                                @if($candidature->evaluated_by)
+                                    <div class="small text-muted">Évalué par: <strong>{{ optional(\App\Models\User::find($candidature->evaluated_by))->name }}</strong></div>
+                                @endif
+                            </div>
                         </div>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Décision d'Admission</div>
                             Recevez votre décision par email.
+                            @if($candidature->decided_by)
+                                <div class="small text-muted mt-1">Décidé par: <strong>{{ optional(\App\Models\User::find($candidature->decided_by))->name }}</strong></div>
+                            @endif
                         </div>
                         <div class="d-flex gap-2">
                             <form action="{{ route('admin.candidatures.updateStatus', $candidature) }}" method="POST">
