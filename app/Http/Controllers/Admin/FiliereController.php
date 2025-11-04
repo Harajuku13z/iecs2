@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Filiere;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FiliereController extends Controller
 {
@@ -33,7 +34,15 @@ class FiliereController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = 'filiere-' . time() . '-' . $file->getClientOriginalName();
+            $path = $file->storeAs('public', $filename);
+            $validated['image'] = $filename;
+        }
 
         Filiere::create($validated);
 
@@ -65,7 +74,20 @@ class FiliereController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($filiere->image && Storage::exists('public/' . $filiere->image)) {
+                Storage::delete('public/' . $filiere->image);
+            }
+            
+            $file = $request->file('image');
+            $filename = 'filiere-' . time() . '-' . $file->getClientOriginalName();
+            $path = $file->storeAs('public', $filename);
+            $validated['image'] = $filename;
+        }
 
         $filiere->update($validated);
 

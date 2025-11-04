@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Filiere extends Model
 {
-    protected $fillable = ['nom', 'description'];
+    protected $fillable = ['nom', 'description', 'image'];
 
     public function classes()
     {

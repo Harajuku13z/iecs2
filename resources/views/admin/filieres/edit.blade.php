@@ -12,7 +12,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('admin.filieres.update', $filiere) }}" method="POST">
+        <form action="{{ route('admin.filieres.update', $filiere) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -30,6 +30,23 @@
                 <textarea class="form-control @error('description') is-invalid @enderror" 
                           id="description" name="description" rows="4">{{ old('description', $filiere->description) }}</textarea>
                 @error('description')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Photo de la filière</label>
+                @if($filiere->image)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $filiere->image) }}" alt="{{ $filiere->nom }}" 
+                             style="max-width: 300px; max-height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                        <p class="text-muted mt-1"><small>Image actuelle</small></p>
+                    </div>
+                @endif
+                <input type="file" class="form-control @error('image') is-invalid @enderror" 
+                       id="image" name="image" accept="image/*">
+                <small class="text-muted">Format: JPG, PNG, GIF. Max: 2MB. Laisser vide pour conserver l'image actuelle.</small>
+                @error('image')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>

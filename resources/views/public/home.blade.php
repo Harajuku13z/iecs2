@@ -171,12 +171,13 @@ h1, h2, h3, h4, h5, h6 {
     background: white;
     border: 2px solid var(--color-light);
     border-radius: 8px;
-    padding: 2rem;
+    padding: 0;
     transition: all 0.3s ease;
     box-shadow: 0 5px 20px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
 }
 
 .filiere-scroll-card:hover {
@@ -185,9 +186,52 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 10px 40px rgba(166, 96, 96, 0.15);
 }
 
+.filiere-card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filiere-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.filiere-scroll-card:hover .filiere-card-image img {
+    transform: scale(1.1);
+}
+
+.filiere-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .filiere-card-icon {
-    font-size: 3rem;
+    font-size: 4rem;
+    color: white;
+}
+
+.filiere-scroll-card .filiere-card-title {
+    padding: 1.5rem 1.5rem 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.filiere-scroll-card .filiere-card-description {
+    padding: 0 1.5rem;
     margin-bottom: 1rem;
+}
+
+.filiere-scroll-card .filiere-card-link {
+    padding: 0 1.5rem 1.5rem;
 }
 
 .filiere-card-title {
@@ -1130,7 +1174,15 @@ h1, h2, h3, h4, h5, h6 {
             <div class="filieres-scroll-wrapper">
                 @foreach(\App\Models\Filiere::all() as $filiere)
                     <div class="filiere-scroll-card">
-                        <div class="filiere-card-icon">🎓</div>
+                        <div class="filiere-card-image">
+                            @if($filiere->image)
+                                <img src="{{ asset('storage/' . $filiere->image) }}" alt="{{ $filiere->nom }}">
+                            @else
+                                <div class="filiere-card-placeholder">
+                                    <div class="filiere-card-icon">🎓</div>
+                                </div>
+                            @endif
+                        </div>
                         <h3 class="filiere-card-title">{{ $filiere->nom }}</h3>
                         <p class="filiere-card-description">{{ Str::limit($filiere->description ?? 'Formation d\'excellence', 100) }}</p>
                         <a href="{{ route('formations', ['filiere_id' => $filiere->id]) }}" class="filiere-card-link">
