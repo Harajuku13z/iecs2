@@ -4,14 +4,14 @@
 
 @section('content')
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 
 * {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
 }
 
 /* Hero Section - Collé au header */
@@ -258,6 +258,37 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-left: 15px;
+}
+
+@media (min-width: 576px) {
+    .admission-image-container {
+        padding-left: 15px;
+    }
+}
+
+@media (min-width: 768px) {
+    .admission-image-container {
+        padding-left: calc((100vw - 720px) / 2);
+    }
+}
+
+@media (min-width: 992px) {
+    .admission-image-container {
+        padding-left: calc((100vw - 960px) / 2);
+    }
+}
+
+@media (min-width: 1200px) {
+    .admission-image-container {
+        padding-left: calc((100vw - 1140px) / 2);
+    }
+}
+
+@media (min-width: 1400px) {
+    .admission-image-container {
+        padding-left: calc((100vw - 1320px) / 2);
+    }
 }
 
 .admission-process-image {
