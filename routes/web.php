@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ActualiteController;
 use App\Http\Controllers\Admin\EvenementController;
 use App\Http\Controllers\Admin\HomeContentController;
 use App\Http\Controllers\Public\FormationController;
+use App\Http\Controllers\Public\CandidatureController as PublicCandidatureController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -84,6 +85,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Candidature publique (étudiants/candidats)
+    Route::get('/candidature/create', [PublicCandidatureController::class, 'create'])->name('candidature.create');
+    Route::post('/candidature', [PublicCandidatureController::class, 'store'])->name('candidature.store');
 });
 
 require __DIR__.'/auth.php';

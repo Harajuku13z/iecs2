@@ -59,7 +59,7 @@
                             <div class="mt-2 d-flex gap-2">
                                 <form action="{{ route('admin.candidatures.markEvaluated', $candidature) }}" method="POST">
                                     @csrf @method('PATCH')
-                                    <button class="btn btn-sm btn-outline-success" @disabled($candidature->evaluated_by)>Valider l'évaluation</button>
+                                    <button class="btn btn-sm btn-outline-success" @disabled(!$candidature->evaluation_date || $candidature->evaluated_by)>Valider l'évaluation</button>
                                 </form>
                                 @if($candidature->evaluated_by)
                                     <div class="small text-muted">Évalué par: <strong>{{ optional(\App\Models\User::find($candidature->evaluated_by))->name }}</strong></div>
