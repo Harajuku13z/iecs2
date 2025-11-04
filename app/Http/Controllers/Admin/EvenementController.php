@@ -50,9 +50,17 @@ class EvenementController extends Controller
         }
 
         $validated['publie'] = $request->has('publie') ? true : false;
-        $validated['date_debut'] = $request->date_debut . ' ' . ($request->heure_debut ?? '00:00');
+        
+        // Combiner date et heure pour date_debut
+        $heure_debut = $request->heure_debut ?? '00:00';
+        $validated['date_debut'] = $request->date_debut . ' ' . $heure_debut;
+        
+        // Combiner date et heure pour date_fin si fournie
         if ($request->date_fin) {
-            $validated['date_fin'] = $request->date_fin . ' ' . ($request->heure_fin ?? '23:59');
+            $heure_fin = $request->heure_fin ?? '23:59';
+            $validated['date_fin'] = $request->date_fin . ' ' . $heure_fin;
+        } else {
+            $validated['date_fin'] = null;
         }
 
         Evenement::create($validated);
