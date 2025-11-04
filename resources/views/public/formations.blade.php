@@ -304,8 +304,9 @@
                                             @endforeach
                                         </div>
                                     @endif
-                                    <div class="mt-auto">
-                                        <a href="{{ route('formations', ['filiere_id' => $f->id]) }}" class="apply-btn" style="padding:.7rem 1.2rem;">Voir les formations →</a>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="{{ route('formations.show', $f) }}" class="btn btn-site">Voir la formation</a>
+                                        <a href="{{ route('admission') }}" class="btn btn-outline-secondary">Soumettre ma candidature</a>
                                     </div>
                                 </div>
                             </div>

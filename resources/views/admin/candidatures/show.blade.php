@@ -109,6 +109,20 @@
         </div>
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-body">
+                <h5 class="mb-3">Frais d'inscription</h5>
+                @if($candidature->inscription_paid)
+                    <div class="alert alert-success mb-2">Payé le {{ optional($candidature->inscription_paid_at)->format('d/m/Y H:i') }} par <strong>{{ optional(\App\Models\User::find($candidature->inscription_paid_by))->name }}</strong></div>
+                @else
+                    <div class="alert alert-warning mb-2">Non réglé</div>
+                    <form action="{{ route('admin.candidatures.markInscriptionPaid', $candidature) }}" method="POST">
+                        @csrf @method('PATCH')
+                        <button class="btn btn-sm btn-outline-success">Marquer comme payé</button>
+                    </form>
+                @endif
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
                 <h5 class="mb-3">Documents</h5>
                 @php
                     $required = [

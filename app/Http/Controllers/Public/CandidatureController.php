@@ -31,6 +31,11 @@ class CandidatureController extends Controller
             'doc_lettre' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'doc_photo' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
             'doc_cv' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'phone' => 'nullable|string|max:50',
+            'contact_name' => 'nullable|string|max:255',
+            'contact_phone' => 'nullable|string|max:50',
+            'profile_photo' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'motivation_text' => 'nullable|string',
         ]);
 
         $labels = [
@@ -50,6 +55,32 @@ class CandidatureController extends Controller
                 Storage::disk('public')->putFileAs('candidatures', $file, $filename);
                 $savedDocs[] = [ 'key' => $field, 'label' => $label, 'path' => 'candidatures/' . $filename, 'name' => $file->getClientOriginalName() ];
             }
+        }
+
+        // Générer un PDF pour la lettre si saisie
+        if (!$request->hasFile('doc_lettre') && $request->filled('motivation_text')) {
+            $html = '<h2>Lettre de motivation</h2><p style="white-space:pre-wrap; font-family: DejaVu Sans, Arial;">' . e($request->motivation_text) . '</p>';
+            $pdfPath = 'candidatures/cand-' . time() . '-lettre.pdf';
+            if (class_exists('Barryvdh\\DomPDF\\Facade\\Pdf')) {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+                Storage::disk('public')->put($pdfPath, $pdf->output());
+            } else {
+                Storage::disk('public')->put($pdfPath, $html);
+            }
+            $savedDocs[] = [ 'key' => 'doc_lettre', 'label' => 'Lettre de motivation', 'path' => $pdfPath, 'name' => 'lettre.pdf' ];
+        }
+
+        // Mettre à jour les infos utilisateur
+        $user->update([
+            'phone' => $request->phone,
+            'contact_name' => $request->contact_name,
+            'contact_phone' => $request->contact_phone,
+        ]);
+        if ($request->hasFile('profile_photo')) {
+            $pp = $request->file('profile_photo');
+            $ppName = 'profile-' . $user->id . '-' . time() . '.' . $pp->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('profiles', $pp, $ppName);
+            $user->update(['profile_photo' => 'profiles/' . $ppName]);
         }
 
         $candidature = Candidature::updateOrCreate(

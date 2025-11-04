@@ -8,7 +8,8 @@
 @elseif($candidature->statut === 'verifie')
 <p style="margin:0 0 12px;">Votre dossier a été vérifié. Il passe à l'étape suivante.</p>
 @elseif($candidature->statut === 'admis')
-<p style="margin:0 0 12px;">Félicitations ! Vous avez été admis(e). L'équipe prendra contact avec vous pour la suite.</p>
+<p style="margin:0 0 12px;">Félicitations ! Vous avez été admis(e).</p>
+<p style="margin:0 0 12px;">Pour finaliser votre inscription, merci de vous acquitter des <strong>frais d'inscription</strong> d'un montant de <strong>{{ number_format(\App\Models\Setting::get('frais_inscription', 30000), 0, ',', ' ') }} FCFA</strong> auprès du secrétariat.</p>
 @elseif($candidature->statut === 'rejete')
 <p style="margin:0 0 12px;">Nous sommes désolés, votre candidature n'a pas été retenue.</p>
 @endif

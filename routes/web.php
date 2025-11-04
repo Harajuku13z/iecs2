@@ -22,6 +22,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/formations', [FormationController::class, 'index'])->name('formations');
+Route::get('/formations/{filiere}', [FormationController::class, 'show'])->name('formations.show');
 
 Route::get('/admission', function () {
     return view('public.admission');
@@ -53,6 +54,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/candidatures/{candidature}/remind', [CandidatureController::class, 'remind'])->name('candidatures.remind');
     Route::patch('/candidatures/{candidature}/assign-class', [CandidatureController::class, 'assignClass'])->name('candidatures.assignClass');
     Route::patch('/candidatures/{candidature}/mark-evaluated', [CandidatureController::class, 'markEvaluated'])->name('candidatures.markEvaluated');
+    Route::patch('/candidatures/{candidature}/mark-inscription-paid', [CandidatureController::class, 'markInscriptionPaid'])->name('candidatures.markInscriptionPaid');
     Route::delete('/candidatures/{candidature}', [CandidatureController::class, 'destroy'])->name('candidatures.destroy');
     
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

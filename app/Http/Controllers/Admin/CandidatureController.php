@@ -201,6 +201,16 @@ class CandidatureController extends Controller
         return back()->with('success', "Évaluation validée.");
     }
 
+    public function markInscriptionPaid(Candidature $candidature)
+    {
+        $candidature->update([
+            'inscription_paid' => true,
+            'inscription_paid_by' => auth()->id(),
+            'inscription_paid_at' => now(),
+        ]);
+        return back()->with('success', "Frais d'inscription marqués comme payés.");
+    }
+
     public function remind(Candidature $candidature)
     {
         $required = [

@@ -48,4 +48,10 @@ class FormationController extends Controller
         // Sinon afficher toutes les filières
         return view('public.formations', compact('niveaux', 'filieres'));
     }
+
+    public function show(Filiere $filiere)
+    {
+        $filiere->load('specialites', 'classes.niveau');
+        return view('public.formation-show', compact('filiere'));
+    }
 }
