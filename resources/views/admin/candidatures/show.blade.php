@@ -7,6 +7,10 @@
     <h1 class="mb-0">Candidature #{{ $candidature->id }}</h1>
     <div class="d-flex gap-2">
         <a href="{{ route('admin.candidatures.edit', $candidature) }}" class="btn btn-outline-secondary">Modifier</a>
+        <form action="{{ route('admin.candidatures.destroy', $candidature) }}" method="POST" onsubmit="return confirm('Supprimer définitivement cette candidature ?');">
+            @csrf @method('DELETE')
+            <button class="btn btn-outline-danger">Supprimer</button>
+        </form>
         <a href="{{ route('register') }}" target="_blank" class="btn btn-outline-primary">Créer un compte</a>
         <a href="{{ route('admin.candidatures.index') }}" class="btn btn-secondary">← Retour</a>
     </div>

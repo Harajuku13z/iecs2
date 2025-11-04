@@ -52,6 +52,11 @@
                                 <input type="hidden" name="statut" value="rejete">
                                 <button class="btn btn-outline-danger" @disabled($cand->statut==='rejete')>Rejeter</button>
                             </form>
+                            <form action="{{ route('admin.candidatures.destroy', $cand) }}" method="POST" onsubmit="return confirm('Supprimer définitivement cette candidature ?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-outline-danger">Supprimer</button>
+                            </form>
                         </div>
                     </td>
                 </tr>

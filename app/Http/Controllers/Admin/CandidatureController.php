@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CandidatureStatusUpdated;
 use App\Mail\CandidatureReminder;
+use Illuminate\Support\Facades\Storage;
 
 class CandidatureController extends Controller
 {
@@ -213,6 +214,19 @@ class CandidatureController extends Controller
             'role' => 'etudiant',
         ]);
         return back()->with('success', 'Classe associée au candidat et rôle mis à jour.');
+    }
+
+    public function destroy(Candidature $candidature)
+    {
+        // Supprimer les fichiers de documents s'ils existent
+        $docs = $candidature->documents ? json_decode($candidature->documents, true) : [];
+        foreach ($docs as $doc) {
+            if (!empty($doc['path']) && Storage::disk('public')->exists($doc['path'])) {
+                Storage::disk('public')->delete($doc['path']);
+            }
+        }
+        $candidature->delete();
+        return redirect()->route('admin.candidatures.index')->with('success', 'Candidature supprimée.');
     }
 }
 
