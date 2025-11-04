@@ -1,3 +1,156 @@
+@extends('layouts.student')
+
+@section('student_content')
+@php
+    $user = Auth::user();
+    $classe = $user->classe ?? null;
+    $cours = method_exists($user, 'cours') ? $user->cours()->with('classes')->get() : collect();
+    $notes = method_exists($user, 'notes') ? $user->notes()->with('cours')->latest()->take(5)->get() : collect();
+    $ressources = \App\Models\Ressource::query()
+        ->when($classe, fn($q) => $q->where('classe_id', $classe->id))
+        ->latest()->take(5)->get();
+    $events = \App\Models\Evenement::where('publie', true)->orderBy('date_debut')->take(5)->get();
+@endphp
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h3 class="mb-1">Bienvenue, {{ $user->name }} 👋</h3>
+        <small class="text-muted">@if($classe) Classe: {{ $classe->nom }} @else Classe non définie @endif</small>
+    </div>
+    <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary">Modifier mon profil</a>
+    </div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted">Mes Cours</div>
+                        <div class="h4 mb-0">{{ $cours->count() }}</div>
+                    </div>
+                    <div>📘</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted">Ressources</div>
+                        <div class="h4 mb-0">{{ $ressources->count() }}</div>
+                    </div>
+                    <div>📂</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted">Événements</div>
+                        <div class="h4 mb-0">{{ $events->count() }}</div>
+                    </div>
+                    <div>📅</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Mes cours</strong>
+            </div>
+            <div class="card-body">
+                @if($cours->isEmpty())
+                    <p class="text-muted mb-0">Aucun cours pour le moment.</p>
+                @else
+                    <ul class="list-group list-group-flush">
+                        @foreach($cours as $c)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ $c->nom }} <small class="text-muted">({{ $c->code }})</small></span>
+                                <span class="badge bg-light text-dark">Coef {{ $c->coefficient }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Dernières notes</strong>
+            </div>
+            <div class="card-body">
+                @if($notes->isEmpty())
+                    <p class="text-muted mb-0">Aucune note enregistrée.</p>
+                @else
+                    <ul class="list-group list-group-flush">
+                        @foreach($notes as $n)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ $n->cours->nom ?? 'Cours' }} <small class="text-muted">({{ $n->type_evaluation }})</small></span>
+                                <span class="badge bg-success">{{ number_format($n->note, 2) }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Ressources récentes</strong>
+            </div>
+            <div class="card-body">
+                @if($ressources->isEmpty())
+                    <p class="text-muted mb-0">Aucune ressource disponible.</p>
+                @else
+                    <ul class="list-group list-group-flush">
+                        @foreach($ressources as $r)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ $r->titre }} <small class="text-muted">({{ $r->type }})</small></span>
+                                <a class="btn btn-sm btn-outline-secondary" href="#">Ouvrir</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Événements à venir</strong>
+            </div>
+            <div class="card-body">
+                @if($events->isEmpty())
+                    <p class="text-muted mb-0">Aucun événement à venir.</p>
+                @else
+                    <ul class="list-group list-group-flush">
+                        @foreach($events as $e)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ $e->titre }} <small class="text-muted">{{ \Carbon\Carbon::parse($e->date_debut)->format('d/m/Y H:i') }}</small></span>
+                                <a class="btn btn-sm btn-outline-primary" href="#">Détails</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
 @extends('layouts.app')
 
 @section('title', 'Tableau de Bord Étudiant')
