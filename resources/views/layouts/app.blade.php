@@ -36,42 +36,33 @@
                 @if($logo)
                     <img src="{{ asset('storage/' . $logo) }}" alt="IESCA Logo" style="height: 50px; margin-right: 10px;">
                 @endif
-                <span style="color: var(--color-black); font-weight: 700; font-size: 1.5rem;">IESCA</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: var(--color-black);">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    @guest
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}" style="color: var(--color-black); font-weight: 500;">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('formations') }}" style="color: var(--color-black); font-weight: 500;">Formations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admission') }}" style="color: var(--color-black); font-weight: 500;">Admission</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}" style="color: var(--color-black); font-weight: 500;">Connexion</a>
-                        </li>
-                    @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/') }}" style="color: var(--color-black); font-weight: 500;">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('formations') }}" style="color: var(--color-black); font-weight: 500;">Formations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admission') }}" style="color: var(--color-black); font-weight: 500;">Admission</a>
+                    </li>
+                    @auth
                         @if(auth()->user()->isAdmin())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Tableau de bord Admin</a>
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Admin</a>
                             </li>
                         @elseif(auth()->user()->isEnseignant())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('enseignant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Tableau de bord Enseignant</a>
+                                <a class="nav-link" href="{{ route('enseignant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Enseignant</a>
                             </li>
-                        @elseif(auth()->user()->isEtudiant())
+                        @elseif(auth()->user()->isEtudiant() || auth()->user()->isCandidat())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('etudiant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Tableau de bord Étudiant</a>
-                            </li>
-                        @elseif(auth()->user()->isCandidat())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('etudiant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Suivi Candidature</a>
+                                <a class="nav-link" href="{{ route('etudiant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Espace Étudiant</a>
                             </li>
                         @endif
                         <li class="nav-item dropdown">
@@ -89,7 +80,11 @@
                                 </li>
                             </ul>
                         </li>
-                    @endguest
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}" style="color: var(--color-black); font-weight: 500;">Connexion</a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
