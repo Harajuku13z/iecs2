@@ -56,4 +56,21 @@ class SettingController extends Controller
         return redirect()->route('admin.settings.index')
             ->with('success', 'Paramètres mis à jour avec succès.');
     }
+
+    public function sendTestEmail(Request $request)
+    {
+        $data = $request->validate([
+            'test_email' => 'required|email',
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::raw('Test email IESCA - configuration SMTP OK.', function ($message) use ($data) {
+                $message->to($data['test_email'])->subject('Test Email IESCA');
+            });
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Échec de l\'envoi: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Email de test envoyé à ' . $data['test_email']);
+    }
 }

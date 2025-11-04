@@ -113,6 +113,22 @@
                 <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
             </div>
         </form>
+
+        <hr class="my-4">
+        <h5 class="mb-3">✉️ Envoyer un email de test</h5>
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+        <form action="{{ route('admin.settings.test-email') }}" method="POST" class="row g-2 align-items-end">
+            @csrf
+            <div class="col-md-4">
+                <label class="form-label">Adresse email de test</label>
+                <input type="email" name="test_email" class="form-control" placeholder="ex: vous@example.com" required>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary">Envoyer un email de test</button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection

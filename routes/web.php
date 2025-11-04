@@ -52,6 +52,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/test-email', [SettingController::class, 'sendTestEmail'])->name('settings.test-email');
     
     Route::get('/home-content', [HomeContentController::class, 'index'])->name('home-content.index');
     Route::post('/home-content', [HomeContentController::class, 'update'])->name('home-content.update');

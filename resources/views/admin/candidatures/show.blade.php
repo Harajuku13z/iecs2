@@ -5,10 +5,13 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Candidature #{{ $candidature->id }}</h1>
-    <a href="{{ route('admin.candidatures.index') }}" class="btn btn-secondary">← Retour</a>
+    <div class="d-flex gap-2">
+        <a href="{{ route('register') }}" target="_blank" class="btn btn-outline-primary">Créer un compte</a>
+        <a href="{{ route('admin.candidatures.index') }}" class="btn btn-secondary">← Retour</a>
+    </div>
 }</div>
 
-<div class="row g-4">
+<div class="row g-4" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); padding: 1rem; border-radius: 8px;">
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm">
             <div class="card-body">

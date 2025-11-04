@@ -10,6 +10,7 @@
     $phone = \App\Models\Setting::get('phone1', '+242 06 541 98 61');
 @endphp
 
+<div style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);">
 <div class="container py-5" style="min-height: 80vh; display:flex; align-items:center;">
     <div class="row justify-content-center w-100">
         <div class="col-12 col-md-8 col-lg-6">
@@ -65,5 +66,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
