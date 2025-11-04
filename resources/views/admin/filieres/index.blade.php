@@ -18,6 +18,7 @@
                     <th>ID</th>
                     <th>Nom</th>
                     <th>Description</th>
+                    <th>Spécialités</th>
                     <th>Nb Classes</th>
                     <th>Actions</th>
                 </tr>
@@ -28,6 +29,17 @@
                         <td>{{ $filiere->id }}</td>
                         <td>{{ $filiere->nom }}</td>
                         <td>{{ Str::limit($filiere->description, 50) }}</td>
+                        <td>
+                            @if($filiere->specialites->count() > 0)
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach($filiere->specialites as $specialite)
+                                        <span class="badge bg-info">{{ $specialite->nom }}</span>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span class="text-muted">Aucune</span>
+                            @endif
+                        </td>
                         <td>{{ $filiere->classes->count() }}</td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group">
@@ -47,7 +59,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted">Aucune filière trouvée</td>
+                        <td colspan="6" class="text-center text-muted">Aucune filière trouvée</td>
                     </tr>
                 @endforelse
             </tbody>

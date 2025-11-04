@@ -15,7 +15,7 @@ class FiliereController extends Controller
      */
     public function index()
     {
-        $filieres = Filiere::orderBy('nom')->paginate(15);
+        $filieres = Filiere::with('specialites', 'classes')->orderBy('nom')->paginate(15);
         return view('admin.filieres.index', compact('filieres'));
     }
 
