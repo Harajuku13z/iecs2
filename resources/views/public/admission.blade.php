@@ -150,14 +150,23 @@
                         </form>
                     @endif
                 @else
-                    <div class="alert alert-warning">
-                        <h5>⚠️ Compte requis</h5>
-                        <p>Vous devez d'abord créer un compte pour soumettre votre candidature.</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('register') }}" class="btn btn-lg" style="background: var(--color-primary); color: white;">Créer un compte</a>
-                        <a href="{{ route('login') }}" class="btn btn-lg btn-outline-secondary">J'ai déjà un compte</a>
-                    </div>
+                    <form action="{{ route('candidature.start') }}" method="POST">
+                        @csrf
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label">Nom complet</label>
+                                <input type="text" name="name" class="form-control" placeholder="Votre nom et prénom" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="vous@example.com" required>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-lg w-100" style="background: var(--color-primary); color: white;">Soumettre</button>
+                            </div>
+                        </div>
+                        <small class="text-muted">Un compte sera créé automatiquement et vous serez redirigé vers le dépôt des pièces.</small>
+                    </form>
                 @endif
             </div>
         </div>

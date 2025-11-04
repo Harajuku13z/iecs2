@@ -91,4 +91,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/candidature', [PublicCandidatureController::class, 'store'])->name('candidature.store');
 });
 
+// Démarrer candidature sans compte (public)
+Route::post('/candidature/start', [PublicCandidatureController::class, 'start'])->name('candidature.start');
+
 require __DIR__.'/auth.php';
