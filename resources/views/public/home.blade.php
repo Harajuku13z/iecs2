@@ -258,36 +258,44 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 15px;
+    padding-left: 0;
 }
 
+/* Border left alignée avec le container principal */
 @media (min-width: 576px) {
-    .admission-image-container {
-        padding-left: 15px;
+    .admission-image-container::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 15px;
+        background: white;
+        z-index: 1;
     }
 }
 
 @media (min-width: 768px) {
-    .admission-image-container {
-        padding-left: calc((100vw - 720px) / 2);
+    .admission-image-container::before {
+        width: calc((100vw - 720px) / 2);
     }
 }
 
 @media (min-width: 992px) {
-    .admission-image-container {
-        padding-left: calc((100vw - 960px) / 2);
+    .admission-image-container::before {
+        width: calc((100vw - 960px) / 2);
     }
 }
 
 @media (min-width: 1200px) {
-    .admission-image-container {
-        padding-left: calc((100vw - 1140px) / 2);
+    .admission-image-container::before {
+        width: calc((100vw - 1140px) / 2);
     }
 }
 
 @media (min-width: 1400px) {
-    .admission-image-container {
-        padding-left: calc((100vw - 1320px) / 2);
+    .admission-image-container::before {
+        width: calc((100vw - 1320px) / 2);
     }
 }
 
