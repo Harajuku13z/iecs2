@@ -573,7 +573,7 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--color-primary);
     color: white;
     padding: 0.5rem 1.5rem;
-    border-radius: 50px;
+    border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -713,7 +713,7 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
     width: 40px;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -742,7 +742,7 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
