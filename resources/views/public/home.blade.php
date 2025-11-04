@@ -1111,8 +1111,8 @@ h1, h2, h3, h4, h5, h6 {
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
                 <div class="stat-card">
-                    <div class="stat-number">{{ \App\Models\User::where('role', 'enseignant')->count() }}+</div>
-                    <div class="stat-label">Enseignants</div>
+                    <div class="stat-number">{{ \App\Models\Specialite::count() }}+</div>
+                    <div class="stat-label">Spécialités</div>
                 </div>
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
