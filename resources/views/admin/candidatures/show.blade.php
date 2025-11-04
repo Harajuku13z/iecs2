@@ -6,6 +6,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Candidature #{{ $candidature->id }}</h1>
     <div class="d-flex gap-2">
+        <a href="{{ route('admin.candidatures.edit', $candidature) }}" class="btn btn-outline-secondary">Modifier</a>
         <a href="{{ route('register') }}" target="_blank" class="btn btn-outline-primary">Créer un compte</a>
         <a href="{{ route('admin.candidatures.index') }}" class="btn btn-secondary">← Retour</a>
     </div>
@@ -106,7 +107,10 @@
                             <span>{{ $label }}</span>
                             @php $found = collect($docs)->firstWhere('key', $key); @endphp
                             @if($found)
-                                <a href="{{ asset('storage/' . $found['path']) }}" target="_blank" class="badge bg-success text-decoration-none">✔</a>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ asset('storage/' . $found['path']) }}" target="_blank" class="badge bg-success text-decoration-none">✔</a>
+                                    <a href="{{ asset('storage/' . $found['path']) }}" download class="btn btn-sm btn-outline-secondary">Télécharger</a>
+                                </div>
                             @else
                                 <span class="badge bg-secondary">—</span>
                             @endif
@@ -118,12 +122,15 @@
                         return in_array($key, $presentKeys, true);
                     })->toArray();
                 @endphp
-                @if(count($missing))
-                    <form action="{{ route('admin.candidatures.remind', $candidature) }}" method="POST">
-                        @csrf @method('PATCH')
-                        <button class="btn btn-sm btn-outline-warning w-100">Rappeler le candidat (pièces manquantes)</button>
-                    </form>
-                @endif
+                <div class="d-flex flex-column gap-2">
+                    @if(count($missing))
+                        <form action="{{ route('admin.candidatures.remind', $candidature) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button class="btn btn-sm btn-outline-warning w-100">Rappeler le candidat (pièces manquantes)</button>
+                        </form>
+                    @endif
+                    <button class="btn btn-sm btn-outline-dark w-100" onclick="window.print()">Imprimer la candidature</button>
+                </div>
             </div>
         </div>
         <div class="card border-0 shadow-sm">

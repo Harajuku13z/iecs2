@@ -53,6 +53,10 @@ class RegisteredUserController extends Controller
         } elseif ($user->isEnseignant()) {
             return redirect(route('enseignant.dashboard', absolute: false));
         } elseif ($user->isEtudiant() || $user->isCandidat()) {
+            // Rediriger les nouveaux candidats vers la création de candidature personnelle (si route publique existe)
+            if (\Illuminate\Support\Facades\Route::has('candidature.create')) {
+                return redirect(route('candidature.create', absolute: false));
+            }
             return redirect(route('etudiant.dashboard', absolute: false));
         }
         

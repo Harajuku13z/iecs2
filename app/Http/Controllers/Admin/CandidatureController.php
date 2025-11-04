@@ -32,6 +32,61 @@ class CandidatureController extends Controller
         return view('admin.candidatures.show', compact('candidature', 'classes'));
     }
 
+    public function edit(Candidature $candidature)
+    {
+        $classes = Classe::orderBy('nom')->get();
+        return view('admin.candidatures.edit', compact('candidature', 'classes'));
+    }
+
+    public function update(Request $request, Candidature $candidature)
+    {
+        $data = $request->validate([
+            'statut' => 'required|in:soumis,verifie,admis,rejete',
+            'evaluation_date' => 'nullable|date',
+            'commentaire_admin' => 'nullable|string',
+            'classe_id' => 'nullable|exists:classes,id',
+            'doc_identite' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_diplome' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_releve' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_lettre' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'doc_photo' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'doc_cv' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $candidature->update([
+            'statut' => $data['statut'],
+            'evaluation_date' => $data['evaluation_date'] ?? null,
+            'commentaire_admin' => $data['commentaire_admin'] ?? null,
+        ]);
+
+        if (!empty($data['classe_id']) && $data['statut'] === 'admis') {
+            $candidature->user->update(['classe_id' => $data['classe_id'], 'role' => 'etudiant']);
+        }
+
+        $docs = $candidature->documents ? json_decode($candidature->documents, true) : [];
+        $labels = [
+            'doc_identite' => "Pièce d'identité",
+            'doc_diplome' => 'Diplôme',
+            'doc_releve' => 'Relevé de notes',
+            'doc_lettre' => 'Lettre de motivation',
+            'doc_photo' => 'Photo',
+            'doc_cv' => 'CV',
+        ];
+        foreach ($labels as $field => $label) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                $filename = 'cand-' . time() . '-' . $field . '-' . $file->getClientOriginalName();
+                \Illuminate\Support\Facades\Storage::disk('public')->putFileAs('candidatures', $file, $filename);
+                // remove existing with same key
+                $docs = collect($docs)->reject(fn($d) => ($d['key'] ?? '') === $field)->values()->all();
+                $docs[] = [ 'key' => $field, 'label' => $label, 'path' => 'candidatures/' . $filename, 'name' => $file->getClientOriginalName() ];
+            }
+        }
+        $candidature->update(['documents' => $docs ? json_encode($docs) : null]);
+
+        return redirect()->route('admin.candidatures.show', $candidature)->with('success', 'Candidature mise à jour.');
+    }
+
     public function store(Request $request)
     {
         $mode = $request->input('user_mode', 'existing');
