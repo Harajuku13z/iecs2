@@ -1184,7 +1184,14 @@ h1, h2, h3, h4, h5, h6 {
                             @endif
                         </div>
                         <h3 class="filiere-card-title">{{ $filiere->nom }}</h3>
-                        <p class="filiere-card-description">{{ Str::limit($filiere->description ?? 'Formation d\'excellence', 100) }}</p>
+                                <p class="filiere-card-description">{{ Str::limit($filiere->description ?? 'Formation d\'excellence', 100) }}</p>
+                                @if($filiere->specialites && $filiere->specialites->count())
+                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                        @foreach($filiere->specialites as $specialite)
+                                            <span class="badge bg-light text-dark border">{{ $specialite->nom }}</span>
+                                        @endforeach
+                                    </div>
+                                @endif
                         <a href="{{ route('formations', ['filiere_id' => $filiere->id]) }}" class="filiere-card-link">
                             En savoir plus →
                         </a>
@@ -1194,6 +1201,51 @@ h1, h2, h3, h4, h5, h6 {
         </div>
     </div>
 </section>
+
+<!-- Filières en vedette (3 grandes cartes) -->
+@php
+    $featuredFilieres = \App\Models\Filiere::with('specialites')->take(3)->get();
+@endphp
+@if($featuredFilieres->count())
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            @foreach($featuredFilieres as $f)
+                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                    <a href="{{ route('formations', ['filiere_id' => $f->id]) }}" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 12px;">
+                            <div style="position: relative; aspect-ratio: 16 / 9; background:#f7f7f7;">
+                                @if($f->image)
+                                    <img src="{{ asset('storage/' . $f->image) }}" alt="{{ $f->nom }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center h-100 w-100" style="font-size:3rem;">🎓</div>
+                                @endif
+                                <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.0) 30%, rgba(0,0,0,0.6) 100%);"></div>
+                                <div style="position:absolute; left:1rem; right:1rem; bottom:1rem; color:#fff;">
+                                    <h4 class="mb-1" style="font-weight:800;">{{ $f->nom }}</h4>
+                                    @if($f->specialites && $f->specialites->count())
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @foreach($f->specialites->take(3) as $sp)
+                                                <span class="badge bg-light text-dark">{{ $sp->nom }}</span>
+                                            @endforeach
+                                            @if($f->specialites->count() > 3)
+                                                <span class="badge bg-secondary">+{{ $f->specialites->count() - 3 }}</span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0">{{ Str::limit($f->description ?? 'Formation d\'excellence', 110) }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    </section>
+@endif
 
 <!-- Processus d'Admission Section -->
 <section class="admission-process-section">
