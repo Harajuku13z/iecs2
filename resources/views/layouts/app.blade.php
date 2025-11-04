@@ -104,23 +104,15 @@
     <footer style="background: linear-gradient(135deg, var(--color-black) 0%, var(--color-dark) 100%); color: white; padding: 4rem 0 2rem;">
         <div class="container">
             <div class="row g-4 mb-4">
-                <!-- Colonne 1: Liens Rapides -->
-                <div class="col-md-4">
+                <!-- Colonne 1: À propos + Suivez-nous -->
+                <div class="col-lg-3 col-md-6">
                     <h5 style="font-weight: 700; margin-bottom: 1.5rem; color: var(--color-primary);">IESCA</h5>
-                    <p style="opacity: 0.8; line-height: 1.8; margin-bottom: 1.5rem;">Institut d'Enseignement Supérieur de la Côte Africaine - Excellence académique et innovation.</p>
-                    
-                    <h6 style="font-weight: 700; margin-bottom: 1rem;">Liens Rapides</h6>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('formations') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Nos Formations</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('admission') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Admission</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="#" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ FAQ</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="#" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Conditions d'utilisation</a></li>
-                    </ul>
+                    <p style="opacity: 0.8; line-height: 1.8; margin-bottom: 2rem; font-size: 0.9rem;">Institut d'Enseignement Supérieur de la Côte Africaine - Excellence académique et innovation.</p>
                     
                     <!-- Réseaux Sociaux -->
-                    <div style="margin-top: 2rem;">
+                    <div>
                         <h6 style="font-weight: 700; margin-bottom: 1rem;">Suivez-nous</h6>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 flex-wrap">
                             @php
                                 $facebook = \App\Models\Setting::get('social_facebook', '');
                                 $twitter = \App\Models\Setting::get('social_twitter', '');
@@ -158,8 +150,34 @@
                     </div>
                 </div>
                 
-                <!-- Colonne 2: Contact -->
-                <div class="col-md-4">
+                <!-- Colonne 2: Liens Rapides & Informations -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 style="font-weight: 700; margin-bottom: 1.5rem;">Liens Rapides</h6>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('formations') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Nos Formations</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('admission') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Admission</a></li>
+                    </ul>
+                    
+                    <h6 style="font-weight: 700; margin-bottom: 1rem;">Informations</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ FAQ</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Conditions d'utilisation</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Colonne 3: Espaces -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 style="font-weight: 700; margin-bottom: 1.5rem;">Espaces</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('etudiant.dashboard') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Espace Étudiant</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('enseignant.dashboard') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Espace Enseignant</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('admin.dashboard') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Espace Admin</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('login') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Connexion</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Colonne 4: Contact -->
+                <div class="col-lg-3 col-md-6">
                     <h6 style="font-weight: 700; margin-bottom: 1.5rem;">Contact</h6>
                     <p style="opacity: 0.8; line-height: 2;">
                         <strong>📍 Adresse:</strong><br>
@@ -170,23 +188,6 @@
                         <strong>📧 Email:</strong><br>
                         <a href="mailto:{{ \App\Models\Setting::get('email', 'institutenseignementsupérieur@gmail.com') }}" style="color: white; opacity: 0.8; text-decoration: none;">{{ \App\Models\Setting::get('email', 'institutenseignementsupérieur@gmail.com') }}</a>
                     </p>
-                </div>
-                
-                <!-- Colonne 3: Espaces + FAQ -->
-                <div class="col-md-4">
-                    <h6 style="font-weight: 700; margin-bottom: 1.5rem;">Espaces</h6>
-                    <ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('etudiant.dashboard') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Espace Étudiant</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('enseignant.dashboard') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Espace Enseignant</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('admin.dashboard') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Espace Admin</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="{{ route('login') }}" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Connexion</a></li>
-                    </ul>
-                    
-                    <h6 style="font-weight: 700; margin-bottom: 1rem;">Informations</h6>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 0.75rem;"><a href="#" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ FAQ</a></li>
-                        <li style="margin-bottom: 0.75rem;"><a href="#" style="color: white; opacity: 0.8; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.paddingLeft='10px'" onmouseout="this.style.opacity='0.8'; this.style.paddingLeft='0'">→ Conditions d'utilisation</a></li>
-                    </ul>
                 </div>
             </div>
             <hr style="opacity: 0.2; margin: 2rem 0;">
