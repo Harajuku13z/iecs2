@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section {
     position: relative;
     min-height: 90vh;
-    background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%),
+    background: linear-gradient(135deg, rgba(166, 96, 96, 0.5) 0%, rgba(13, 13, 13, 0.5) 100%),
                 url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover;
     color: white;
     overflow: hidden;
@@ -52,19 +52,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 2rem;
-    text-shadow: 2px 4px 20px rgba(0,0,0,0.3);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
 }
 
 .hero-subtitle {
-    font-size: clamp(1.1rem, 2vw, 1.5rem);
-    font-weight: 300;
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    font-weight: 400;
     opacity: 0.95;
-    margin-bottom: 3rem;
-    letter-spacing: 0.5px;
+    margin-bottom: 2rem;
+    letter-spacing: 0.3px;
 }
 
 /* Premium Search Box */
@@ -1003,12 +1003,12 @@ h1, h2, h3, h4, h5, h6 {
     $heroImage = \App\Models\Setting::get('hero_image', '');
     $heroImageUrl = $heroImage ? asset('storage/' . $heroImage) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920';
 @endphp
-<section class="hero-section" style="background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%), url('{{ $heroImageUrl }}') center/cover;">
+<section class="hero-section" style="background: linear-gradient(135deg, rgba(166, 96, 96, 0.5) 0%, rgba(13, 13, 13, 0.5) 100%), url('{{ $heroImageUrl }}') center/cover;">
     <div class="container">
         <div class="hero-content">
-            <div class="row justify-content-center">
-                <div class="col-12">
-                    <div class="text-center">
+            <div class="row">
+                <div class="col-lg-6 col-md-8 col-12">
+                    <div class="hero-text-content">
                         <h1 class="hero-title" data-aos="fade-up">
                             {{ \App\Models\Setting::get('hero_title', 'Façonnons l\'Avenir de l\'Excellence') }}
                         </h1>
@@ -1017,6 +1017,10 @@ h1, h2, h3, h4, h5, h6 {
                         </p>
                     </div>
                     
+                </div>
+            </div>
+            <div class="row justify-content-center mt-4">
+                <div class="col-12">
                     <!-- Premium Search Box - Style Voyage -->
                     <div class="premium-search" data-aos="fade-up" data-aos-delay="200">
                         <h4 class="text-center text-dark mb-2" style="font-weight: 700; font-size: 1.3rem;">Trouvez Votre Formation Idéale</h4>
@@ -1194,32 +1198,32 @@ h1, h2, h3, h4, h5, h6 {
                         <div class="admission-step-item" data-aos="fade-up" data-aos-delay="100">
                             <div class="step-number">1</div>
                             <div class="step-content">
-                                <h4 class="step-title">Inscription en Ligne</h4>
-                                <p class="step-description">Créez votre compte et soumettez votre dossier de candidature en quelques clics.</p>
+                                <h4 class="step-title">{{ \App\Models\Setting::get('admission_step_1_title', 'Inscription en Ligne') }}</h4>
+                                <p class="step-description">{{ \App\Models\Setting::get('admission_step_1_description', 'Créez votre compte et soumettez votre dossier de candidature en quelques clics.') }}</p>
                             </div>
                         </div>
                         
                         <div class="admission-step-item" data-aos="fade-up" data-aos-delay="200">
                             <div class="step-number">2</div>
                             <div class="step-content">
-                                <h4 class="step-title">Vérification Administrative</h4>
-                                <p class="step-description">Notre équipe examine votre dossier sous 48h.</p>
+                                <h4 class="step-title">{{ \App\Models\Setting::get('admission_step_2_title', 'Vérification Administrative') }}</h4>
+                                <p class="step-description">{{ \App\Models\Setting::get('admission_step_2_description', 'Notre équipe examine votre dossier sous 48h.') }}</p>
                             </div>
                         </div>
                         
                         <div class="admission-step-item" data-aos="fade-up" data-aos-delay="300">
                             <div class="step-number">3</div>
                             <div class="step-content">
-                                <h4 class="step-title">Évaluation du Comité</h4>
-                                <p class="step-description">Le comité d'admission étudie votre profil académique.</p>
+                                <h4 class="step-title">{{ \App\Models\Setting::get('admission_step_3_title', 'Évaluation du Comité') }}</h4>
+                                <p class="step-description">{{ \App\Models\Setting::get('admission_step_3_description', 'Le comité d\'admission étudie votre profil académique.') }}</p>
                             </div>
                         </div>
                         
                         <div class="admission-step-item" data-aos="fade-up" data-aos-delay="400">
                             <div class="step-number">4</div>
                             <div class="step-content">
-                                <h4 class="step-title">Décision d'Admission</h4>
-                                <p class="step-description">Recevez votre décision par email.</p>
+                                <h4 class="step-title">{{ \App\Models\Setting::get('admission_step_4_title', 'Décision d\'Admission') }}</h4>
+                                <p class="step-description">{{ \App\Models\Setting::get('admission_step_4_description', 'Recevez votre décision par email.') }}</p>
                             </div>
                         </div>
                     </div>

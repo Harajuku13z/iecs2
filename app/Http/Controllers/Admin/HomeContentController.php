@@ -74,6 +74,18 @@ class HomeContentController extends Controller
         Setting::updateOrCreate(['cle' => 'admission_process_title'], ['valeur' => $request->admission_process_title, 'description' => 'Titre section Processus d\'Admission']);
         Setting::updateOrCreate(['cle' => 'admission_process_intro'], ['valeur' => $request->admission_process_intro, 'description' => 'Introduction section Processus d\'Admission']);
         
+        // Étapes du processus d'admission
+        for ($i = 1; $i <= 4; $i++) {
+            Setting::updateOrCreate(
+                ['cle' => 'admission_step_' . $i . '_title'],
+                ['valeur' => $request->input('admission_step_' . $i . '_title', ''), 'description' => 'Titre étape ' . $i . ' du processus d\'admission']
+            );
+            Setting::updateOrCreate(
+                ['cle' => 'admission_step_' . $i . '_description'],
+                ['valeur' => $request->input('admission_step_' . $i . '_description', ''), 'description' => 'Description étape ' . $i . ' du processus d\'admission']
+            );
+        }
+        
         // Section CTA
         Setting::updateOrCreate(['cle' => 'cta_title'], ['valeur' => $request->cta_title, 'description' => 'Titre section CTA']);
         Setting::updateOrCreate(['cle' => 'cta_subtitle'], ['valeur' => $request->cta_subtitle, 'description' => 'Sous-titre section CTA']);

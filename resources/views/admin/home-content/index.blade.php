@@ -163,6 +163,29 @@
                 <input type="text" class="form-control" id="admission_process_intro" name="admission_process_intro" 
                        value="{{ \App\Models\Setting::get('admission_process_intro', 'Quatre étapes simples pour rejoindre l\'excellence à l\'IESCA') }}">
             </div>
+            
+            <hr class="my-4">
+            
+            <h6 class="mb-3">Les 4 Étapes</h6>
+            @for($i = 1; $i <= 4; $i++)
+                <div class="border rounded p-3 mb-3">
+                    <h6 class="mb-3">Étape {{ $i }}</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Titre</label>
+                            <input type="text" class="form-control" 
+                                   name="admission_step_{{ $i }}_title" 
+                                   value="{{ \App\Models\Setting::get('admission_step_' . $i . '_title', ['Inscription en Ligne', 'Vérification Administrative', 'Évaluation du Comité', 'Décision d\'Admission'][$i-1]) }}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" 
+                                   name="admission_step_{{ $i }}_description" 
+                                   value="{{ \App\Models\Setting::get('admission_step_' . $i . '_description', ['Créez votre compte et soumettez votre dossier de candidature en quelques clics.', 'Notre équipe examine votre dossier sous 48h.', 'Le comité d\'admission étudie votre profil académique.', 'Recevez votre décision par email.'][$i-1]) }}">
+                        </div>
+                    </div>
+                </div>
+            @endfor
         </div>
     </div>
     
