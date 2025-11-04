@@ -67,6 +67,11 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.3px;
 }
 
+/* Hero Text Content */
+.hero-text-content {
+    text-align: left;
+}
+
 /* Premium Search Box */
 .premium-search {
     background: rgba(255, 255, 255, 0.98);
@@ -974,6 +979,10 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
     .hero-content {
         padding: 4rem 0 3rem;
+    }
+    
+    .hero-text-content {
+        text-align: center;
     }
     
     .premium-search {
