@@ -45,6 +45,18 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Rediriger selon le rôle de l'utilisateur (par défaut candidat)
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            return redirect(route('admin.dashboard', absolute: false));
+        } elseif ($user->isEnseignant()) {
+            return redirect(route('enseignant.dashboard', absolute: false));
+        } elseif ($user->isEtudiant() || $user->isCandidat()) {
+            return redirect(route('etudiant.dashboard', absolute: false));
+        }
+        
+        // Par défaut, rediriger vers la page d'accueil
+        return redirect('/');
     }
 }
