@@ -552,12 +552,14 @@ h1, h2, h3, h4, h5, h6 {
         flex-direction: column-reverse;
     }
     
+    /* Forcer un format carré sur mobile pour l'image */
     .admission-image-container {
-        min-height: 500px;
+        min-height: 0;
+        aspect-ratio: 1 / 1;
     }
-    
     .admission-process-image {
-        min-height: 500px;
+        min-height: 0;
+        height: 100%;
     }
     
     .admission-process-content {
@@ -1199,7 +1201,7 @@ h1, h2, h3, h4, h5, h6 {
         <div class="row g-0 align-items-stretch">
             <!-- Image à gauche (9:16) -->
             <div class="col-lg-6" data-aos="fade-right">
-                <div class="admission-image-container" style="width: 100%; height: 100%;">
+                <div class="admission-image-container h-100" style="width: 100%; height: 100%;">
                     @php
                         $admissionImage = \App\Models\Setting::get('admission_process_image', 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop');
                         $admissionImageUrl = $admissionImage ? (str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage)) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop';
@@ -1210,7 +1212,7 @@ h1, h2, h3, h4, h5, h6 {
             
             <!-- Contenu à droite -->
             <div class="col-lg-6" data-aos="fade-left">
-                <div class="admission-process-content" style="width: 100%; padding: 3rem;">
+                <div class="admission-process-content h-100" style="width: 100%; padding: 3rem;">
                     <h2 class="admission-process-title">{{ \App\Models\Setting::get('admission_process_title', 'Processus d\'Admission') }}</h2>
                     <p class="admission-process-intro">{{ \App\Models\Setting::get('admission_process_intro', 'Quatre étapes simples pour rejoindre l\'excellence à l\'IESCA') }}</p>
                     
