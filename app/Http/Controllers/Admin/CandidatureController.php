@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Candidature;
 use App\Models\User;
+use App\Models\Classe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CandidatureStatusUpdated;
@@ -14,7 +15,8 @@ class CandidatureController extends Controller
     public function index()
     {
         $candidatures = Candidature::with('user')->orderByDesc('created_at')->paginate(15);
-        return view('admin.candidatures.index', compact('candidatures'));
+        $classes = Classe::orderBy('nom')->get();
+        return view('admin.candidatures.index', compact('candidatures', 'classes'));
     }
 
     public function create()
