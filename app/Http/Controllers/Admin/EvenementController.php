@@ -103,8 +103,8 @@ class EvenementController extends Controller
 
         if ($request->hasFile('image')) {
             // Supprimer l'ancienne image si elle existe
-            if ($evenement->image && Storage::exists('public/' . $evenement->image)) {
-                Storage::delete('public/' . $evenement->image);
+            if ($evenement->image && Storage::disk('public')->exists($evenement->image)) {
+                Storage::disk('public')->delete($evenement->image);
             }
             
             $file = $request->file('image');
@@ -139,8 +139,8 @@ class EvenementController extends Controller
     public function destroy(Evenement $evenement)
     {
         // Supprimer l'image si elle existe
-        if ($evenement->image && Storage::exists('public/' . $evenement->image)) {
-            Storage::delete('public/' . $evenement->image);
+        if ($evenement->image && Storage::disk('public')->exists($evenement->image)) {
+            Storage::disk('public')->delete($evenement->image);
         }
 
         $evenement->delete();

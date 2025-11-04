@@ -89,8 +89,8 @@ class ActualiteController extends Controller
 
         if ($request->hasFile('image')) {
             // Supprimer l'ancienne image si elle existe
-            if ($actualite->image && Storage::exists('public/' . $actualite->image)) {
-                Storage::delete('public/' . $actualite->image);
+            if ($actualite->image && Storage::disk('public')->exists($actualite->image)) {
+                Storage::disk('public')->delete($actualite->image);
             }
             
             $file = $request->file('image');
@@ -113,8 +113,8 @@ class ActualiteController extends Controller
     public function destroy(Actualite $actualite)
     {
         // Supprimer l'image si elle existe
-        if ($actualite->image && Storage::exists('public/' . $actualite->image)) {
-            Storage::delete('public/' . $actualite->image);
+        if ($actualite->image && Storage::disk('public')->exists($actualite->image)) {
+            Storage::disk('public')->delete($actualite->image);
         }
 
         $actualite->delete();

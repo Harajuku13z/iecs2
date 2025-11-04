@@ -93,8 +93,8 @@ class FiliereController extends Controller
 
         if ($request->hasFile('image')) {
             // Supprimer l'ancienne image si elle existe
-            if ($filiere->image && Storage::exists('public/' . $filiere->image)) {
-                Storage::delete('public/' . $filiere->image);
+            if ($filiere->image && Storage::disk('public')->exists($filiere->image)) {
+                Storage::disk('public')->delete($filiere->image);
             }
             
             $file = $request->file('image');
