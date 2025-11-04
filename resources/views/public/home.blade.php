@@ -617,6 +617,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .news-section .section-title {
     color: var(--color-black) !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: var(--color-black) !important;
+    background-clip: unset !important;
 }
 
 .news-section .section-subtitle {
@@ -1037,31 +1041,6 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 </section>
 
-<!-- Filières Horizontal Scroll Section -->
-<section class="filieres-scroll-section">
-    <div class="container">
-        <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--color-black);">Nos Filières</h2>
-            <p class="section-subtitle" style="color: var(--color-dark);">Découvrez nos formations d'excellence</p>
-        </div>
-        
-        <div class="filieres-scroll-container" data-aos="fade-up" data-aos-delay="100">
-            <div class="filieres-scroll-wrapper">
-                @foreach(\App\Models\Filiere::all() as $filiere)
-                    <div class="filiere-scroll-card">
-                        <div class="filiere-card-icon">🎓</div>
-                        <h3 class="filiere-card-title">{{ $filiere->nom }}</h3>
-                        <p class="filiere-card-description">{{ Str::limit($filiere->description ?? 'Formation d\'excellence', 100) }}</p>
-                        <a href="{{ route('formations', ['filiere_id' => $filiere->id]) }}" class="filiere-card-link">
-                            En savoir plus →
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- About Section -->
 <section class="about-section">
     <div class="container">
@@ -1135,6 +1114,30 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="about-image">
                     <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800" alt="Campus IESCA">
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filières Horizontal Scroll Section -->
+<section class="filieres-scroll-section">
+    <div class="container">
+        <div class="section-header text-dark" data-aos="fade-up">
+            <h2 class="section-title" style="color: var(--color-black);">Découvrez nos formations d'excellence</h2>
+        </div>
+        
+        <div class="filieres-scroll-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="filieres-scroll-wrapper">
+                @foreach(\App\Models\Filiere::all() as $filiere)
+                    <div class="filiere-scroll-card">
+                        <div class="filiere-card-icon">🎓</div>
+                        <h3 class="filiere-card-title">{{ $filiere->nom }}</h3>
+                        <p class="filiere-card-description">{{ Str::limit($filiere->description ?? 'Formation d\'excellence', 100) }}</p>
+                        <a href="{{ route('formations', ['filiere_id' => $filiere->id]) }}" class="filiere-card-link">
+                            En savoir plus →
+                        </a>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
