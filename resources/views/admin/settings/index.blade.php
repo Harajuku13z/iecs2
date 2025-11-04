@@ -28,10 +28,29 @@
             </div>
 
             @php
-                $homepageKeys = ['logo', 'admission_process_image', 'hero_title', 'hero_subtitle', 'hero_image', 'about_title', 'about_text1', 'about_text2', 'about_image', 'about_feature_1_icon', 'about_feature_1_title', 'about_feature_1_description', 'about_feature_2_icon', 'about_feature_2_title', 'about_feature_2_description', 'about_feature_3_icon', 'about_feature_3_title', 'about_feature_3_description', 'about_feature_4_icon', 'about_feature_4_title', 'about_feature_4_description', 'about_feature_5_icon', 'about_feature_5_title', 'about_feature_5_description', 'about_feature_6_icon', 'about_feature_6_title', 'about_feature_6_description', 'filieres_title', 'admission_process_title', 'admission_process_intro', 'admission_step_1_title', 'admission_step_1_description', 'admission_step_2_title', 'admission_step_2_description', 'admission_step_3_title', 'admission_step_3_description', 'admission_step_4_title', 'admission_step_4_description', 'cta_title', 'cta_subtitle', 'cta_background_image'];
+                $homepageKeys = [
+                    'logo',
+                    'admission_process_image',
+                    'hero_title', 'hero_subtitle', 'hero_image',
+                    'about_title', 'about_text1', 'about_text2', 'about_image',
+                    'about_feature_1_icon', 'about_feature_1_title', 'about_feature_1_description',
+                    'about_feature_2_icon', 'about_feature_2_title', 'about_feature_2_description',
+                    'about_feature_3_icon', 'about_feature_3_title', 'about_feature_3_description',
+                    'about_feature_4_icon', 'about_feature_4_title', 'about_feature_4_description',
+                    'about_feature_5_icon', 'about_feature_5_title', 'about_feature_5_description',
+                    'about_feature_6_icon', 'about_feature_6_title', 'about_feature_6_description',
+                    'about_feature_7_icon', 'about_feature_7_title', 'about_feature_7_description',
+                    'filieres_title',
+                    'admission_process_title', 'admission_process_intro',
+                    'admission_step_1_title', 'admission_step_1_description',
+                    'admission_step_2_title', 'admission_step_2_description',
+                    'admission_step_3_title', 'admission_step_3_description',
+                    'admission_step_4_title', 'admission_step_4_description',
+                    'cta_title', 'cta_subtitle', 'cta_background_image',
+                    'homepage_title', 'banner_image', 'inscription_start_date', 'frais_mensuels',
+                ];
                 $colorSettings = [];
                 $socialSettings = [];
-                $otherSettings = [];
                 
                 foreach($settings as $setting) {
                     if(in_array($setting->cle, $homepageKeys)) {
@@ -41,8 +60,6 @@
                         $colorSettings[] = $setting;
                     } elseif(str_starts_with($setting->cle, 'social_')) {
                         $socialSettings[] = $setting;
-                    } else {
-                        $otherSettings[] = $setting;
                     }
                 }
             @endphp
@@ -90,35 +107,7 @@
                 </div>
             @endif
 
-            @if(count($otherSettings) > 0)
-                <div class="mb-4 p-4 border rounded">
-                    <h5 class="mb-3">⚙️ Autres Paramètres</h5>
-                    @foreach($otherSettings as $setting)
-                        <div class="mb-3">
-                            <label for="{{ $setting->cle }}" class="form-label">
-                                <strong>{{ ucfirst(str_replace('_', ' ', $setting->cle)) }}</strong>
-                            </label>
-                            @if($setting->description)
-                                <small class="text-muted d-block">{{ $setting->description }}</small>
-                            @endif
-                            
-                            @if(in_array($setting->cle, ['homepage_title', 'banner_image']))
-                                <input type="text" class="form-control" id="{{ $setting->cle }}" 
-                                       name="{{ $setting->cle }}" value="{{ $setting->valeur }}">
-                            @elseif($setting->cle === 'inscription_start_date')
-                                <input type="date" class="form-control" id="{{ $setting->cle }}" 
-                                       name="{{ $setting->cle }}" value="{{ $setting->valeur }}">
-                            @elseif($setting->cle === 'frais_mensuels')
-                                <input type="number" class="form-control" id="{{ $setting->cle }}" 
-                                       name="{{ $setting->cle }}" value="{{ $setting->valeur }}">
-                            @else
-                                <textarea class="form-control" id="{{ $setting->cle }}" 
-                                          name="{{ $setting->cle }}" rows="3">{{ $setting->valeur }}</textarea>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-            @endif
+            
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>

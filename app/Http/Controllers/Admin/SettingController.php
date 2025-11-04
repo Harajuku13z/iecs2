@@ -27,6 +27,7 @@ class SettingController extends Controller
             'about_feature_4_icon', 'about_feature_4_title', 'about_feature_4_description',
             'about_feature_5_icon', 'about_feature_5_title', 'about_feature_5_description',
             'about_feature_6_icon', 'about_feature_6_title', 'about_feature_6_description',
+            'about_feature_7_icon', 'about_feature_7_title', 'about_feature_7_description',
             'filieres_title',
             'admission_process_title', 'admission_process_intro', 'admission_process_image',
             'admission_step_1_title', 'admission_step_1_description',
@@ -34,6 +35,7 @@ class SettingController extends Controller
             'admission_step_3_title', 'admission_step_3_description',
             'admission_step_4_title', 'admission_step_4_description',
             'cta_title', 'cta_subtitle', 'cta_background_image',
+            'homepage_title', 'banner_image', 'inscription_start_date', 'frais_mensuels',
         ];
         
         foreach ($request->except(array_merge(['_token', 'logo'], $homepageKeys)) as $cle => $valeur) {
