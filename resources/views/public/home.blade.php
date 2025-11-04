@@ -71,7 +71,7 @@ h1, h2, h3, h4, h5, h6 {
 .premium-search {
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 1.5rem 2rem;
     box-shadow: 
         0 25px 50px rgba(0,0,0,0.3),
@@ -90,7 +90,7 @@ h1, h2, h3, h4, h5, h6 {
 .search-input {
     height: 50px;
     border: 2px solid #e8e8e8;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 0 1.25rem;
     font-size: 0.95rem;
     transition: all 0.3s ease;
@@ -107,7 +107,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     border: none;
-    border-radius: 12px;
+    border-radius: 6px;
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
@@ -129,7 +129,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .stat-card {
     background: white;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 3rem 2rem;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
@@ -186,7 +186,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .about-image {
-    border-radius: 24px;
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     height: 100%;
@@ -237,7 +237,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 50px;
     height: 50px;
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    border-radius: 12px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -347,7 +347,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 60px;
     height: 60px;
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    border-radius: 50%;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -381,7 +381,7 @@ h1, h2, h3, h4, h5, h6 {
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     color: white;
     padding: 1rem 2.5rem;
-    border-radius: 50px;
+    border-radius: 6px;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -536,7 +536,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .news-card {
     background: white;
-    border-radius: 24px;
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -646,7 +646,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .event-card {
     background: white;
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 1rem;
     box-shadow: 0 5px 20px rgba(0,0,0,0.06);
@@ -683,7 +683,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .calendar-container {
     background: white;
-    border-radius: 24px;
+    border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     border: 1px solid rgba(166, 96, 96, 0.1);
@@ -803,7 +803,7 @@ h1, h2, h3, h4, h5, h6 {
     background: white;
     color: var(--color-primary);
     padding: 1.2rem 3rem;
-    border-radius: 50px;
+    border-radius: 6px;
     font-size: 1.2rem;
     font-weight: 700;
     border: none;
