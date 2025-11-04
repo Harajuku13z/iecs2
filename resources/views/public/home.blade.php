@@ -459,6 +459,7 @@ h1, h2, h3, h4, h5, h6 {
     object-fit: cover;
     display: block;
     min-height: 0;
+    border-radius: 8px;
 }
 
 .admission-process-content {
