@@ -1,52 +1,63 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@php
+    $logo = \App\Models\Setting::get('logo', '');
+    $logoUrl = $logo ? asset('storage/' . $logo) : null;
+    $email = \App\Models\Setting::get('email', 'institutenseignementsupérieur@gmail.com');
+    $phone = \App\Models\Setting::get('phone1', '+242 06 541 98 61');
+@endphp
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+<div class="container py-5" style="min-height: 80vh; display:flex; align-items:center;">
+    <div class="row justify-content-center w-100">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 8px; overflow:hidden;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        @if($logoUrl)
+                            <img src="{{ $logoUrl }}" alt="IESCA" style="height: 60px;">
+                        @endif
+                        <h1 class="mt-3 mb-1" style="font-size:1.6rem; font-weight:800;">Créer un compte</h1>
+                        <p class="text-muted mb-0">Rejoignez l'IESCA</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('register') }}">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label class="form-label">Nom complet</label>
+                            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="form-control" />
+                            @error('name')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username" class="form-control" />
+                            @error('email')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mot de passe</label>
+                            <input id="password" type="password" name="password" required autocomplete="new-password" class="form-control" />
+                            @error('password')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Confirmer le mot de passe</label>
+                            <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="form-control" />
+                            @error('password_confirmation')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; font-weight:700;">Créer mon compte</button>
+                    </form>
+
+                    <div class="mt-3 text-center">
+                        <a href="{{ route('login') }}" class="text-decoration-none" style="color: var(--color-primary); font-weight:600;">Déjà inscrit ? Se connecter</a>
+                    </div>
+
+                    <div class="mt-4 text-center text-muted" style="font-size:.9rem;">
+                        <div>Besoin d’aide ? <a href="mailto:{{ $email }}" class="text-decoration-none" style="color: var(--color-primary);">{{ $email }}</a></div>
+                        <div>ou appelez le {{ $phone }}</div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</div>
