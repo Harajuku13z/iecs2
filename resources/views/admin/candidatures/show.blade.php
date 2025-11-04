@@ -73,25 +73,68 @@
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-body">
                 <h5 class="mb-3">Candidat</h5>
+                @php
+                    $docs = $candidature->documents ? json_decode($candidature->documents, true) : [];
+                    $photo = collect($docs)->firstWhere('key', 'doc_photo');
+                @endphp
+                @if($photo)
+                    <img src="{{ asset('storage/' . $photo['path']) }}" alt="Photo" class="mb-2" style="width:80px; height:80px; object-fit:cover; border-radius:50%;">
+                @endif
                 <div class="mb-1"><strong>{{ $candidature->user->name }}</strong></div>
                 <div class="text-muted small">{{ $candidature->user->email }}</div>
             </div>
         </div>
-        <div class="card border-0 shadow-sm">
+        <div class="card border-0 shadow-sm mb-3">
             <div class="card-body">
                 <h5 class="mb-3">Documents</h5>
-                @php $docs = $candidature->documents ? json_decode($candidature->documents, true) : []; @endphp
-                @if($docs)
-                    <ul class="list-unstyled mb-0">
-                        @foreach($docs as $doc)
-                            <li class="mb-2">
-                                <a href="{{ asset('storage/' . $doc['path']) }}" target="_blank" class="text-decoration-none">{{ $doc['label'] ?? $doc['name'] }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <div class="text-muted">Aucun document</div>
+                @php
+                    $required = [
+                        'doc_identite' => "Pièce d'identité",
+                        'doc_diplome' => 'Diplôme',
+                        'doc_releve' => 'Relevé de notes',
+                        'doc_lettre' => 'Lettre de motivation',
+                        'doc_photo' => 'Photo',
+                    ];
+                    $presentKeys = collect($docs)->pluck('key')->filter()->values()->all();
+                @endphp
+                <ul class="list-unstyled mb-3">
+                    @foreach($required as $key => $label)
+                        <li class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ $label }}</span>
+                            @php $found = collect($docs)->firstWhere('key', $key); @endphp
+                            @if($found)
+                                <a href="{{ asset('storage/' . $found['path']) }}" target="_blank" class="badge bg-success text-decoration-none">✔</a>
+                            @else
+                                <span class="badge bg-secondary">—</span>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+                @php
+                    $missing = collect($required)->reject(function ($label, $key) use ($presentKeys) {
+                        return in_array($key, $presentKeys, true);
+                    })->toArray();
+                @endphp
+                @if(count($missing))
+                    <form action="{{ route('admin.candidatures.remind', $candidature) }}" method="POST">
+                        @csrf @method('PATCH')
+                        <button class="btn btn-sm btn-outline-warning w-100">Rappeler le candidat (pièces manquantes)</button>
+                    </form>
                 @endif
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">Associer à une classe</h5>
+                <form action="{{ route('admin.candidatures.assignClass', $candidature) }}" method="POST" class="d-flex gap-2">
+                    @csrf @method('PATCH')
+                    <select name="classe_id" class="form-select">
+                        @foreach($classes as $classe)
+                            <option value="{{ $classe->id }}" @selected($candidature->user->classe_id==$classe->id)>{{ $classe->nom }}</option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-outline-primary">Associer</button>
+                </form>
             </div>
         </div>
     </div>

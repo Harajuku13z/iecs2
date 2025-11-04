@@ -9,6 +9,7 @@ use App\Models\Classe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CandidatureStatusUpdated;
+use App\Mail\CandidatureReminder;
 
 class CandidatureController extends Controller
 {
@@ -27,7 +28,8 @@ class CandidatureController extends Controller
 
     public function show(Candidature $candidature)
     {
-        return view('admin.candidatures.show', compact('candidature'));
+        $classes = Classe::orderBy('nom')->get();
+        return view('admin.candidatures.show', compact('candidature', 'classes'));
     }
 
     public function store(Request $request)
@@ -124,6 +126,38 @@ class CandidatureController extends Controller
         Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
 
         return back()->with('success', "Date d'évaluation planifiée et email envoyé.");
+    }
+
+    public function remind(Candidature $candidature)
+    {
+        $required = [
+            'doc_identite' => "Pièce d'identité",
+            'doc_diplome' => 'Diplôme',
+            'doc_releve' => 'Relevé de notes',
+            'doc_lettre' => 'Lettre de motivation',
+            'doc_photo' => 'Photo',
+            // 'doc_cv' optionnel
+        ];
+        $docs = $candidature->documents ? json_decode($candidature->documents, true) : [];
+        $presentKeys = collect($docs)->pluck('key')->filter()->values()->all();
+        $missing = collect($required)->reject(function ($label, $key) use ($presentKeys) {
+            return in_array($key, $presentKeys, true);
+        })->toArray();
+
+        Mail::to($candidature->user->email)->send(new CandidatureReminder($candidature, $missing));
+        return back()->with('success', "Email de rappel envoyé au candidat.");
+    }
+
+    public function assignClass(Request $request, Candidature $candidature)
+    {
+        $data = $request->validate([
+            'classe_id' => 'required|exists:classes,id',
+        ]);
+        $candidature->user->update([
+            'classe_id' => $data['classe_id'],
+            'role' => 'etudiant',
+        ]);
+        return back()->with('success', 'Classe associée au candidat et rôle mis à jour.');
     }
 }
 

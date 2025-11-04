@@ -47,6 +47,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/candidatures/{candidature}', [CandidatureController::class, 'show'])->name('candidatures.show');
     Route::patch('/candidatures/{candidature}/status', [CandidatureController::class, 'updateStatus'])->name('candidatures.updateStatus');
     Route::patch('/candidatures/{candidature}/schedule', [CandidatureController::class, 'schedule'])->name('candidatures.schedule');
+    Route::patch('/candidatures/{candidature}/remind', [CandidatureController::class, 'remind'])->name('candidatures.remind');
+    Route::patch('/candidatures/{candidature}/assign-class', [CandidatureController::class, 'assignClass'])->name('candidatures.assignClass');
     
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
