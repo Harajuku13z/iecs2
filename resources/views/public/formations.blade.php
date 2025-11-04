@@ -11,20 +11,16 @@
     text-align: center;
 }
 
-.formations-hero h1 {
-    font-size: 3.5rem;
-    font-weight: 900;
-    margin-bottom: 1rem;
-}
+.formations-hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: .75rem; }
 
 .formation-result-card {
     background: white;
-    border-radius: 24px;
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     transition: all 0.4s ease;
     margin-bottom: 2rem;
-    border: 2px solid var(--color-primary);
+    border: 1px solid rgba(0,0,0,0.06);
 }
 
 .formation-result-card:hover {
@@ -39,20 +35,14 @@
     text-align: center;
 }
 
-.formation-title {
-    font-size: 2.5rem;
-    font-weight: 900;
-    margin: 0 0 0.5rem 0;
-}
+.formation-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 .5rem 0; }
 
 .formation-subtitle {
     font-size: 1.2rem;
     opacity: 0.9;
 }
 
-.formation-body {
-    padding: 3rem;
-}
+.formation-body { padding: 2rem; }
 
 .formation-info {
     display: grid;
@@ -64,7 +54,7 @@
 .info-box {
     background: var(--color-light);
     padding: 1.5rem;
-    border-radius: 15px;
+    border-radius: 8px;
     border-left: 4px solid var(--color-primary);
 }
 
@@ -83,7 +73,7 @@
     padding: 1rem;
     margin-bottom: 0.75rem;
     background: var(--color-light);
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -98,7 +88,7 @@
 
 .filiere-card {
     background: white;
-    border-radius: 24px;
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     transition: all 0.4s ease;
@@ -117,15 +107,9 @@
     padding: 2rem;
 }
 
-.filiere-title {
-    font-size: 2rem;
-    font-weight: 900;
-    margin: 0;
-}
+.filiere-title { font-size: 1.4rem; font-weight: 800; margin: 0; }
 
-.filiere-body {
-    padding: 2rem;
-}
+.filiere-body { padding: 1.5rem; }
 
 .program-list {
     list-style: none;
@@ -136,7 +120,7 @@
     padding: 1rem;
     margin-bottom: 0.75rem;
     background: var(--color-light);
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -154,17 +138,7 @@
     font-size: 1.5rem;
 }
 
-.apply-btn {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
+.apply-btn { background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color:#fff; border:none; padding:.9rem 1.5rem; border-radius: 6px; font-weight:700; transition:all .3s ease; text-decoration:none; display:inline-block; }
 
 .apply-btn:hover {
     transform: translateY(-3px);
@@ -172,17 +146,7 @@
     color: white;
 }
 
-.search-again {
-    background: white;
-    border: 2px solid var(--color-primary);
-    color: var(--color-primary);
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
+.search-again { background:white; border:1px solid var(--color-primary); color:var(--color-primary); padding:.9rem 1.5rem; border-radius: 6px; font-weight:700; transition:all .3s ease; text-decoration:none; display:inline-block; }
 
 .search-again:hover {
     background: var(--color-primary);
@@ -203,6 +167,37 @@
 </div>
 
 <div class="container py-5">
+    <!-- Bloc recherche (style similaire à la home) -->
+    <div class="premium-search mb-4" data-aos="fade-up">
+        <h4 class="text-center text-dark mb-2" style="font-weight: 700; font-size: 1.1rem;">Trouvez Votre Formation Idéale</h4>
+        <form action="{{ route('formations') }}" method="GET">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label text-dark mb-1" style="font-weight: 600; font-size: 0.85rem;">📚 Niveau d'étude</label>
+                    <select class="form-select search-input" name="niveau_id" required style="height: 45px; font-size: 0.9rem;">
+                        <option value="">Sélectionnez un niveau</option>
+                        @foreach(\App\Models\Niveau::orderBy('ordre')->get() as $niv)
+                            <option value="{{ $niv->id }}" @selected(request('niveau_id')==$niv->id)>{{ $niv->nom }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label text-dark mb-1" style="font-weight: 600; font-size: 0.85rem;">🎓 Filière</label>
+                    <select class="form-select search-input" name="filiere_id" required style="height: 45px; font-size: 0.9rem;">
+                        <option value="">Sélectionnez une filière</option>
+                        @foreach(\App\Models\Filiere::orderBy('nom')->get() as $fil)
+                            <option value="{{ $fil->id }}" @selected(request('filiere_id')==$fil->id)>{{ $fil->nom }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn search-button w-100" style="height: 45px; font-size: 0.95rem;">
+                        🔍 Rechercher
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
     @if(isset($niveau) && isset($filiere))
         <!-- Résultat de recherche -->
         <div class="row">
@@ -285,85 +280,39 @@
             </div>
         </div>
     @else
-        <!-- Affichage de toutes les filières -->
-        <div class="row">
-            <!-- Sciences et Administration des Affaires -->
-            <div class="col-12" data-aos="fade-up">
-                <div class="filiere-card">
-                    <div class="filiere-header">
-                        <h2 class="filiere-title">Sciences et Administration des Affaires</h2>
-                    </div>
-                    <div class="filiere-body">
-                        <h5 class="mb-3" style="color: var(--color-dark);">Programmes disponibles :</h5>
-                        <ul class="program-list">
-                            <li><strong>Management et Entrepreneuriat</strong> - Former les futurs managers et entrepreneurs</li>
-                            <li><strong>Gestion des Ressources Humaines</strong> - Maîtriser la gestion du capital humain</li>
-                        </ul>
-                        <div class="mt-4">
-                            <a href="{{ route('admission') }}" class="apply-btn">Postuler pour cette filière →</a>
+        <!-- Liste dynamique des filières en cartes (image + description + spécialités) -->
+        <div class="row g-4">
+            @foreach(\App\Models\Filiere::with('specialites')->orderBy('nom')->get() as $f)
+                <div class="col-12" data-aos="fade-up" data-aos-delay="{{ $loop->index * 50 }}">
+                    <div class="card border-0 shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                        <div class="row g-0 align-items-stretch">
+                            <div class="col-md-4" style="background:#f7f7f7;">
+                                @if($f->image)
+                                    <img src="{{ asset('storage/' . $f->image) }}" alt="{{ $f->nom }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center" style="width:100%; height:100%; min-height:220px; font-size:3rem;">🎓</div>
+                                @endif
+                            </div>
+                            <div class="col-md-8">
+                                <div class="p-3 p-md-4 h-100 d-flex flex-column">
+                                    <h3 class="mb-2" style="font-weight:800; font-size:1.25rem;">{{ $f->nom }}</h3>
+                                    <p class="text-muted" style="margin-bottom: .75rem;">{{ \Illuminate\Support\Str::limit($f->description ?? 'Formation d\'excellence', 220) }}</p>
+                                    @if($f->specialites && $f->specialites->count())
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            @foreach($f->specialites as $sp)
+                                                <span class="badge bg-light text-dark border">{{ $sp->nom }}</span>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    <div class="mt-auto">
+                                        <a href="{{ route('formations', ['filiere_id' => $f->id]) }}" class="apply-btn" style="padding:.7rem 1.2rem;">Voir les formations →</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Génie Informatique -->
-            <div class="col-12" data-aos="fade-up" data-aos-delay="100">
-                <div class="filiere-card">
-                    <div class="filiere-header">
-                        <h2 class="filiere-title">Génie Informatique</h2>
-                    </div>
-                    <div class="filiere-body">
-                        <h5 class="mb-3" style="color: var(--color-dark);">Programmes disponibles :</h5>
-                        <ul class="program-list">
-                            <li><strong>Réseaux et Télécommunications</strong> - Architecture et sécurité des réseaux</li>
-                            <li><strong>Informatique de Gestion</strong> - Systèmes d'information et développement</li>
-                        </ul>
-                        <div class="mt-4">
-                            <a href="{{ route('admission') }}" class="apply-btn">Postuler pour cette filière →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sciences Juridiques -->
-            <div class="col-12" data-aos="fade-up" data-aos-delay="200">
-                <div class="filiere-card">
-                    <div class="filiere-header">
-                        <h2 class="filiere-title">Sciences Juridiques</h2>
-                    </div>
-                    <div class="filiere-body">
-                        <h5 class="mb-3" style="color: var(--color-dark);">Programmes disponibles :</h5>
-                        <ul class="program-list">
-                            <li><strong>Droit Privé</strong> - Maîtriser le droit civil et commercial</li>
-                            <li><strong>Droit Public</strong> - Comprendre le droit administratif et constitutionnel</li>
-                            <li><strong>Droit des Affaires</strong> - Expertise en droit commercial et des sociétés</li>
-                        </ul>
-                        <div class="mt-4">
-                            <a href="{{ route('admission') }}" class="apply-btn">Postuler pour cette filière →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sciences Commerciales -->
-            <div class="col-12" data-aos="fade-up" data-aos-delay="300">
-                <div class="filiere-card">
-                    <div class="filiere-header">
-                        <h2 class="filiere-title">Sciences Commerciales</h2>
-                    </div>
-                    <div class="filiere-body">
-                        <h5 class="mb-3" style="color: var(--color-dark);">Programmes disponibles :</h5>
-                        <ul class="program-list">
-                            <li><strong>Comptabilité</strong> - Expert-comptable et audit</li>
-                            <li><strong>Management de la Chaîne Logistique</strong> - Supply chain et logistique</li>
-                            <li><strong>Banque, Assurance et Finances</strong> - Finance d'entreprise et marché</li>
-                        </ul>
-                        <div class="mt-4">
-                            <a href="{{ route('admission') }}" class="apply-btn">Postuler pour cette filière →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     @endif
 </div>

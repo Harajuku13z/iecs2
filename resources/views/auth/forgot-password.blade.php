@@ -1,25 +1,45 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@php
+    $logo = \App\Models\Setting::get('logo', '');
+    $logoUrl = $logo ? asset('storage/' . $logo) : null;
+    $email = \App\Models\Setting::get('email', 'institutenseignementsupérieur@gmail.com');
+@endphp
+
+<div class="container py-5" style="min-height: 80vh; display:flex; align-items:center;">
+    <div class="row justify-content-center w-100">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm" style="border-radius: 8px; overflow:hidden;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        @if($logoUrl)
+                            <img src="{{ $logoUrl }}" alt="IESCA" style="height: 60px;">
+                        @endif
+                        <h1 class="mt-3 mb-1" style="font-size:1.6rem; font-weight:800;">Mot de passe oublié</h1>
+                        <p class="text-muted mb-0">Entrez votre email pour recevoir le lien de réinitialisation</p>
+                    </div>
+
+                    @if (session('status'))
+                        <div class="alert alert-success">{{ session('status') }}</div>
+                    @endif
+
+                    <form method="POST" action="{{ route('password.email') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus class="form-control" />
+                            @error('email')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; font-weight:700;">Envoyer le lien</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <a href="{{ route('login') }}" class="text-decoration-none" style="color: var(--color-primary); font-weight:600;">← Retour à la connexion</a>
+                    </div>
+
+                    <div class="mt-3 text-center text-muted" style="font-size:.9rem;">
+                        Besoin d’aide ? <a href="mailto:{{ $email }}" class="text-decoration-none" style="color: var(--color-primary);">{{ $email }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</div>
