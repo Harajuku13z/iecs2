@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Filiere;
+use App\Models\Specialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,7 +45,19 @@ class FiliereController extends Controller
             $validated['image'] = $filename;
         }
 
-        Filiere::create($validated);
+        $filiere = Filiere::create($validated);
+
+        // Gérer les spécialités
+        if ($request->has('specialites')) {
+            foreach ($request->specialites as $specialiteData) {
+                if (!empty($specialiteData['nom'])) {
+                    $filiere->specialites()->create([
+                        'nom' => $specialiteData['nom'],
+                        'description' => $specialiteData['description'] ?? null,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière créée avec succès.');
@@ -63,6 +76,7 @@ class FiliereController extends Controller
      */
     public function edit(Filiere $filiere)
     {
+        $filiere->load('specialites');
         return view('admin.filieres.edit', compact('filiere'));
     }
 
@@ -90,6 +104,22 @@ class FiliereController extends Controller
         }
 
         $filiere->update($validated);
+
+        // Gérer les spécialités
+        // Supprimer les spécialités existantes
+        $filiere->specialites()->delete();
+        
+        // Créer les nouvelles spécialités
+        if ($request->has('specialites')) {
+            foreach ($request->specialites as $specialiteData) {
+                if (!empty($specialiteData['nom'])) {
+                    $filiere->specialites()->create([
+                        'nom' => $specialiteData['nom'],
+                        'description' => $specialiteData['description'] ?? null,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière mise à jour avec succès.');

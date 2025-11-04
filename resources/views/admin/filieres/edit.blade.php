@@ -51,6 +51,45 @@
                 @enderror
             </div>
 
+            <!-- Spécialités -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="form-label mb-0">🎯 Spécialités de cette filière</label>
+                    <button type="button" class="btn btn-sm btn-success" onclick="addSpecialite()">
+                        ➕ Ajouter une spécialité
+                    </button>
+                </div>
+                <div id="specialites-container">
+                    @foreach($filiere->specialites as $specialite)
+                        <div class="border rounded p-3 mb-3 specialite-item">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong>Spécialité #{{ $loop->iteration }}</strong>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeSpecialite(this)">
+                                    🗑️ Supprimer
+                                </button>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Nom de la spécialité *</label>
+                                    <input type="text" class="form-control" 
+                                           name="specialites[{{ $loop->index }}][nom]" 
+                                           value="{{ $specialite->nom }}" 
+                                           placeholder="Ex: Réseaux et télécommunications" required>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" 
+                                           name="specialites[{{ $loop->index }}][description]" 
+                                           value="{{ $specialite->description }}" 
+                                           placeholder="Description de la spécialité">
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <small class="text-muted">Une filière peut avoir plusieurs spécialités</small>
+            </div>
+
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
                 <a href="{{ route('admin.filieres.index') }}" class="btn btn-secondary">Annuler</a>
@@ -58,5 +97,57 @@
         </form>
     </div>
 </div>
+
+<script>
+let specialiteIndex = {{ $filiere->specialites->count() }};
+
+function addSpecialite(nom = '', description = '') {
+    const container = document.getElementById('specialites-container');
+    const specialiteDiv = document.createElement('div');
+    specialiteDiv.className = 'border rounded p-3 mb-3 specialite-item';
+    specialiteDiv.innerHTML = `
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Spécialité #${container.children.length + 1}</strong>
+            <button type="button" class="btn btn-sm btn-danger" onclick="removeSpecialite(this)">
+                🗑️ Supprimer
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Nom de la spécialité *</label>
+                <input type="text" class="form-control" 
+                       name="specialites[${specialiteIndex}][nom]" 
+                       value="${nom}" 
+                       placeholder="Ex: Réseaux et télécommunications" required>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Description</label>
+                <input type="text" class="form-control" 
+                       name="specialites[${specialiteIndex}][description]" 
+                       value="${description}" 
+                       placeholder="Description de la spécialité">
+            </div>
+        </div>
+    `;
+    container.appendChild(specialiteDiv);
+    specialiteIndex++;
+    updateSpecialiteNumbers();
+}
+
+function removeSpecialite(button) {
+    button.closest('.specialite-item').remove();
+    updateSpecialiteNumbers();
+}
+
+function updateSpecialiteNumbers() {
+    const items = document.querySelectorAll('.specialite-item');
+    items.forEach((item, index) => {
+        const strong = item.querySelector('strong');
+        if (strong) {
+            strong.textContent = `Spécialité #${index + 1}`;
+        }
+    });
+}
+</script>
 @endsection
 

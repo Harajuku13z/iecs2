@@ -12,4 +12,9 @@ class Filiere extends Model
     {
         return $this->hasMany(Classe::class);
     }
+
+    public function specialites()
+    {
+        return $this->hasMany(Specialite::class);
+    }
 }
