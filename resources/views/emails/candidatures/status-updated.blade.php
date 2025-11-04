@@ -12,6 +12,10 @@
 <p>Nous sommes désolés, votre candidature n'a pas été retenue.</p>
 @endif
 
+@if($candidature->evaluation_date)
+<p>Date d'évaluation prévue: <strong>{{ \Carbon\Carbon::parse($candidature->evaluation_date)->format('d/m/Y H:i') }}</strong></p>
+@endif
+
 @if($candidature->commentaire_admin)
 <p><strong>Commentaire :</strong> {{ $candidature->commentaire_admin }}</p>
 @endif

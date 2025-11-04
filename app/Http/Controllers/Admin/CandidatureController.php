@@ -25,6 +25,11 @@ class CandidatureController extends Controller
         return view('admin.candidatures.create', compact('users'));
     }
 
+    public function show(Candidature $candidature)
+    {
+        return view('admin.candidatures.show', compact('candidature'));
+    }
+
     public function store(Request $request)
     {
         $mode = $request->input('user_mode', 'existing');
@@ -106,6 +111,19 @@ class CandidatureController extends Controller
         Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
 
         return back()->with('success', 'Statut mis à jour et email envoyé.');
+    }
+
+    public function schedule(Request $request, Candidature $candidature)
+    {
+        $request->validate([
+            'evaluation_date' => 'required|date',
+        ]);
+        $candidature->update(['evaluation_date' => $request->evaluation_date]);
+
+        // Informer par email
+        Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
+
+        return back()->with('success', "Date d'évaluation planifiée et email envoyé.");
     }
 }
 

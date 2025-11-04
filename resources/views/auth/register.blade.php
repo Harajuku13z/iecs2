@@ -1,3 +1,8 @@
+@extends('layouts.app')
+
+@section('title', 'Inscription - IESCA')
+
+@section('content')
 @php
     $logo = \App\Models\Setting::get('logo', '');
     $logoUrl = $logo ? asset('storage/' . $logo) : null;
@@ -61,3 +66,4 @@
         </div>
     </div>
 </div>
+@endsection

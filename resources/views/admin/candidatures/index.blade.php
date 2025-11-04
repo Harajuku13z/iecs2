@@ -33,6 +33,7 @@
                     <td>{{ $cand->created_at->format('d/m/Y H:i') }}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
+                            <a href="{{ route('admin.candidatures.show', $cand) }}" class="btn btn-outline-secondary">Voir</a>
                             <form action="{{ route('admin.candidatures.updateStatus', $cand) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
