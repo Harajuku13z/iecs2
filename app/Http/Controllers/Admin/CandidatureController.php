@@ -4,40 +4,54 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Candidature;
-use App\Models\Classe;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CandidatureStatusUpdated;
 
 class CandidatureController extends Controller
 {
     public function index()
     {
-        $candidatures = Candidature::with('user')->orderBy('created_at', 'desc')->paginate(20);
-        $classes = Classe::all();
-        return view('admin.candidatures.index', compact('candidatures', 'classes'));
+        $candidatures = Candidature::with('user')->orderByDesc('created_at')->paginate(15);
+        return view('admin.candidatures.index', compact('candidatures'));
+    }
+
+    public function create()
+    {
+        $users = User::orderBy('name')->get();
+        return view('admin.candidatures.create', compact('users'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'statut' => 'required|in:soumis,verifie,admis,rejete',
+            'commentaire_admin' => 'nullable|string',
+        ]);
+
+        $candidature = Candidature::create($validated);
+
+        // Email notification initiale
+        Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
+
+        return redirect()->route('admin.candidatures.index')->with('success', 'Candidature créée.');
     }
 
     public function updateStatus(Request $request, Candidature $candidature)
     {
-        $validated = $request->validate([
+        $request->validate([
             'statut' => 'required|in:soumis,verifie,admis,rejete',
-            'commentaire_admin' => 'nullable|string',
-            'classe_id' => 'nullable|exists:classes,id',
         ]);
 
-        $candidature->update([
-            'statut' => $validated['statut'],
-            'commentaire_admin' => $validated['commentaire_admin'],
-        ]);
+        $candidature->update(['statut' => $request->statut]);
 
-        // Si admis, changer le rôle de l'utilisateur et affecter à une classe
-        if ($validated['statut'] === 'admis' && isset($validated['classe_id'])) {
-            $candidature->user->update([
-                'role' => 'etudiant',
-                'classe_id' => $validated['classe_id'],
-            ]);
-        }
+        // Email notification
+        Mail::to($candidature->user->email)->send(new CandidatureStatusUpdated($candidature));
 
-        return redirect()->route('admin.candidatures.index')
-            ->with('success', 'Candidature mise à jour avec succès.');
+        return back()->with('success', 'Statut mis à jour et email envoyé.');
     }
 }
+
+ 

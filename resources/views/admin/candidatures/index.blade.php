@@ -1,5 +1,71 @@
 @extends('layouts.admin')
 
+@section('title', 'Candidatures')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Candidatures</h1>
+    <a href="{{ route('admin.candidatures.create') }}" class="btn btn-primary">+ Nouvelle Candidature</a>
+}</div>
+
+@if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
+<div class="card">
+    <div class="card-body table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Étudiant</th>
+                    <th>Statut</th>
+                    <th>Créée</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($candidatures as $cand)
+                <tr>
+                    <td>{{ $cand->id }}</td>
+                    <td>{{ $cand->user->name }} <small class="text-muted">({{ $cand->user->email }})</small></td>
+                    <td><span class="badge bg-secondary">{{ ucfirst($cand->statut) }}</span></td>
+                    <td>{{ $cand->created_at->format('d/m/Y H:i') }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <form action="{{ route('admin.candidatures.updateStatus', $cand) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="statut" value="verifie">
+                                <button class="btn btn-outline-success" @disabled($cand->statut==='verifie' || $cand->statut==='admis')>Valider vérif.</button>
+                            </form>
+                            <form action="{{ route('admin.candidatures.updateStatus', $cand) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="statut" value="admis">
+                                <button class="btn btn-outline-primary" @disabled($cand->statut==='admis')>Admettre</button>
+                            </form>
+                            <form action="{{ route('admin.candidatures.updateStatus', $cand) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="statut" value="rejete">
+                                <button class="btn btn-outline-danger" @disabled($cand->statut==='rejete')>Rejeter</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr><td colspan="5" class="text-center text-muted">Aucune candidature.</td></tr>
+            @endforelse
+            </tbody>
+        </table>
+        <div>{{ $candidatures->links() }}</div>
+    </div>
+</div>
+@endsection
+
+@extends('layouts.admin')
+
 @section('title', 'Gestion des Candidatures')
 
 @section('content')
