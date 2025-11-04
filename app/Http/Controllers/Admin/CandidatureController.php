@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CandidatureStatusUpdated;
 use App\Mail\CandidatureReminder;
+use App\Mail\CandidatureAccountCredentials;
 use Illuminate\Support\Facades\Storage;
 
 class CandidatureController extends Controller
@@ -98,12 +99,15 @@ class CandidatureController extends Controller
                 'prenom' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
             ]);
+            $tempPassword = str()->password(12);
             $user = User::create([
                 'name' => trim($request->prenom . ' ' . $request->nom),
                 'email' => $request->email,
-                'password' => bcrypt(str()->random(12)),
+                'password' => bcrypt($tempPassword),
                 'role' => 'candidat',
             ]);
+            // Envoyer les identifiants de connexion
+            Mail::to($user->email)->send(new CandidatureAccountCredentials($user->name, $user->email, $tempPassword));
         } else {
             $request->validate(['user_id' => 'required|exists:users,id']);
             $user = User::find($request->user_id);
