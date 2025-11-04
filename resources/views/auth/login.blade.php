@@ -56,7 +56,11 @@
                         <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; font-weight:700;">Se connecter</button>
                     </form>
 
-                    <div class="mt-4 text-center text-muted" style="font-size:.9rem;">
+                    <div class="mt-3 text-center">
+                        <a href="{{ route('register') }}" class="text-decoration-none" style="color: var(--color-primary); font-weight:600;">Créer un compte</a>
+                    </div>
+
+                    <div class="mt-3 text-center text-muted" style="font-size:.9rem;">
                         <div>Besoin d’aide ? <a href="mailto:{{ $email }}" class="text-decoration-none" style="color: var(--color-primary);">{{ $email }}</a></div>
                         <div>ou appelez le {{ $phone }}</div>
                     </div>
