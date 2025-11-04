@@ -127,6 +127,100 @@ h1, h2, h3, h4, h5, h6 {
     padding: 5rem 0;
 }
 
+/* Filières Horizontal Scroll Section */
+.filieres-scroll-section {
+    padding: 6rem 0;
+    background: white;
+}
+
+.filieres-scroll-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.filieres-scroll-wrapper {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1rem 0 2rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+}
+
+.filieres-scroll-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.filieres-scroll-wrapper::-webkit-scrollbar-track {
+    background: var(--color-light);
+    border-radius: 4px;
+}
+
+.filieres-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+.filiere-scroll-card {
+    min-width: 320px;
+    max-width: 320px;
+    background: white;
+    border: 2px solid var(--color-light);
+    border-radius: 8px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.filiere-scroll-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(166, 96, 96, 0.15);
+}
+
+.filiere-card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.filiere-card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.filiere-card-description {
+    font-size: 0.95rem;
+    color: var(--color-dark);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.filiere-card-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filiere-card-link:hover {
+    color: var(--color-secondary);
+    gap: 0.75rem;
+}
+
 .stat-card {
     background: white;
     border-radius: 8px;
