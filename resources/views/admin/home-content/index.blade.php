@@ -163,6 +163,22 @@
                 <input type="text" class="form-control" id="admission_process_intro" name="admission_process_intro" 
                        value="{{ \App\Models\Setting::get('admission_process_intro', 'Quatre étapes simples pour rejoindre l\'excellence à l\'IESCA') }}">
             </div>
+            <div class="mb-3">
+                <label for="admission_process_image" class="form-label">Image du Processus d'Admission (format 9:16)</label>
+                @php
+                    $admissionImage = \App\Models\Setting::get('admission_process_image', '');
+                @endphp
+                @if($admissionImage)
+                    <div class="mb-2">
+                        <img src="{{ str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage) }}" 
+                             alt="Image Processus d'Admission" 
+                             style="max-width: 300px; max-height: 500px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                        <p class="text-muted mt-1"><small>Image actuelle</small></p>
+                    </div>
+                @endif
+                <input type="file" class="form-control" id="admission_process_image" name="admission_process_image" accept="image/*">
+                <small class="text-muted">Format recommandé: 9:16 (portrait vertical) - Exemple: 900x1600px, max 5MB</small>
+            </div>
             
             <hr class="my-4">
             

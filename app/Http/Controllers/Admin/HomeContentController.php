@@ -74,6 +74,17 @@ class HomeContentController extends Controller
         Setting::updateOrCreate(['cle' => 'admission_process_title'], ['valeur' => $request->admission_process_title, 'description' => 'Titre section Processus d\'Admission']);
         Setting::updateOrCreate(['cle' => 'admission_process_intro'], ['valeur' => $request->admission_process_intro, 'description' => 'Introduction section Processus d\'Admission']);
         
+        // Image du Processus d'Admission
+        if ($request->hasFile('admission_process_image')) {
+            $file = $request->file('admission_process_image');
+            $filename = 'admission-process-' . time() . '.' . $file->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
+            Setting::updateOrCreate(
+                ['cle' => 'admission_process_image'],
+                ['valeur' => $filename, 'description' => 'Image du processus d\'admission (format 9:16)']
+            );
+        }
+        
         // Étapes du processus d'admission
         for ($i = 1; $i <= 4; $i++) {
             Setting::updateOrCreate(
