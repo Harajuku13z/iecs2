@@ -458,7 +458,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 100%;
     object-fit: cover;
     display: block;
-    min-height: 600px;
+    min-height: 0;
 }
 
 .admission-process-content {
@@ -470,8 +470,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .admission-process-title {
-    font-size: 3rem;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--color-black);
     margin-bottom: 1rem;
 }
@@ -582,13 +581,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .section-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 900;
+    font-size: clamp(1.8rem, 3vw, 2rem);
+    font-weight: 800;
     margin-bottom: 1rem;
     background: linear-gradient(135deg, white, rgba(255,255,255,0.8));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+/* Harmoniser la taille des titres des sections principales */
+.about-section h2,
+.admission-process-title,
+.filieres-scroll-section .section-title,
+.news-section .section-title {
+    font-size: clamp(1.8rem, 3vw, 2rem) !important;
+    font-weight: 800 !important;
+    -webkit-text-fill-color: initial;
+    background: none;
 }
 
 .section-subtitle {
@@ -1185,10 +1195,10 @@ h1, h2, h3, h4, h5, h6 {
 <!-- Processus d'Admission Section -->
 <section class="admission-process-section">
     <div class="container-fluid px-0">
-        <div class="row g-0 align-items-center">
+        <div class="row g-0 align-items-stretch">
             <!-- Image à gauche (9:16) -->
             <div class="col-lg-6" data-aos="fade-right">
-                <div class="admission-image-container" style="width: 100%; height: 100%; min-height: 600px;">
+                <div class="admission-image-container" style="width: 100%; height: 100%;">
                     @php
                         $admissionImage = \App\Models\Setting::get('admission_process_image', 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop');
                         $admissionImageUrl = $admissionImage ? (str_starts_with($admissionImage, 'http') ? $admissionImage : asset('storage/' . $admissionImage)) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=1067&fit=crop';
