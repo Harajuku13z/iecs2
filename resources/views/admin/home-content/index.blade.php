@@ -33,6 +33,21 @@
                 <input type="text" class="form-control" id="hero_subtitle" name="hero_subtitle" 
                        value="{{ \App\Models\Setting::get('hero_subtitle', 'Institut d\'Enseignement Supérieur de la Côte Africaine') }}">
             </div>
+            <div class="mb-3">
+                <label for="hero_image" class="form-label">Image de fond</label>
+                @php
+                    $heroImage = \App\Models\Setting::get('hero_image', '');
+                @endphp
+                @if($heroImage)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $heroImage) }}" alt="Image Hero" 
+                             style="max-width: 300px; max-height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                        <p class="text-muted mt-1"><small>Image actuelle</small></p>
+                    </div>
+                @endif
+                <input type="file" class="form-control" id="hero_image" name="hero_image" accept="image/*">
+                <small class="text-muted">Format: JPG, PNG, GIF. Max: 2MB</small>
+            </div>
         </div>
     </div>
     
@@ -87,7 +102,6 @@
                     ['icon' => '👨‍🏫', 'title' => 'Formation Complète', 'description' => 'Cours théoriques et pratiques'],
                     ['icon' => '📹', 'title' => 'Caméras de Surveillance', 'description' => 'Sécurité assurée 24/7'],
                     ['icon' => '🏢', 'title' => 'Stage Garanti', 'description' => 'En fin de formation'],
-                    ['icon' => '💻', 'title' => 'Ordinateur à Crédit', 'description' => 'Facilité de paiement'],
                 ];
             @endphp
             
@@ -129,6 +143,59 @@
                 <label for="filieres_title" class="form-label">Titre</label>
                 <input type="text" class="form-control" id="filieres_title" name="filieres_title" 
                        value="{{ \App\Models\Setting::get('filieres_title', 'Découvrez nos formations d\'excellence') }}">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Processus d'Admission Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">📋 Section Processus d'Admission</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="admission_process_title" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="admission_process_title" name="admission_process_title" 
+                       value="{{ \App\Models\Setting::get('admission_process_title', 'Processus d\'Admission') }}">
+            </div>
+            <div class="mb-3">
+                <label for="admission_process_intro" class="form-label">Introduction</label>
+                <input type="text" class="form-control" id="admission_process_intro" name="admission_process_intro" 
+                       value="{{ \App\Models\Setting::get('admission_process_intro', 'Quatre étapes simples pour rejoindre l\'excellence à l\'IESCA') }}">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section CTA -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🎯 Section CTA (Prêt à Rejoindre l'Excellence ?)</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="cta_title" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="cta_title" name="cta_title" 
+                       value="{{ \App\Models\Setting::get('cta_title', 'Prêt à Rejoindre l\'Excellence ?') }}">
+            </div>
+            <div class="mb-3">
+                <label for="cta_subtitle" class="form-label">Sous-titre</label>
+                <input type="text" class="form-control" id="cta_subtitle" name="cta_subtitle" 
+                       value="{{ \App\Models\Setting::get('cta_subtitle', 'Les inscriptions sont ouvertes. Commencez votre parcours vers le succès.') }}">
+            </div>
+            <div class="mb-3">
+                <label for="cta_background_image" class="form-label">Image de fond</label>
+                @php
+                    $ctaBgImage = \App\Models\Setting::get('cta_background_image', '');
+                @endphp
+                @if($ctaBgImage)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $ctaBgImage) }}" alt="Image CTA" 
+                             style="max-width: 300px; max-height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                        <p class="text-muted mt-1"><small>Image actuelle</small></p>
+                    </div>
+                @endif
+                <input type="file" class="form-control" id="cta_background_image" name="cta_background_image" accept="image/*">
+                <small class="text-muted">Format: JPG, PNG, GIF. Max: 2MB</small>
             </div>
         </div>
     </div>

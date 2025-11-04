@@ -18,8 +18,12 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section {
     position: relative;
     min-height: 90vh;
+    @php
+        $heroImage = \App\Models\Setting::get('hero_image', '');
+        $heroImageUrl = $heroImage ? asset('storage/' . $heroImage) : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920';
+    @endphp
     background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%),
-                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920') center/cover;
+                url('{{ $heroImageUrl }}') center/cover;
     color: white;
     overflow: hidden;
     margin-top: 0;
@@ -916,7 +920,16 @@ h1, h2, h3, h4, h5, h6 {
 /* CTA Section */
 .cta-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-black) 100%);
+    @php
+        $ctaBgImage = \App\Models\Setting::get('cta_background_image', '');
+        $ctaBgImageUrl = $ctaBgImage ? asset('storage/' . $ctaBgImage) : '';
+    @endphp
+    @if($ctaBgImageUrl)
+        background: linear-gradient(135deg, rgba(166, 96, 96, 0.85) 0%, rgba(13, 13, 13, 0.85) 100%),
+                    url('{{ $ctaBgImageUrl }}') center/cover;
+    @else
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-black) 100%);
+    @endif
     color: white;
     position: relative;
     overflow: hidden;
@@ -1108,12 +1121,12 @@ h1, h2, h3, h4, h5, h6 {
                     </p>
                     
                     <div class="about-features">
-                        @for($i = 1; $i <= 7; $i++)
+                        @for($i = 1; $i <= 6; $i++)
                             <div class="feature-item">
-                                <div class="feature-icon">{{ \App\Models\Setting::get('about_feature_' . $i . '_icon', ['💻', '📚', '❄️', '👨‍🏫', '📹', '🏢', '💻'][$i-1]) }}</div>
+                                <div class="feature-icon">{{ \App\Models\Setting::get('about_feature_' . $i . '_icon', ['💻', '📚', '❄️', '👨‍🏫', '📹', '🏢'][$i-1]) }}</div>
                                 <div>
-                                    <h5 style="font-weight: 700; margin-bottom: 0.5rem;">{{ \App\Models\Setting::get('about_feature_' . $i . '_title', ['Salle d\'Informatique', 'Bibliothèque', 'Classes Climatisées', 'Formation Complète', 'Caméras de Surveillance', 'Stage Garanti', 'Ordinateur à Crédit'][$i-1]) }}</h5>
-                                    <p style="color: var(--color-dark); margin: 0;">{{ \App\Models\Setting::get('about_feature_' . $i . '_description', ['Équipements modernes et performants', 'Ressources académiques complètes', 'Confort optimal pour l\'apprentissage', 'Cours théoriques et pratiques', 'Sécurité assurée 24/7', 'En fin de formation', 'Facilité de paiement disponible'][$i-1]) }}</p>
+                                    <h5 style="font-weight: 700; margin-bottom: 0.5rem;">{{ \App\Models\Setting::get('about_feature_' . $i . '_title', ['Salle d\'Informatique', 'Bibliothèque', 'Classes Climatisées', 'Formation Complète', 'Caméras de Surveillance', 'Stage Garanti'][$i-1]) }}</h5>
+                                    <p style="color: var(--color-dark); margin: 0;">{{ \App\Models\Setting::get('about_feature_' . $i . '_description', ['Équipements modernes et performants', 'Ressources académiques complètes', 'Confort optimal pour l\'apprentissage', 'Cours théoriques et pratiques', 'Sécurité assurée 24/7', 'En fin de formation'][$i-1]) }}</p>
                                 </div>
                             </div>
                         @endfor
@@ -1183,8 +1196,8 @@ h1, h2, h3, h4, h5, h6 {
             <!-- Contenu à droite -->
             <div class="col-lg-6" data-aos="fade-left">
                 <div class="admission-process-content" style="width: 100%; padding: 3rem;">
-                    <h2 class="admission-process-title">Processus d'Admission</h2>
-                    <p class="admission-process-intro">Quatre étapes simples pour rejoindre l'excellence à l'IESCA</p>
+                    <h2 class="admission-process-title">{{ \App\Models\Setting::get('admission_process_title', 'Processus d\'Admission') }}</h2>
+                    <p class="admission-process-intro">{{ \App\Models\Setting::get('admission_process_intro', 'Quatre étapes simples pour rejoindre l\'excellence à l\'IESCA') }}</p>
                     
                     <div class="admission-steps">
                         <div class="admission-step-item" data-aos="fade-up" data-aos-delay="100">
@@ -1363,8 +1376,8 @@ h1, h2, h3, h4, h5, h6 {
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 cta-content" data-aos="fade-right">
-                <h2 class="cta-title">Prêt à Rejoindre l'Excellence ?</h2>
-                <p class="cta-subtitle">Les inscriptions sont ouvertes. Commencez votre parcours vers le succès.</p>
+                <h2 class="cta-title">{{ \App\Models\Setting::get('cta_title', 'Prêt à Rejoindre l\'Excellence ?') }}</h2>
+                <p class="cta-subtitle">{{ \App\Models\Setting::get('cta_subtitle', 'Les inscriptions sont ouvertes. Commencez votre parcours vers le succès.') }}</p>
             </div>
             <div class="col-lg-4 text-end" data-aos="fade-left">
                 <a href="{{ route('admission') }}" class="cta-button">
