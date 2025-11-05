@@ -1,16 +1,17 @@
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-    
     RewriteEngine On
     
-    # Redirect everything to public directory
+    # Redirect to public directory
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ public/$1 [L]
-    
-    # Redirect root to public
-    RewriteRule ^$ public/ [L]
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# If mod_rewrite is not available, redirect to public
+<IfModule !mod_rewrite.c>
+    RedirectMatch ^/$ /public/
 </IfModule>
