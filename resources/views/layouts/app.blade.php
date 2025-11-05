@@ -7,14 +7,24 @@
     @stack('head')
     
     {{-- Vite assets avec fallback --}}
-    @if(file_exists(public_path('build/manifest.json')))
+    @php
+        $manifestPath = public_path('build/manifest.json');
+        $hasManifest = file_exists($manifestPath) && is_readable($manifestPath);
+    @endphp
+    
+    @if($hasManifest)
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
-        {{-- Fallback: Charger Bootstrap et les styles de base depuis CDN --}}
+        {{-- Fallback: Charger Bootstrap et les styles depuis CDN et fichiers locaux --}}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-        <link href="{{ asset('build/assets/app.css') }}" rel="stylesheet" onerror="this.onerror=null; this.href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';">
+        @if(file_exists(public_path('build/assets/app.css')))
+            <link href="{{ asset('build/assets/app.css') }}?v={{ time() }}" rel="stylesheet">
+        @endif
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        @if(file_exists(public_path('build/assets/app.js')))
+            <script src="{{ asset('build/assets/app.js') }}?v={{ time() }}"></script>
+        @endif
     @endif
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
