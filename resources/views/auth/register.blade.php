@@ -27,10 +27,35 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        {{-- Préserver les paramètres de formation --}}
+                        @if(isset($formationParams))
+                            @if($formationParams['filiere_id'])
+                                <input type="hidden" name="filiere_id" value="{{ $formationParams['filiere_id'] }}">
+                            @endif
+                            @if($formationParams['specialite_id'])
+                                <input type="hidden" name="specialite_id" value="{{ $formationParams['specialite_id'] }}">
+                            @endif
+                            @if($formationParams['classe_id'])
+                                <input type="hidden" name="classe_id" value="{{ $formationParams['classe_id'] }}">
+                            @endif
+                        @endif
+
                         <div class="mb-3">
                             <label class="form-label">Nom complet</label>
                             <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="form-control" />
                             @error('name')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Téléphone</label>
+                            <input id="phone" type="text" name="phone" value="{{ old('phone') }}" autocomplete="tel" class="form-control" />
+                            @error('phone')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Adresse</label>
+                            <input id="address" type="text" name="address" value="{{ old('address') }}" autocomplete="street-address" class="form-control" />
+                            @error('address')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="mb-3">

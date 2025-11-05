@@ -4,48 +4,53 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Gestion des Cours</h1>
-    <a href="{{ route('admin.cours.create') }}" class="btn btn-primary">➕ Nouveau Cours</a>
+    <h1>📚 Gestion des Cours</h1>
+    <a href="{{ route('admin.cours.create') }}" class="btn btn-primary">➕ Ajouter des Cours</a>
 </div>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Code</th>
-                    <th>Coefficient</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($cours as $cour)
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>{{ $cour->nom }}</td>
-                        <td><code>{{ $cour->code }}</code></td>
-                        <td>{{ $cour->coefficient }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('admin.cours.edit', $cour) }}" class="btn btn-warning">✏️ Modifier</a>
-                                <form action="{{ route('admin.cours.destroy', $cour) }}" method="POST" 
-                                      onsubmit="return confirm('Supprimer ce cours ?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">🗑️ Supprimer</button>
-                                </form>
-                            </div>
-                        </td>
+                        <th>Classe</th>
+                        <th>Filière</th>
+                        <th>Niveau</th>
+                        <th>Nombre de cours</th>
+                        <th>Actions</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">Aucun cours</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-        {{ $cours->links() }}
+                </thead>
+                <tbody>
+                    @forelse($classes as $classe)
+                        <tr>
+                            <td><strong>{{ $classe->nom }}</strong></td>
+                            <td>{{ $classe->filiere->nom ?? '-' }}</td>
+                            <td>{{ $classe->niveau->nom ?? '-' }}</td>
+                            <td>
+                                <span class="badge bg-primary">{{ $classe->cours->count() }} cours</span>
+                            </td>
+                            <td>
+                                <a href="{{ route('admin.cours.classe.show', $classe) }}" class="btn btn-sm btn-primary">
+                                    👁️ Voir les cours
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Aucune classe trouvée</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection
-

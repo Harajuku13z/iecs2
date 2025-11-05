@@ -11,13 +11,29 @@ class SettingController extends Controller
 {
     public function index()
     {
+        // Créer les settings de réseaux sociaux s'ils n'existent pas
+        $socialNetworks = [
+            'social_facebook' => 'Lien Facebook',
+            'social_twitter' => 'Lien Twitter/X',
+            'social_instagram' => 'Lien Instagram',
+            'social_linkedin' => 'Lien LinkedIn',
+            'social_youtube' => 'Lien YouTube',
+        ];
+        
+        foreach ($socialNetworks as $key => $description) {
+            Setting::firstOrCreate(
+                ['cle' => $key],
+                ['valeur' => '', 'description' => $description]
+            );
+        }
+        
         $settings = Setting::all();
         return view('admin.settings.index', compact('settings'));
     }
 
     public function update(Request $request)
     {
-        // Liste des clés qui appartiennent à la page d'accueil (à exclure)
+        // Liste des clés qui appartiennent à la page d'accueil ou autres pages (à exclure)
         $homepageKeys = [
             'hero_title', 'hero_subtitle', 'hero_image',
             'about_title', 'about_text1', 'about_text2', 'about_image',
@@ -36,10 +52,14 @@ class SettingController extends Controller
             'admission_step_4_title', 'admission_step_4_description',
             'cta_title', 'cta_subtitle', 'cta_background_image',
             'homepage_title', 'banner_image', 'inscription_start_date', 'frais_mensuels',
+            'events_hero_title', 'events_hero_subtitle', 'events_hero_image',
         ];
         
         foreach ($request->except(array_merge(['_token', 'logo'], $homepageKeys)) as $cle => $valeur) {
-            Setting::where('cle', $cle)->update(['valeur' => $valeur]);
+            Setting::updateOrCreate(
+                ['cle' => $cle],
+                ['valeur' => $valeur, 'description' => $this->getSettingDescription($cle)]
+            );
         }
 
         // Gestion de l'upload du logo
@@ -72,5 +92,18 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Email de test envoyé à ' . $data['test_email']);
+    }
+
+    private function getSettingDescription($cle)
+    {
+        $descriptions = [
+            'social_facebook' => 'Lien Facebook',
+            'social_twitter' => 'Lien Twitter/X',
+            'social_instagram' => 'Lien Instagram',
+            'social_linkedin' => 'Lien LinkedIn',
+            'social_youtube' => 'Lien YouTube',
+        ];
+        
+        return $descriptions[$cle] ?? ucfirst(str_replace('_', ' ', $cle));
     }
 }

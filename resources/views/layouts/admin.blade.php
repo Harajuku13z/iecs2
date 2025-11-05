@@ -50,13 +50,19 @@
             <!-- Sidebar -->
             <nav class="col-md-2 d-md-block sidebar p-3">
                 <div class="position-sticky">
-                    <h6 class="text-muted mb-3">GESTION</h6>
-                    <ul class="nav flex-column">
+                    <!-- Tableau de bord -->
+                    <h6 class="text-muted mb-2 mt-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Tableau de bord</h6>
+                    <ul class="nav flex-column mb-4">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.dashboard') }}">
                                 📊 Tableau de bord
                             </a>
                         </li>
+                    </ul>
+
+                    <!-- Gestion académique -->
+                    <h6 class="text-muted mb-2 mt-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Gestion académique</h6>
+                    <ul class="nav flex-column mb-4">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.filieres.index') }}">
                                 📚 Filières
@@ -78,6 +84,16 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.calendrier-cours.index') }}">
+                                📅 Calendrier des Cours
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Gestion utilisateurs -->
+                    <h6 class="text-muted mb-2 mt-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Utilisateurs</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.users.index') }}">
                                 👥 Utilisateurs
                             </a>
@@ -87,24 +103,59 @@
                                 📝 Candidatures
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.home-content.index') }}">
-                                📝 Contenus Page d'Accueil
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.settings.index') }}">
-                                ⚙️ Paramètres
-                            </a>
-                        </li>
+                    </ul>
+
+                    <!-- Contenus -->
+                    <h6 class="text-muted mb-2 mt-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Contenus</h6>
+                    <ul class="nav flex-column mb-4">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.actualites.index') }}">
                                 📰 Actualités
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.actualite-content.index') }}" style="padding-left: 1.5rem; font-size: 0.9rem;">
+                                ⚙️ Config. Page Actualités
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.evenements.index') }}">
                                 📅 Événements
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.notifications.index') }}">
+                                🔔 Notifications
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.event-content.index') }}" style="padding-left: 1.5rem; font-size: 0.9rem;">
+                                ⚙️ Config. Page Événements
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Pages -->
+                    <h6 class="text-muted mb-2 mt-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Pages</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.home-content.index') }}">
+                                🏠 Page d'Accueil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.admission-content.index') }}">
+                                📋 Page Admission
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Paramètres -->
+                    <h6 class="text-muted mb-2 mt-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Paramètres</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.settings.index') }}">
+                                ⚙️ Paramètres
                             </a>
                         </li>
                     </ul>
@@ -133,4 +184,5 @@
     </div>
 </body>
 </html>
+
 

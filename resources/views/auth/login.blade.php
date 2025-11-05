@@ -57,7 +57,11 @@
                     </form>
 
                     <div class="mt-3 text-center">
-                        <a href="{{ route('register') }}" class="text-decoration-none" style="color: var(--color-primary); font-weight:600;">Créer un compte</a>
+                        @php
+                            $intendedUrl = session()->get('url.intended');
+                            $registerUrl = $intendedUrl ? route('register') . '?redirect_to=' . urlencode($intendedUrl) : route('register');
+                        @endphp
+                        <a href="{{ $registerUrl }}" class="text-decoration-none" style="color: var(--color-primary); font-weight:600;">Créer un compte</a>
                     </div>
 
                     <div class="mt-3 text-center text-muted" style="font-size:.9rem;">

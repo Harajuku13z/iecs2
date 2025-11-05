@@ -25,11 +25,28 @@ class Classe extends Model
 
     public function cours()
     {
-        return $this->belongsToMany(Cours::class, 'classe_cours')->withTimestamps();
+        return $this->belongsToMany(Cours::class, 'classe_cours')
+            ->withPivot('semestre')
+            ->withTimestamps();
     }
 
     public function ressources()
     {
         return $this->hasMany(Ressource::class);
+    }
+
+    public function calendrierCours()
+    {
+        return $this->hasMany(CalendrierCours::class)->orderByRaw("
+            CASE jour_semaine
+                WHEN 'Lundi' THEN 1
+                WHEN 'Mardi' THEN 2
+                WHEN 'Mercredi' THEN 3
+                WHEN 'Jeudi' THEN 4
+                WHEN 'Vendredi' THEN 5
+                WHEN 'Samedi' THEN 6
+                WHEN 'Dimanche' THEN 7
+            END
+        ")->orderBy('heure_debut');
     }
 }

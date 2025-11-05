@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
         'role',
         'classe_id',
+        'phone',
+        'contact_name',
+        'contact_phone',
+        'profile_photo',
+        'address',
     ];
 
     /**
@@ -74,6 +79,16 @@ class User extends Authenticatable
     public function ressources()
     {
         return $this->hasMany(Ressource::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    public function notificationsNonLues()
+    {
+        return $this->notifications()->where('lu', false);
     }
 
     // Helper methods

@@ -1,0 +1,426 @@
+@extends('layouts.app')
+
+@section('title', 'Événements - IESCA')
+
+@section('content')
+<style>
+.events-hero {
+    position: relative;
+    min-height: 60vh;
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+@php
+    $heroImage = \App\Models\Setting::get('events_hero_image', '');
+    $heroImageUrl = $heroImage ? asset('storage/' . $heroImage) : '';
+@endphp
+
+.events-hero {
+    @if($heroImageUrl)
+    background-image: url('{{ $heroImageUrl }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    @endif
+}
+
+.events-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(166, 96, 96, 0.5) 0%, rgba(13, 13, 13, 0.5) 100%);
+    z-index: 0;
+}
+
+.events-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.events-hero h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+.event-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.event-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+}
+
+.event-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-date {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.event-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.event-description {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.event-lieu {
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.event-type {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-light);
+    color: var(--color-primary);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.event-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--color-light);
+    border-radius: 8px;
+}
+
+.event-tag {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 2px solid var(--color-primary);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.event-tag:hover,
+.event-tag.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.event-tag.all {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+}
+
+.pagination .page-link {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+</style>
+
+@php
+    $heroTitle = \App\Models\Setting::get('events_hero_title', '📅 Nos Événements');
+    $heroSubtitle = \App\Models\Setting::get('events_hero_subtitle', 'Découvrez les événements et activités de l\'IESCA');
+    
+    // Récupérer tous les types uniques pour les tags
+    $allTypes = \App\Models\Evenement::where('publie', true)
+        ->distinct()
+        ->pluck('type')
+        ->filter()
+        ->map(function($type) {
+            $labels = [
+                'conference' => 'Conférence',
+                'seminaire' => 'Séminaire',
+                'atelier' => 'Atelier',
+                'formation' => 'Formation',
+                'competition' => 'Compétition',
+                'autre' => 'Autre'
+            ];
+            return [
+                'value' => $type,
+                'label' => $labels[$type] ?? ucfirst($type)
+            ];
+        })
+        ->values();
+@endphp
+
+<div class="events-hero">
+    <div class="container">
+        <div class="events-hero-content">
+            <h1>{{ $heroTitle }}</h1>
+            <p class="lead">{{ $heroSubtitle }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Tags de filtrage -->
+    <div class="event-tags">
+        <button class="event-tag all active" data-type="all">Tous</button>
+        @foreach($allTypes as $typeInfo)
+            <button class="event-tag" data-type="{{ $typeInfo['value'] }}">{{ $typeInfo['label'] }}</button>
+        @endforeach
+    </div>
+
+    <!-- Événements à venir -->
+    @if($evenementsAVenir->count() > 0)
+    <h2 class="section-title">Événements à Venir</h2>
+    <div class="row g-4 mb-4" id="eventsAVenir">
+        @foreach($evenementsAVenir as $evenement)
+            <div class="col-md-6 col-lg-4 event-item" data-type="{{ $evenement->type }}">
+                <div class="event-card">
+                    @if($evenement->image)
+                        <img src="{{ asset('storage/' . $evenement->image) }}" alt="{{ $evenement->titre }}" class="event-image">
+                    @else
+                        <div class="event-image d-flex align-items-center justify-content-center text-white">
+                            <i style="font-size: 3rem;">📅</i>
+                        </div>
+                    @endif
+                    <div class="event-body">
+                        <div class="event-date">
+                            {{ optional($evenement->date_debut)->format('d M Y') }}
+                            @if($evenement->date_fin && $evenement->date_fin != $evenement->date_debut)
+                                - {{ optional($evenement->date_fin)->format('d M Y') }}
+                            @endif
+                        </div>
+                        <h3 class="event-title">{{ $evenement->titre }}</h3>
+                        <p class="event-description">{{ Str::limit($evenement->description, 150) }}</p>
+                        @if($evenement->lieu)
+                            <div class="event-lieu">📍 {{ $evenement->lieu }}</div>
+                        @endif
+                        @if($evenement->type)
+                            <span class="event-type">{{ $evenement->type }}</span>
+                        @endif
+                        <a href="{{ route('evenements.show', $evenement) }}" class="btn btn-sm mt-auto" style="background: var(--color-primary); color: white; border-radius: 8px;">
+                            En savoir plus →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    @if(!$showAll)
+        @php
+            $totalAVenir = \App\Models\Evenement::where('publie', true)
+                ->where('date_debut', '>=', now())
+                ->count();
+        @endphp
+        @if($totalAVenir > 6)
+        <div class="text-center mb-5">
+            <a href="{{ route('evenements', ['filter' => 'all']) }}" class="btn" style="background: var(--color-primary); color: white; border-radius: 8px; padding: 0.75rem 2rem;">
+                Voir tout ({{ $totalAVenir }} événements)
+            </a>
+        </div>
+        @endif
+    @else
+        <!-- Pagination pour les événements à venir -->
+        @if($evenementsAVenir instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            <div class="d-flex justify-content-center mb-5">
+                {{ $evenementsAVenir->appends(['filter' => 'all'])->links() }}
+            </div>
+        @endif
+    @endif
+    @endif
+
+    <!-- Événements passés -->
+    @if($evenementsPasses->count() > 0)
+    <h2 class="section-title">Événements Passés</h2>
+    <div class="row g-4 mb-4" id="eventsPasses">
+        @foreach($evenementsPasses as $evenement)
+            <div class="col-md-6 col-lg-4 event-item" data-type="{{ $evenement->type }}">
+                <div class="event-card" style="opacity: 0.85;">
+                    @if($evenement->image)
+                        <img src="{{ asset('storage/' . $evenement->image) }}" alt="{{ $evenement->titre }}" class="event-image">
+                    @else
+                        <div class="event-image d-flex align-items-center justify-content-center text-white">
+                            <i style="font-size: 3rem;">📅</i>
+                        </div>
+                    @endif
+                    <div class="event-body">
+                        <div class="event-date">
+                            {{ optional($evenement->date_debut)->format('d M Y') }}
+                            @if($evenement->date_fin && $evenement->date_fin != $evenement->date_debut)
+                                - {{ optional($evenement->date_fin)->format('d M Y') }}
+                            @endif
+                        </div>
+                        <h3 class="event-title">{{ $evenement->titre }}</h3>
+                        <p class="event-description">{{ Str::limit($evenement->description, 150) }}</p>
+                        @if($evenement->lieu)
+                            <div class="event-lieu">📍 {{ $evenement->lieu }}</div>
+                        @endif
+                        @if($evenement->type)
+                            <span class="event-type">{{ $evenement->type }}</span>
+                        @endif
+                        <a href="{{ route('evenements.show', $evenement) }}" class="btn btn-sm mt-auto" style="background: var(--color-primary); color: white; border-radius: 8px;">
+                            En savoir plus →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    
+    @if($showAll && $evenementsPasses instanceof \Illuminate\Pagination\LengthAwarePaginator)
+        <!-- Pagination pour les événements passés -->
+        <div class="d-flex justify-content-center mb-5">
+            {{ $evenementsPasses->appends(['filter' => 'all'])->links() }}
+        </div>
+    @endif
+    @endif
+
+    @if($evenementsAVenir->count() == 0 && $evenementsPasses->count() == 0)
+        <div class="text-center py-5">
+            <p class="text-muted">Aucun événement disponible pour le moment.</p>
+        </div>
+    @endif
+
+    <!-- Réseaux Sociaux -->
+    <div class="mt-5 pt-4 border-top">
+        <h5 class="text-center mb-3" style="font-weight: 700; color: var(--color-black);">Suivez-nous</h5>
+        <div class="d-flex gap-2 flex-wrap justify-content-center">
+            @php
+                $facebook = \App\Models\Setting::get('social_facebook', '');
+                $twitter = \App\Models\Setting::get('social_twitter', '');
+                $instagram = \App\Models\Setting::get('social_instagram', '');
+                $linkedin = \App\Models\Setting::get('social_linkedin', '');
+                $youtube = \App\Models\Setting::get('social_youtube', '');
+            @endphp
+            
+            @if($facebook)
+                <a href="{{ $facebook }}" target="_blank" style="width: 40px; height: 40px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='var(--color-secondary)'" onmouseout="this.style.transform='scale(1)'; this.style.background='var(--color-primary)'">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/></svg>
+                </a>
+            @endif
+            @if($twitter)
+                <a href="{{ $twitter }}" target="_blank" style="width: 40px; height: 40px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='var(--color-secondary)'" onmouseout="this.style.transform='scale(1)'; this.style.background='var(--color-primary)'">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/></svg>
+                </a>
+            @endif
+            @if($instagram)
+                <a href="{{ $instagram }}" target="_blank" style="width: 40px; height: 40px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='var(--color-secondary)'" onmouseout="this.style.transform='scale(1)'; this.style.background='var(--color-primary)'">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>
+                </a>
+            @endif
+            @if($linkedin)
+                <a href="{{ $linkedin }}" target="_blank" style="width: 40px; height: 40px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='var(--color-secondary)'" onmouseout="this.style.transform='scale(1)'; this.style.background='var(--color-primary)'">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+                </a>
+            @endif
+            @if($youtube)
+                <a href="{{ $youtube }}" target="_blank" style="width: 40px; height: 40px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='var(--color-secondary)'" onmouseout="this.style.transform='scale(1)'; this.style.background='var(--color-primary)'">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/></svg>
+                </a>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- AOS Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000, once: true });
+
+  // Filtrage par tags
+  document.querySelectorAll('.event-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+      // Active le tag cliqué
+      document.querySelectorAll('.event-tag').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      
+      const selectedType = this.dataset.type;
+      const allItems = document.querySelectorAll('.event-item');
+      
+      allItems.forEach(item => {
+        if (selectedType === 'all' || item.dataset.type === selectedType) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+@endsection

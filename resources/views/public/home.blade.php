@@ -605,11 +605,13 @@ h1, h2, h3, h4, h5, h6 {
 .about-section h2,
 .admission-process-title,
 .filieres-scroll-section .section-title,
-.news-section .section-title {
+.news-section .section-title,
+.events-section .section-title {
     font-size: clamp(1.8rem, 3vw, 2rem) !important;
     font-weight: 800 !important;
     -webkit-text-fill-color: initial;
     background: none;
+    color: var(--color-black) !important;
 }
 
 .section-subtitle {
@@ -861,20 +863,22 @@ h1, h2, h3, h4, h5, h6 {
 .calendar-container {
     background: white;
     border-radius: 8px;
-    padding: 2rem;
+    padding: 1.25rem;
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     border: 1px solid rgba(166, 96, 96, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .calendar-title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--color-black);
 }
@@ -888,11 +892,12 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--color-primary);
     border: none;
     color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 1rem;
 }
 
 .calendar-nav button:hover {
@@ -903,15 +908,15 @@ h1, h2, h3, h4, h5, h6 {
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
+    gap: 0.35rem;
 }
 
 .calendar-day-header {
     text-align: center;
     font-weight: 600;
     color: var(--color-dark);
-    padding: 0.5rem;
-    font-size: 0.9rem;
+    padding: 0.35rem;
+    font-size: 0.8rem;
 }
 
 .calendar-day {
@@ -919,10 +924,12 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
+    font-size: 0.85rem;
+    min-height: 32px;
 }
 
 .calendar-day:hover {
@@ -1207,7 +1214,7 @@ h1, h2, h3, h4, h5, h6 {
                                     @endif
                                 </div>
                             @endif
-                            <a href="{{ route('formations', ['filiere_id' => $f->id]) }}" class="btn btn-site w-100 mt-auto">En savoir plus</a>
+                            <a href="{{ route('formations.show', $f) }}" class="btn btn-site w-100 mt-auto">En savoir plus</a>
                             </div>
                     </div>
                 </div>
@@ -1273,7 +1280,7 @@ h1, h2, h3, h4, h5, h6 {
                     </div>
                     
                     <div class="mt-4" data-aos="fade-up" data-aos-delay="500">
-                        <a href="{{ route('admission') }}" class="admission-cta-button">
+                        <a href="{{ route('candidature.create') }}" class="admission-cta-button">
                             Commencer Ma Candidature →
                         </a>
                     </div>
@@ -1326,87 +1333,73 @@ h1, h2, h3, h4, h5, h6 {
     </div>
 </section>
 
-<!-- Events Section with Calendar -->
+<!-- Events Section with Tags -->
 <section class="events-section">
     <div class="container">
         <div class="section-header text-dark" data-aos="fade-up">
-            <h2 class="section-title" style="color: var(--color-black);">Calendrier des Événements</h2>
+            <h2 class="section-title" style="color: #000000;">Événements</h2>
             <p class="section-subtitle" style="color: var(--color-dark);">Ne manquez aucun de nos événements</p>
         </div>
         
-        <div class="row g-4">
-            <!-- Events List -->
-            <div class="col-lg-6" data-aos="fade-right">
-                <div class="events-list">
-                    @php
-                        $evenements = \App\Models\Evenement::publie()->aVenir()->get();
-                    @endphp
-                    
-                    @forelse($evenements as $event)
-                        <div class="event-card">
+        @php
+            $homeEvenementsAVenir = \App\Models\Evenement::publie()
+                ->aVenir()
+                ->take(3)
+                ->get();
+        @endphp
+        
+        <!-- Événements à venir -->
+        @if($homeEvenementsAVenir->count() > 0)
+        <div class="row g-4 mb-4" id="homeEventsAVenir">
+            @foreach($homeEvenementsAVenir as $event)
+                <div class="col-md-6 col-lg-4">
+                    <div class="event-card">
+                        @if($event->image)
+                            <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->titre }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px 8px 0 0;">
+                        @else
+                            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: center; color: white;">
+                                <i style="font-size: 3rem;">📅</i>
+                            </div>
+                        @endif
+                        <div style="padding: 1.5rem;">
                             <div class="event-date-badge">
                                 {{ $event->date_debut->format('d M Y') }} - {{ $event->date_debut->format('H:i') }}
                             </div>
                             <h3 class="event-title">{{ $event->titre }}</h3>
-                            <p class="mb-2">{{ $event->description }}</p>
+                            <p class="mb-2">{{ Str::limit($event->description, 100) }}</p>
                             <div class="event-info">
                                 @if($event->lieu)
                                     <div>📍 {{ $event->lieu }}</div>
                                 @endif
                                 <div><span class="badge" style="background: var(--color-secondary);">{{ $event->type }}</span></div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="text-center p-5">
-                            <h4>Aucun événement programmé</h4>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-            
-            <!-- Calendar -->
-            <div class="col-lg-6" data-aos="fade-left">
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <h3 class="calendar-title">{{ now()->format('F Y') }}</h3>
-                        <div class="calendar-nav">
-                            <button>‹</button>
-                            <button>›</button>
+                            <a href="{{ route('evenements.show', $event) }}" class="btn btn-sm mt-2" style="background: var(--color-primary); color: white; border-radius: 8px;">
+                                En savoir plus →
+                            </a>
                         </div>
                     </div>
-                    
-                    <div class="calendar-grid">
-                        <!-- Day Headers -->
-                        @foreach(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] as $day)
-                            <div class="calendar-day-header">{{ $day }}</div>
-                        @endforeach
-                        
-                        <!-- Calendar Days -->
-                        @php
-                            $startOfMonth = now()->startOfMonth();
-                            $daysInMonth = now()->daysInMonth;
-                            $startDay = $startOfMonth->dayOfWeek == 0 ? 7 : $startOfMonth->dayOfWeek;
-                            $eventDays = \App\Models\Evenement::publie()
-                                ->whereMonth('date_debut', now()->month)
-                                ->get()
-                                ->pluck('date_debut')
-                                ->map(fn($date) => $date->day)
-                                ->toArray();
-                        @endphp
-                        
-                        @for($i = 1; $i < $startDay; $i++)
-                            <div class="calendar-day"></div>
-                        @endfor
-                        
-                        @for($day = 1; $day <= $daysInMonth; $day++)
-                            <div class="calendar-day {{ in_array($day, $eventDays) ? 'has-event' : '' }} {{ $day == now()->day ? 'today' : '' }}">
-                                {{ $day }}
-                            </div>
-                        @endfor
-                    </div>
                 </div>
-            </div>
+            @endforeach
         </div>
+        @php
+            $totalAVenir = \App\Models\Evenement::publie()
+                ->aVenir()
+                ->count();
+        @endphp
+        @if($totalAVenir > 3)
+        <div class="text-center mb-5">
+            <a href="{{ route('evenements') }}" class="btn" style="background: var(--color-primary); color: white; border-radius: 8px; padding: 0.75rem 2rem;">
+                Voir tout ({{ $totalAVenir }} événements)
+            </a>
+        </div>
+        @endif
+        @endif
+        
+        @if($homeEvenementsAVenir->count() == 0)
+            <div class="text-center p-5">
+                <h4>Aucun événement disponible</h4>
+            </div>
+        @endif
     </div>
 </section>
 
@@ -1423,7 +1416,7 @@ h1, h2, h3, h4, h5, h6 {
                 <p class="cta-subtitle">{{ \App\Models\Setting::get('cta_subtitle', 'Les inscriptions sont ouvertes. Commencez votre parcours vers le succès.') }}</p>
             </div>
             <div class="col-lg-4 text-end" data-aos="fade-left">
-                <a href="{{ route('admission') }}" class="cta-button">
+                <a href="{{ route('candidature.create') }}" class="cta-button">
                     Postuler Maintenant
                 </a>
             </div>
@@ -1523,5 +1516,6 @@ h1, h2, h3, h4, h5, h6 {
     // Vérifier si le niveau select a des options
     console.log('Niveau options:', niveauSelect.options.length);
   });
+
 </script>
 @endsection

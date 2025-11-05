@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'IESCA')</title>
+    @stack('head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +23,187 @@
         }
         main {
             padding: 0 !important;
+        }
+        
+        /* Navigation Styles */
+        .navbar {
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .navbar-nav {
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-item {
+            margin: 0 0.25rem;
+        }
+        
+        .nav-link {
+            color: var(--color-black) !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.25rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--color-primary) !important;
+            background: rgba(166, 96, 96, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link:hover::before {
+            width: 80%;
+        }
+        
+        .nav-link.active {
+            color: white !important;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            box-shadow: 0 4px 12px rgba(166, 96, 96, 0.3);
+        }
+        
+        .nav-link.active::before {
+            display: none;
+        }
+        
+        .nav-link.cta-button {
+            background: #6c757d;
+            color: white !important;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+        
+        .nav-link.cta-button:hover {
+            background: #5a6268;
+            color: white !important;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+        
+        .nav-link.cta-button::before {
+            display: none;
+        }
+        
+        .nav-link.student-button {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white !important;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(166, 96, 96, 0.3);
+        }
+        
+        .nav-link.student-button:hover {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+            color: white !important;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(166, 96, 96, 0.4);
+        }
+        
+        .nav-link.student-button::before {
+            display: none;
+        }
+        /* Student secondary link */
+        .nav-link.student-secondary {
+            background: #f1f3f5;
+            color: #333 !important;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .nav-link.student-secondary:hover {
+            background: #e9ecef;
+            color: #000 !important;
+        }
+        
+        .nav-link.dropdown-toggle {
+            padding-right: 1.5rem !important;
+        }
+        
+        .nav-link.dropdown-toggle::after {
+            margin-left: 0.5rem;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background: var(--color-primary);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .navbar-toggler {
+            border: 2px solid var(--color-primary);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-toggler:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        
+        .navbar-toggler:hover .navbar-toggler-icon {
+            filter: brightness(0) invert(1);
+        }
+        
+        @media (max-width: 991px) {
+            .navbar-nav {
+                gap: 0;
+                padding-top: 1rem;
+            }
+            
+            .nav-item {
+                margin: 0.25rem 0;
+            }
+            
+            .nav-link {
+                padding: 1rem 1.5rem !important;
+                border-radius: 8px;
+            }
+            
+            .nav-link:hover {
+                background: rgba(166, 96, 96, 0.1);
+            }
         }
     </style>
 </head>
@@ -43,46 +225,102 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}" style="color: var(--color-black); font-weight: 500;">Accueil</a>
+                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">
+                            Accueil
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('formations') }}" style="color: var(--color-black); font-weight: 500;">Formations</a>
+                        <a class="nav-link {{ request()->is('formations*') ? 'active' : '' }}" href="{{ route('formations') }}">
+                            Formations
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admission') }}" style="color: var(--color-black); font-weight: 500;">Admission</a>
+                        <a class="nav-link {{ request()->is('admission*') ? 'active' : '' }}" href="{{ route('admission') }}">
+                            Admission
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('actualites*') ? 'active' : '' }}" href="{{ route('actualites') }}">
+                            Actualités
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('evenements*') ? 'active' : '' }}" href="{{ route('evenements') }}">
+                            Événements
+                        </a>
                     </li>
                     @auth
                         @if(auth()->user()->isAdmin())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Admin</a>
+                                <a class="nav-link {{ request()->is('admin*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                                    Admin
+                                </a>
                             </li>
                         @elseif(auth()->user()->isEnseignant())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('enseignant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Enseignant</a>
+                            @php
+                                $fullName = auth()->user()->name;
+                                $firstName = trim(strtok($fullName, ' '));
+                            @endphp
+                            <li class="nav-item dropdown">
+                                <a class="nav-link student-secondary dropdown-toggle {{ request()->is('enseignant*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" title="Espace Enseignant" style="display:flex; align-items:center; gap:.5rem;">
+                                    👨‍🏫 Espace Enseignant
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.dashboard') }}">📊 Tableau de bord</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.cours.index') }}">📚 Mes Cours</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.classes.index') }}">🏫 Mes Classes</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.notes.index') }}">📊 Notes</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.examens.index') }}">📝 Examens</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.ressources.index') }}">📁 Ressources</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('enseignant.notifications.index') }}">🔔 Notifications</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">👤 Profil</a></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">🚪 Déconnexion</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         @elseif(auth()->user()->isEtudiant() || auth()->user()->isCandidat())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('etudiant.dashboard') }}" style="color: var(--color-black); font-weight: 500;">Espace Étudiant</a>
+                            @php
+                                $fullName = auth()->user()->name;
+                                $firstName = trim(strtok($fullName, ' '));
+                                $unread = auth()->user()->notificationsNonLues()->count();
+                                $isAdmis = auth()->user()->candidature && auth()->user()->candidature->statut === 'admis';
+                            @endphp
+                            <li class="nav-item dropdown">
+                                <a class="nav-link student-secondary dropdown-toggle {{ request()->is('etudiant*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" title="Espace Étudiant" style="display:flex; align-items:center; gap:.5rem;">
+                                    👤 Espace Étudiant
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @if($isAdmis)
+                                        <li><a class="dropdown-item" href="{{ route('etudiant.dashboard') }}">Tableau de bord</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('etudiant.cours.index') }}">Mes cours</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('etudiant.notes.index') }}">Mes notes</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('etudiant.calendrier.index') }}">Calendrier</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('etudiant.ressources.index') }}">Ressources</a></li>
+                                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" href="{{ route('etudiant.notifications.index') }}">Notifications @if($unread>0)<span class="badge bg-danger rounded-pill">{{ $unread }}</span>@endif</a></li>
+                                    @endif
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('etudiant.candidature.show') }}">Ma Candidature</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profil</a></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">Déconnexion</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         @endif
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="color: var(--color-black); font-weight: 500;">
-                                {{ auth()->user()->name }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profil</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Déconnexion</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}" style="color: var(--color-black); font-weight: 500;">Connexion</a>
+                            <a class="nav-link cta-button {{ request()->is('login*') ? 'active' : '' }}" href="{{ route('login') }}">
+                                Connexion
+                            </a>
                         </li>
                     @endauth
                 </ul>

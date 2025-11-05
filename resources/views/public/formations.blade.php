@@ -204,7 +204,7 @@
             <div class="col-12" data-aos="fade-up">
                 <div class="formation-result-card">
                     <div class="formation-header">
-                        <h2 class="formation-title">{{ $filiere->nom }}</h2>
+                        <h2 class="formation-title" style="font-size: 1.5rem; font-weight: 700;">{{ $filiere->nom }}</h2>
                         <p class="formation-subtitle">Niveau : {{ $niveau->nom }}</p>
                     </div>
                     <div class="formation-body">
@@ -237,7 +237,46 @@
                                                     <strong style="font-size: 1.1rem;">{{ $classe->nom }}</strong>
                                                     <small class="d-block text-muted">{{ $classe->filiere->nom }} - {{ $classe->niveau->nom }}</small>
                                                 </div>
-                                                <a href="{{ route('admission') }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
+                                                <a href="{{ route('candidature.create', ['classe_id' => $classe->id, 'filiere_id' => $classe->filiere_id]) }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
+                                                    Postuler →
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                        @elseif(isset($isLicence) && $isLicence)
+                            <div class="alert alert-info border border-info">
+                                <h5 class="mb-3">💡 Information importante</h5>
+                                <p class="mb-3">Si vous avez déjà une Licence (L1) d'une autre école et souhaitez continuer votre parcours à l'IESCA, vous pouvez postuler pour la <strong>L2 (Licence 2)</strong>.</p>
+                                
+                                @if($suggestedClasses->count() > 0)
+                                    <h5 class="mt-4 mb-3" style="color: var(--color-black); font-weight: 700;">Classes L1 disponibles</h5>
+                                    <ul class="classes-list">
+                                        @foreach($suggestedClasses as $classe)
+                                            <li>
+                                                <div>
+                                                    <strong style="font-size: 1.1rem;">{{ $classe->nom }}</strong>
+                                                    <small class="d-block text-muted">{{ $classe->filiere->nom }} - {{ $classe->niveau->nom }}</small>
+                                                </div>
+                                                <a href="{{ route('candidature.create', ['classe_id' => $classe->id, 'filiere_id' => $classe->filiere_id]) }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
+                                                    Postuler →
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                                
+                                @if($suggestedL2Classes->count() > 0)
+                                    <h5 class="mt-4 mb-3" style="color: var(--color-black); font-weight: 700;">Classes L2 disponibles</h5>
+                                    <ul class="classes-list">
+                                        @foreach($suggestedL2Classes as $classe)
+                                            <li>
+                                                <div>
+                                                    <strong style="font-size: 1.1rem;">{{ $classe->nom }}</strong>
+                                                    <small class="d-block text-muted">{{ $classe->filiere->nom }} - {{ $classe->niveau->nom }}</small>
+                                                </div>
+                                                <a href="{{ route('candidature.create', ['classe_id' => $classe->id, 'filiere_id' => $classe->filiere_id]) }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
                                                     Postuler →
                                                 </a>
                                             </li>
@@ -246,7 +285,7 @@
                                 @endif
                             </div>
                         @elseif($classes->count() > 0)
-                            <h4 class="mb-3" style="color: var(--color-black); font-weight: 700;">Classes Disponibles</h4>
+                            <h4 class="mb-3" style="color: var(--color-black); font-weight: 700; font-size: 1.5rem;">Classes Disponibles</h4>
                             <ul class="classes-list">
                                 @foreach($classes as $classe)
                                     <li>
@@ -254,7 +293,7 @@
                                             <strong style="font-size: 1.1rem;">{{ $classe->nom }}</strong>
                                             <small class="d-block text-muted">{{ $classe->filiere->nom }} - {{ $classe->niveau->nom }}</small>
                                         </div>
-                                        <a href="{{ route('admission') }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
+                                        <a href="{{ route('candidature.create', ['classe_id' => $classe->id, 'filiere_id' => $classe->filiere_id]) }}" class="btn btn-sm" style="background: var(--color-primary); color: white;">
                                             Postuler →
                                         </a>
                                     </li>
@@ -268,7 +307,12 @@
                         @endif
                         
                         <div class="mt-4 text-center">
-                            <a href="{{ route('admission') }}" class="apply-btn me-3">
+                            @php
+                                $params = [];
+                                if(isset($filiere)) $params['filiere_id'] = $filiere->id;
+                                if(isset($niveau)) $params['niveau_id'] = $niveau->id;
+                            @endphp
+                            <a href="{{ route('candidature.create', $params) }}" class="apply-btn me-3">
                                 Postuler Maintenant
                             </a>
                             <a href="{{ route('formations') }}" class="search-again">
@@ -306,7 +350,7 @@
                                     @endif
                                     <div class="mt-auto d-flex gap-2">
                                         <a href="{{ route('formations.show', $f) }}" class="btn btn-site">Voir la formation</a>
-                                        <a href="{{ route('admission') }}" class="btn btn-outline-secondary">Soumettre ma candidature</a>
+                                        <a href="{{ route('candidature.create', ['filiere_id' => $f->id]) }}" class="btn btn-outline-secondary">Soumettre ma candidature</a>
                                     </div>
                                 </div>
                             </div>

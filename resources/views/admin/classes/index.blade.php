@@ -8,6 +8,20 @@
     <a href="{{ route('admin.classes.create') }}" class="btn btn-primary">➕ Nouvelle Classe</a>
 </div>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 <div class="card">
     <div class="card-body">
         <table class="table table-striped">
@@ -28,13 +42,14 @@
                         <td>{{ $classe->niveau->nom }}</td>
                         <td>{{ $classe->etudiants->count() }}</td>
                         <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('admin.classes.edit', $classe) }}" class="btn btn-warning">✏️ Modifier</a>
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('admin.classes.edit', $classe) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
                                 <form action="{{ route('admin.classes.destroy', $classe) }}" method="POST" 
-                                      onsubmit="return confirm('Supprimer cette classe ?');">
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette classe ? Cette action est irréversible.');"
+                                      style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">🗑️ Supprimer</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
                                 </form>
                             </div>
                         </td>
