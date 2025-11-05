@@ -198,10 +198,19 @@ echo ""
 
 # Configurer les permissions
 echo -e "${YELLOW}Configuration des permissions...${NC}"
-chmod -R 775 storage bootstrap/cache
-chmod -R 755 public
-find storage bootstrap/cache -type f -exec chmod 664 {} \;
-find storage bootstrap/cache -type d -exec chmod 775 {} \;
+# Permissions pour les dossiers
+chmod -R 775 storage bootstrap/cache 2>/dev/null || true
+chmod -R 755 public 2>/dev/null || true
+
+# Permissions pour les fichiers
+find storage bootstrap/cache -type f -exec chmod 664 {} \; 2>/dev/null || true
+find storage bootstrap/cache -type d -exec chmod 775 {} \; 2>/dev/null || true
+
+# Permissions pour les fichiers importants
+chmod 644 .htaccess public/.htaccess 2>/dev/null || true
+chmod 644 index.php 2>/dev/null || true
+chmod 644 .env 2>/dev/null || true
+
 echo -e "${GREEN}✓ Permissions configurées${NC}"
 echo ""
 
