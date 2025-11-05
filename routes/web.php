@@ -33,6 +33,9 @@ Route::get('/actualites/{actualite}', [\App\Http\Controllers\Public\ActualiteCon
 Route::get('/admission', [\App\Http\Controllers\Public\AdmissionController::class, 'index'])->name('admission');
 Route::get('/admission/download-pdf', [\App\Http\Controllers\Public\AdmissionController::class, 'downloadPdf'])->name('admission.download-pdf');
 
+// Pages statiques publiques
+Route::get('/page/{slug}', [\App\Http\Controllers\Public\StaticPageController::class, 'show'])->name('static-page.show');
+
 Route::post('/admission', function () {
     // Rediriger vers la création de candidature si l'utilisateur est connecté
     if (auth()->check()) {
@@ -88,6 +91,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     Route::resource('actualites', ActualiteController::class);
     Route::resource('evenements', EvenementController::class);
+    
+    // Pages statiques
+    Route::resource('static-pages', \App\Http\Controllers\Admin\StaticPageController::class);
     
     // Routes personnalisées pour calendrier-cours (AVANT le resource pour éviter les conflits)
     Route::get('/calendrier-cours/classe/{classe}', [\App\Http\Controllers\Admin\CalendrierCoursController::class, 'show'])->name('calendrier-cours.show');
