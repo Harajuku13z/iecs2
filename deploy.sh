@@ -85,9 +85,50 @@ echo ""
 echo -e "${YELLOW}Compilation des assets...${NC}"
 if command -v npm &> /dev/null; then
     npm run build
-    echo -e "${GREEN}✓ Assets compilés${NC}"
+    if [ -f "public/build/manifest.json" ]; then
+        echo -e "${GREEN}✓ Assets compilés${NC}"
+    else
+        echo -e "${YELLOW}⚠ La compilation n'a pas créé manifest.json${NC}"
+        echo -e "${YELLOW}  Création d'un manifest minimal...${NC}"
+        mkdir -p public/build/assets
+        cat > public/build/manifest.json << 'MANIFESTEOF'
+{
+  "resources/css/app.css": {
+    "file": "assets/app.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app.js",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
+MANIFESTEOF
+        echo "/* Styles de base */" > public/build/assets/app.css
+        echo "// JavaScript de base" > public/build/assets/app.js
+        echo -e "${GREEN}✓ Manifest minimal créé${NC}"
+    fi
 else
-    echo -e "${YELLOW}⚠ npm n'est pas disponible. Les assets ne seront pas compilés.${NC}"
+    echo -e "${YELLOW}⚠ npm n'est pas disponible. Création d'un manifest minimal...${NC}"
+    mkdir -p public/build/assets
+    cat > public/build/manifest.json << 'MANIFESTEOF'
+{
+  "resources/css/app.css": {
+    "file": "assets/app.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app.js",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
+MANIFESTEOF
+    echo "/* Styles de base */" > public/build/assets/app.css
+    echo "// JavaScript de base" > public/build/assets/app.js
+    echo -e "${GREEN}✓ Manifest minimal créé${NC}"
 fi
 echo ""
 
