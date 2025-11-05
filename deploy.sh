@@ -56,9 +56,18 @@ if command -v composer &> /dev/null; then
 elif [ -f "composer.phar" ]; then
     php composer.phar install --no-dev --optimize-autoloader --no-interaction
 else
+    echo -e "${YELLOW}Téléchargement de Composer...${NC}"
     curl -sS https://getcomposer.org/installer | php
     php composer.phar install --no-dev --optimize-autoloader --no-interaction
 fi
+
+# Vérifier que vendor/autoload.php existe
+if [ ! -f "vendor/autoload.php" ]; then
+    echo -e "${RED}❌ ERREUR: vendor/autoload.php n'existe pas après l'installation${NC}"
+    echo -e "${RED}   L'application ne pourra pas fonctionner sans ce fichier${NC}"
+    exit 1
+fi
+
 echo -e "${GREEN}✓ Dépendances Composer installées${NC}"
 echo ""
 
