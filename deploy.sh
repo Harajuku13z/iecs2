@@ -105,9 +105,19 @@ if command -v npm &> /dev/null; then
   }
 }
 MANIFESTEOF
-        echo "/* Styles de base */" > public/build/assets/app.css
-        echo "// JavaScript de base" > public/build/assets/app.js
-        echo -e "${GREEN}✓ Manifest minimal créé${NC}"
+        # Créer un fichier CSS avec Bootstrap et styles de base
+        cat > public/build/assets/app.css << 'CSSEOF'
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+* { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important; }
+body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important; margin: 0; padding: 0; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important; }
+.navbar { padding: 1rem 0; transition: all 0.3s ease; }
+.btn { border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; }
+.btn-primary { background-color: var(--color-primary, #A66060); border-color: var(--color-primary, #A66060); }
+CSSEOF
+        echo "// Bootstrap JS" > public/build/assets/app.js
+        echo -e "${GREEN}✓ Manifest minimal créé avec Bootstrap${NC}"
     fi
 else
     echo -e "${YELLOW}⚠ npm n'est pas disponible. Création d'un manifest minimal...${NC}"
@@ -126,9 +136,19 @@ else
   }
 }
 MANIFESTEOF
-    echo "/* Styles de base */" > public/build/assets/app.css
-    echo "// JavaScript de base" > public/build/assets/app.js
-    echo -e "${GREEN}✓ Manifest minimal créé${NC}"
+    # Créer un fichier CSS avec Bootstrap et styles de base
+    cat > public/build/assets/app.css << 'CSSEOF'
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+* { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important; }
+body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important; margin: 0; padding: 0; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important; }
+.navbar { padding: 1rem 0; transition: all 0.3s ease; }
+.btn { border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; }
+.btn-primary { background-color: var(--color-primary, #A66060); border-color: var(--color-primary, #A66060); }
+CSSEOF
+    echo "// Bootstrap JS" > public/build/assets/app.js
+    echo -e "${GREEN}✓ Manifest minimal créé avec Bootstrap${NC}"
 fi
 echo ""
 
