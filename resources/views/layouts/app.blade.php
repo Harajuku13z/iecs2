@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'IESCA')</title>
@@ -206,7 +206,7 @@
             }
         }
     </style>
-</head>
+    </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg" style="background: white; box-shadow: 0 2px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
@@ -429,5 +429,5 @@
             </div>
         </div>
     </footer>
-</body>
+    </body>
 </html>

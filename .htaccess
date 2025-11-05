@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+    
+    RewriteEngine On
+    
+    # Prevent access to sensitive files and directories
+    RewriteCond %{REQUEST_URI} ^/(\.user.ini|\.htaccess|\.htpasswd|\.git|\.env|\.env\.local|\.env\.production|composer\.json|composer\.lock|package\.json|package-lock\.json|yarn\.lock|node_modules|storage|bootstrap|config|database|resources|routes|tests|vendor|artisan|README\.md|phpunit\.xml|\.gitignore|\.gitattributes) [NC,OR]
+    RewriteCond %{REQUEST_URI} ^/(storage|bootstrap|config|database|resources|routes|tests|vendor|app)/.*$ [NC]
+    RewriteRule ^ - [F,L]
+    
+    # Redirect to public directory
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    # Redirect root to public/index.php
+    RewriteRule ^$ public/index.php [L]
+</IfModule>
