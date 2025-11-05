@@ -6,24 +6,53 @@
     <title>@yield('title', 'IESCA')</title>
     @stack('head')
     
-    {{-- Vite assets avec fallback --}}
+    {{-- Vite assets avec fallback CDN robuste --}}
     @php
         $manifestPath = public_path('build/manifest.json');
-        $hasManifest = file_exists($manifestPath) && is_readable($manifestPath);
+        $manifestExists = file_exists($manifestPath) && is_readable($manifestPath);
+        
+        // Vérifier aussi si les fichiers assets existent vraiment
+        $cssExists = false;
+        $jsExists = false;
+        
+        if ($manifestExists) {
+            try {
+                $manifest = json_decode(file_get_contents($manifestPath), true);
+                if (isset($manifest['resources/css/app.css']['file'])) {
+                    $cssFile = public_path('build/' . $manifest['resources/css/app.css']['file']);
+                    $cssExists = file_exists($cssFile) && is_readable($cssFile);
+                }
+                if (isset($manifest['resources/js/app.js']['file'])) {
+                    $jsFile = public_path('build/' . $manifest['resources/js/app.js']['file']);
+                    $jsExists = file_exists($jsFile) && is_readable($jsFile);
+                }
+            } catch (Exception $e) {
+                // Si erreur de lecture, utiliser fallback
+                $manifestExists = false;
+            }
+        }
+        
+        $useVite = $manifestExists && $cssExists && $jsExists;
     @endphp
     
-    @if($hasManifest)
+    @if($useVite)
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
-        {{-- Fallback: Charger Bootstrap et les styles depuis CDN et fichiers locaux --}}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        {{-- Fallback CDN: Toujours utiliser CDN pour Bootstrap --}}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        
+        {{-- Charger les styles personnalisés si disponibles --}}
         @if(file_exists(public_path('build/assets/app.css')))
-            <link href="{{ asset('build/assets/app.css') }}?v={{ time() }}" rel="stylesheet">
+            <link href="{{ asset('build/assets/app.css') }}?v={{ filemtime(public_path('build/assets/app.css')) }}" rel="stylesheet">
         @endif
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        {{-- Bootstrap JS --}}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        
+        {{-- JS personnalisé si disponible --}}
         @if(file_exists(public_path('build/assets/app.js')))
-            <script src="{{ asset('build/assets/app.js') }}?v={{ time() }}"></script>
+            <script src="{{ asset('build/assets/app.js') }}?v={{ filemtime(public_path('build/assets/app.js')) }}"></script>
         @endif
     @endif
     
