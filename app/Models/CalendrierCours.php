@@ -20,8 +20,9 @@ class CalendrierCours extends Model
     ];
 
     protected $casts = [
-        'heure_debut' => 'datetime',
-        'heure_fin' => 'datetime',
+        // Ne pas caster les heures en datetime car elles sont stockées en time
+        // 'heure_debut' => 'datetime',
+        // 'heure_fin' => 'datetime',
     ];
 
     /**
