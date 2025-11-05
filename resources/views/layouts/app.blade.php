@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', config('app.name', 'IESCA'))</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
+    @php
+        // Priorité: 1. Favicon depuis settings, 2. Favicon depuis config, 3. Favicon par défaut
+        $faviconSetting = \App\Models\Setting::get('favicon', '');
+        $faviconPath = $faviconSetting 
+            ? asset('storage/' . $faviconSetting)
+            : asset(config('app.favicon', '/favicon.ico'));
+    @endphp
+    <link rel="icon" type="image/x-icon" href="{{ $faviconPath }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $faviconPath }}">
     @stack('head')
     
     {{-- Vite assets avec fallback CDN robuste --}}

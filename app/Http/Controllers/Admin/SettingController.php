@@ -55,7 +55,7 @@ class SettingController extends Controller
             'events_hero_title', 'events_hero_subtitle', 'events_hero_image',
         ];
         
-        foreach ($request->except(array_merge(['_token', 'logo'], $homepageKeys)) as $cle => $valeur) {
+        foreach ($request->except(array_merge(['_token', 'logo', 'favicon'], $homepageKeys)) as $cle => $valeur) {
             Setting::updateOrCreate(
                 ['cle' => $cle],
                 ['valeur' => $valeur, 'description' => $this->getSettingDescription($cle)]
@@ -67,9 +67,50 @@ class SettingController extends Controller
             $file = $request->file('logo');
             $filename = 'logo-' . time() . '.' . $file->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('', $file, $filename);
+            
+            // Supprimer l'ancien logo s'il existe
+            $oldLogo = Setting::where('cle', 'logo')->first();
+            if ($oldLogo && $oldLogo->valeur && Storage::disk('public')->exists($oldLogo->valeur)) {
+                Storage::disk('public')->delete($oldLogo->valeur);
+            }
+            
             Setting::updateOrCreate(
                 ['cle' => 'logo'],
                 ['valeur' => $filename, 'description' => 'Logo de l\'IESCA']
+            );
+        }
+
+        // Gestion de l'upload du favicon
+        if ($request->hasFile('favicon')) {
+            $file = $request->file('favicon');
+            
+            // Valider le type de fichier
+            $allowedExtensions = ['png', 'ico', 'jpg', 'jpeg'];
+            $extension = strtolower($file->getClientOriginalExtension());
+            
+            if (!in_array($extension, $allowedExtensions)) {
+                return redirect()->route('admin.settings.index')
+                    ->with('error', 'Le favicon doit être au format PNG, ICO, JPG ou JPEG.');
+            }
+            
+            // Valider la taille (max 500KB)
+            if ($file->getSize() > 500 * 1024) {
+                return redirect()->route('admin.settings.index')
+                    ->with('error', 'Le favicon ne doit pas dépasser 500KB.');
+            }
+            
+            $filename = 'favicon-' . time() . '.' . $extension;
+            $path = Storage::disk('public')->putFileAs('', $file, $filename);
+            
+            // Supprimer l'ancien favicon s'il existe
+            $oldFavicon = Setting::where('cle', 'favicon')->first();
+            if ($oldFavicon && $oldFavicon->valeur && Storage::disk('public')->exists($oldFavicon->valeur)) {
+                Storage::disk('public')->delete($oldFavicon->valeur);
+            }
+            
+            Setting::updateOrCreate(
+                ['cle' => 'favicon'],
+                ['valeur' => $filename, 'description' => 'Favicon du site IESCA']
             );
         }
 

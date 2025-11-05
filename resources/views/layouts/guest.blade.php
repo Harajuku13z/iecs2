@@ -7,8 +7,14 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
         
-        <link rel="icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
+        @php
+            $faviconSetting = \App\Models\Setting::get('favicon', '');
+            $faviconPath = $faviconSetting 
+                ? asset('storage/' . $faviconSetting)
+                : asset(config('app.favicon', '/favicon.ico'));
+        @endphp
+        <link rel="icon" type="image/x-icon" href="{{ $faviconPath }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ $faviconPath }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

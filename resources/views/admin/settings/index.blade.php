@@ -27,9 +27,33 @@
                 </div>
             </div>
 
+            <!-- Favicon Upload -->
+            <div class="mb-4 p-4 border rounded">
+                <h5 class="mb-3">🔖 Favicon du Site</h5>
+                <div class="mb-3">
+                    @php
+                        $favicon = \App\Models\Setting::get('favicon', '');
+                    @endphp
+                    @if($favicon)
+                        <div class="mb-3">
+                            <p class="mb-2"><strong>Favicon actuel :</strong></p>
+                            <img src="{{ asset('storage/' . $favicon) }}" alt="Favicon actuel" style="max-width: 64px; max-height: 64px; border: 1px solid #ddd; padding: 5px; border-radius: 5px; background: white;">
+                            <p class="mt-2 mb-0"><small class="text-muted">Taille recommandée: 32x32 ou 64x64 pixels</small></p>
+                        </div>
+                    @else
+                        <div class="mb-3 alert alert-info">
+                            <p class="mb-0">Aucun favicon uploadé. Le favicon par défaut (/favicon.ico) sera utilisé.</p>
+                        </div>
+                    @endif
+                    <input type="file" class="form-control" name="favicon" accept="image/png,image/x-icon,image/vnd.microsoft.icon">
+                    <small class="text-muted">Format recommandé: PNG ou ICO, taille 32x32 ou 64x64 pixels, max 500KB</small>
+                </div>
+            </div>
+
             @php
                 $homepageKeys = [
                     'logo',
+                    'favicon',
                     'admission_process_image',
                     'hero_title', 'hero_subtitle', 'hero_image',
                     'about_title', 'about_text1', 'about_text2', 'about_image',
