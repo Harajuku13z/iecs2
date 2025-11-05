@@ -1,17 +1,35 @@
+# Activer le moteur de réécriture
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Redirect to public directory
+    # Ne pas appliquer les règles si on est déjà dans /public/
     RewriteCond %{REQUEST_URI} !^/public/
+    
+    # Ne pas rediriger les fichiers existants
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Rediriger vers /public/ en conservant la requête
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>
 
-# Prevent directory listing
+# Désactiver l'indexation des répertoires
 Options -Indexes
 
-# If mod_rewrite is not available, redirect to public
+# Bloquer l'accès aux fichiers sensibles
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Autoriser l'accès au .htaccess
+<Files ".htaccess">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# Si mod_rewrite n'est pas disponible, utiliser une redirection simple
 <IfModule !mod_rewrite.c>
+    # Rediriger la racine vers /public/
     RedirectMatch ^/$ /public/
 </IfModule>
