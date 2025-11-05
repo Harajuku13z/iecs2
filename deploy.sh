@@ -89,20 +89,38 @@ if [ ! -f ".env" ]; then
         cp .env.example .env
     else
         echo -e "${RED}⚠ Fichier .env.example non trouvé${NC}"
+        # Créer un .env minimal
+        touch .env
     fi
 fi
 
+# Fonction pour mettre à jour ou ajouter une variable dans .env
+update_env() {
+    local key=$1
+    local value=$2
+    if grep -q "^${key}=" .env; then
+        # Échapper les caractères spéciaux pour sed
+        local escaped_value=$(echo "$value" | sed 's/[[\.*^$()+?{|]/\\&/g')
+        sed -i.bak "s|^${key}=.*|${key}=${escaped_value}|" .env
+    else
+        echo "${key}=${value}" >> .env
+    fi
+}
+
 # Configuration de la base de données MySQL
-sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env
-sed -i "s/^DB_HOST=.*/DB_HOST=$DB_HOST/" .env
-sed -i "s/^DB_PORT=.*/DB_PORT=3306/" .env
-sed -i "s/^DB_DATABASE=.*/DB_DATABASE=$DB_NAME/" .env
-sed -i "s/^DB_USERNAME=.*/DB_USERNAME=$DB_USER/" .env
-sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=$DB_PASSWORD/" .env
+update_env "DB_CONNECTION" "mysql"
+update_env "DB_HOST" "$DB_HOST"
+update_env "DB_PORT" "3306"
+update_env "DB_DATABASE" "$DB_NAME"
+update_env "DB_USERNAME" "$DB_USER"
+update_env "DB_PASSWORD" "$DB_PASSWORD"
 
 # Configuration de l'environnement de production
-sed -i "s/^APP_ENV=.*/APP_ENV=production/" .env
-sed -i "s/^APP_DEBUG=.*/APP_DEBUG=false/" .env
+update_env "APP_ENV" "production"
+update_env "APP_DEBUG" "false"
+
+# Nettoyer le backup créé par sed
+rm -f .env.bak 2>/dev/null || true
 
 # Générer la clé d'application si nécessaire
 if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env; then
@@ -110,14 +128,27 @@ if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env; then
 fi
 
 echo -e "${GREEN}✓ Configuration .env mise à jour${NC}"
+
+# Afficher la configuration pour vérification
+echo -e "${YELLOW}Configuration actuelle:${NC}"
+grep "^DB_" .env | sed 's/\(DB_PASSWORD=\).*/\1***/' || true
 echo ""
+
+# Vider le cache de configuration pour forcer le rechargement
+php artisan config:clear 2>/dev/null || true
 
 # Tester la connexion à la base de données
 echo -e "${YELLOW}Test de connexion à la base de données...${NC}"
-php artisan db:show --database=mysql 2>/dev/null || {
+if php artisan db:show 2>/dev/null; then
+    echo -e "${GREEN}✓ Connexion à la base de données réussie${NC}"
+else
     echo -e "${YELLOW}⚠ La base de données n'existe pas encore ou la connexion a échoué${NC}"
-    echo -e "${YELLOW}  Veuillez créer la base de données manuellement si nécessaire${NC}"
-}
+    echo -e "${YELLOW}  Vérifiez les identifiants dans .env${NC}"
+    echo -e "${YELLOW}  Configuration attendue:${NC}"
+    echo -e "${YELLOW}    DB_USERNAME=$DB_USER${NC}"
+    echo -e "${YELLOW}    DB_DATABASE=$DB_NAME${NC}"
+fi
+echo ""
 
 # Exécuter les migrations
 echo -e "${YELLOW}Exécution des migrations...${NC}"
@@ -156,10 +187,12 @@ echo ""
 
 # Optimiser Laravel pour la production
 echo -e "${YELLOW}Optimisation de Laravel...${NC}"
+# S'assurer que la config est bien chargée avant de cacher
+php artisan config:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-php artisan event:cache
+php artisan event:cache 2>/dev/null || true
 echo -e "${GREEN}✓ Optimisations terminées${NC}"
 echo ""
 
