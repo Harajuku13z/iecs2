@@ -64,10 +64,41 @@
                 </div>
             </div>
 
+            <!-- SEO Settings -->
+            @php
+                $metaDescription = \App\Models\Setting::get('meta_description', '');
+                $metaKeywords = \App\Models\Setting::get('meta_keywords', '');
+            @endphp
+            <div class="mb-4 p-4 border rounded">
+                <h5 class="mb-3">🔍 Référencement (SEO)</h5>
+                <div class="mb-3">
+                    <label for="meta_description" class="form-label">
+                        <strong>Meta Description</strong>
+                    </label>
+                    <small class="text-muted d-block mb-2">Description du site pour les moteurs de recherche (150-160 caractères recommandés)</small>
+                    <textarea class="form-control" id="meta_description" name="meta_description" rows="3" 
+                              maxlength="300" placeholder="Institut d'Enseignement Supérieur de la Côte Africaine (IESCA) - Excellence académique et innovation...">{{ $metaDescription }}</textarea>
+                    <small class="text-muted">
+                        <span id="meta_description_count">{{ strlen($metaDescription) }}</span>/300 caractères
+                    </small>
+                </div>
+                <div class="mb-3">
+                    <label for="meta_keywords" class="form-label">
+                        <strong>Meta Keywords</strong>
+                    </label>
+                    <small class="text-muted d-block mb-2">Mots-clés pour le référencement (séparés par des virgules)</small>
+                    <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" 
+                           value="{{ $metaKeywords }}" 
+                           placeholder="IESCA, Institut d'Enseignement Supérieur, Formation supérieure, Licence...">
+                </div>
+            </div>
+
             @php
                 $homepageKeys = [
                     'logo',
                     'favicon',
+                    'meta_description',
+                    'meta_keywords',
                     'admission_process_image',
                     'hero_title', 'hero_subtitle', 'hero_image',
                     'about_title', 'about_text1', 'about_text2', 'about_image',
@@ -151,6 +182,27 @@
                 <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
             </div>
         </form>
+
+        <script>
+            // Compteur de caractères pour meta_description
+            document.addEventListener('DOMContentLoaded', function() {
+                const metaDescTextarea = document.getElementById('meta_description');
+                const metaDescCount = document.getElementById('meta_description_count');
+                
+                if (metaDescTextarea && metaDescCount) {
+                    metaDescTextarea.addEventListener('input', function() {
+                        metaDescCount.textContent = this.value.length;
+                        if (this.value.length > 160) {
+                            metaDescCount.style.color = '#dc3545';
+                        } else if (this.value.length > 150) {
+                            metaDescCount.style.color = '#ffc107';
+                        } else {
+                            metaDescCount.style.color = '#28a745';
+                        }
+                    });
+                }
+            });
+        </script>
 
         <hr class="my-4">
         <h5 class="mb-3">✉️ Envoyer un email de test</h5>

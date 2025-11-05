@@ -27,6 +27,19 @@ class SettingController extends Controller
             );
         }
         
+        // Créer les settings SEO s'ils n'existent pas
+        $seoSettings = [
+            'meta_description' => 'Description du site pour les moteurs de recherche (SEO)',
+            'meta_keywords' => 'Mots-clés pour le référencement (séparés par des virgules)',
+        ];
+        
+        foreach ($seoSettings as $key => $description) {
+            Setting::firstOrCreate(
+                ['cle' => $key],
+                ['valeur' => '', 'description' => $description]
+            );
+        }
+        
         $settings = Setting::all();
         return view('admin.settings.index', compact('settings'));
     }
