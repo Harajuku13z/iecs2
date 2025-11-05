@@ -56,6 +56,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Favicon
+    |--------------------------------------------------------------------------
+    |
+    | This value is the path to the favicon file. It can be set in the ".env"
+    | file using APP_FAVICON. Defaults to '/favicon.ico'.
+    |
+    */
+
+    'favicon' => env('APP_FAVICON', '/favicon.ico'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

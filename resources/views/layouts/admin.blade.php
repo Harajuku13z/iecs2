@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin - IESCA')</title>
+    <title>@yield('title', 'Admin - ' . config('app.name', 'IESCA'))</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
     {{-- Vite assets avec fallback --}}
     @if(file_exists(public_path('build/manifest.json')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -3,7 +3,9 @@
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'IESCA')</title>
+    <title>@yield('title', config('app.name', 'IESCA'))</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset(config('app.favicon', '/favicon.ico')) }}">
     @stack('head')
     
     {{-- Vite assets avec fallback CDN robuste --}}
