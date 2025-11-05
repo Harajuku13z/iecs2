@@ -4,15 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', config('app.name', 'IESCA'))</title>
+    
     @php
-        // Priorité: 1. Favicon depuis settings, 2. Favicon depuis config, 3. Favicon par défaut
+        // Meta description - peut être surchargée par @yield('meta_description')
+        $defaultDescription = \App\Models\Setting::get('meta_description', 'Institut d\'Enseignement Supérieur de la Côte Africaine (IESCA) - Excellence académique et innovation. Formations de qualité en Licence dans 4 domaines clés : Sciences et Administration des Affaires, Génie Informatique, Sciences Juridiques et Sciences Commerciales.');
+        $metaDescription = $__env->yieldContent('meta_description') ?: $defaultDescription;
+        
+        // Meta keywords
+        $defaultKeywords = \App\Models\Setting::get('meta_keywords', 'IESCA, Institut d\'Enseignement Supérieur, Côte Africaine, Formation supérieure, Licence, SAA, Génie Informatique, Sciences Juridiques, Sciences Commerciales, Brazzaville, Congo');
+        $metaKeywords = $__env->yieldContent('meta_keywords') ?: $defaultKeywords;
+        
+        // Open Graph / Social Media
+        $siteName = config('app.name', 'IESCA');
+        $siteUrl = config('app.url', url('/'));
+        $ogImage = \App\Models\Setting::get('og_image', '');
+        $ogImageUrl = $ogImage ? asset('storage/' . $ogImage) : asset('storage/' . \App\Models\Setting::get('logo', ''));
+        
+        // Favicon
         $faviconSetting = \App\Models\Setting::get('favicon', '');
         $faviconPath = $faviconSetting 
             ? asset('storage/' . $faviconSetting)
             : asset(config('app.favicon', '/favicon.ico'));
     @endphp
+    
+    {{-- Meta Description --}}
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="author" content="{{ $siteName }}">
+    <meta name="robots" content="index, follow">
+    
+    {{-- Open Graph / Facebook --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $siteUrl }}">
+    <meta property="og:title" content="@yield('title', $siteName)">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    @if($ogImageUrl)
+    <meta property="og:image" content="{{ $ogImageUrl }}">
+    @endif
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:locale" content="fr_FR">
+    
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ $siteUrl }}">
+    <meta name="twitter:title" content="@yield('title', $siteName)">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    @if($ogImageUrl)
+    <meta name="twitter:image" content="{{ $ogImageUrl }}">
+    @endif
+    
+    {{-- Favicon --}}
     <link rel="icon" type="image/x-icon" href="{{ $faviconPath }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ $faviconPath }}">
+    
     @stack('head')
     
     {{-- Vite assets avec fallback CDN robuste --}}

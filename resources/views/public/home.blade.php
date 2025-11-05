@@ -2,6 +2,8 @@
 
 @section('title', 'Accueil - IESCA')
 
+@section('meta_description', 'Institut d\'Enseignement Supérieur de la Côte Africaine (IESCA) - Excellence académique et innovation. Formations de qualité en Licence dans 4 domaines : Sciences et Administration des Affaires (SAA), Génie Informatique (GI), Sciences Juridiques (SJ) et Sciences Commerciales (SC). Situé au 112, Avenue de France (Poto poto), Brazzaville, Congo.')
+
 @section('content')
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
