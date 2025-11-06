@@ -328,95 +328,78 @@ document.addEventListener('DOMContentLoaded', function() {
 @endpush
 
 @push('scripts')
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-let mediaModalInstance;
-function openMediaManager(){
-    const modalEl = document.getElementById('mediaManagerModal');
-    if (!modalEl) {
-        console.error('Modal element not found');
-        return;
-    }
-    if (typeof bootstrap === 'undefined') {
-        console.error('Bootstrap is not loaded');
-        return;
-    }
-    mediaModalInstance = new bootstrap.Modal(modalEl);
-    mediaModalInstance.show();
-    loadMediaImages();
-}
-
-// Attacher l'event listener au bouton
-document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('btn-open-media');
-    if (btn) {
-        btn.addEventListener('click', openMediaManager);
-    }
-});
-
-function loadMediaImages(){
-    const grid = document.getElementById('mediaGrid');
-    grid.innerHTML = '<div class="text-center py-4">Chargement...</div>';
-    fetch("{{ route('admin.media.images') }}", { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
-        .then(r => r.json())
-        .then(data => {
-            grid.innerHTML = '';
-            if(!data.files || data.files.length === 0){
-                grid.innerHTML = '<div class="text-center py-4 text-muted">Aucune image trouvée dans storage.</div>';
-                return;
+(function(){
+    function initTiny(){
+        const toolbarEl = document.getElementById('editor-toolbar');
+        if (toolbarEl) toolbarEl.style.display = 'none';
+        tinymce.init({
+            selector: '#contenu',
+            height: 500,
+            menubar: true,
+            plugins: 'lists link image table media code codesample autoresize',
+            toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link image media table | alignleft aligncenter alignright | code',
+            language: 'fr_FR',
+            convert_urls: false,
+            images_upload_handler: function (blobInfo, success, failure) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', "{{ route('admin.media.upload') }}");
+                xhr.onload = function() {
+                    if (xhr.status !== 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    let json;
+                    try { json = JSON.parse(xhr.responseText); } catch (e) { failure('Invalid JSON'); return; }
+                    if (!json || !json.success || !json.file || !json.file.url) {
+                        failure('Upload failed');
+                        return;
+                    }
+                    success(json.file.url);
+                };
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            },
+            file_picker_types: 'image',
+            file_picker_callback: function(callback) {
+                fetch("{{ route('admin.media.images') }}")
+                    .then(r=>r.json())
+                    .then(data => {
+                        const files = (data && data.files) ? data.files : [];
+                        const html = files.length ? files.map(f => '<img src="'+f.url+'" data-url="'+f.url+'" style="width:100px;height:100px;object-fit:cover;margin:6px;cursor:pointer;border-radius:6px;border:1px solid #eee;" />').join('') : '<div style="padding:1rem;">Aucune image</div>';
+                        const win = tinymce.activeEditor.windowManager.open({
+                            title: 'Sélectionner une image',
+                            body: { type: 'panel', items: [{ type: 'htmlpanel', html: '<div style="display:flex;flex-wrap:wrap;max-height:300px;overflow:auto;">'+html+'</div>' }] },
+                            buttons: [{ type: 'cancel', text: 'Fermer' }]
+                        });
+                        setTimeout(function(){
+                            const imgs = win.getEl().querySelectorAll('img[data-url]');
+                            imgs.forEach(function(img){
+                                img.addEventListener('click', function(){ callback(this.getAttribute('data-url')); win.close(); });
+                            });
+                        }, 0);
+                    })
+                    .catch(()=>{
+                        // fallback: ouvrir un input file local
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = function(){
+                            const file = this.files[0];
+                            const reader = new FileReader();
+                            reader.onload = function(){ callback(reader.result); };
+                            reader.readAsDataURL(file);
+                        };
+                        input.click();
+                    });
             }
-            data.files.forEach(file => {
-                const col = document.createElement('div');
-                col.className = 'col-6 col-md-4 col-lg-3';
-                col.innerHTML = `
-                    <div class=\"card h-100 shadow-sm\" style=\"cursor:pointer;\">
-                        <img src=\"${file.url}\" class=\"card-img-top\" style=\"height:120px; object-fit:cover;\">
-                        <div class=\"card-body p-2\">
-                            <div class=\"small text-truncate\" title=\"${file.name}\">${file.name}</div>
-                            <button type=\"button\" class=\"btn btn-sm btn-outline-primary w-100 mt-2\">Insérer</button>
-                        </div>
-                    </div>`;
-                col.querySelector('button').addEventListener('click', () => insertImageFromManager(file.url));
-                grid.appendChild(col);
-            });
-        })
-        .catch(() => {
-            grid.innerHTML = '<div class="text-center py-4 text-danger">Erreur lors du chargement des images.</div>';
         });
-}
-
-function insertImageFromManager(url){
-    const textarea = document.getElementById('contenu');
-    const cursorPos = textarea.selectionStart || textarea.value.length;
-    const html = '<img src=\"' + url + '\" alt=\"\" class=\"img-fluid\">';
-    textarea.value = textarea.value.substring(0, cursorPos) + html + textarea.value.substring(cursorPos);
-    textarea.focus();
-    textarea.setSelectionRange(cursorPos + html.length, cursorPos + html.length);
-    if(mediaModalInstance){ mediaModalInstance.hide(); }
-}
-
-// Upload handling
-const uploadInput = document.getElementById('mediaUploadInput');
-if(uploadInput){
-    uploadInput.addEventListener('change', function(){
-        const file = this.files && this.files[0];
-        if(!file) return;
-        const status = document.getElementById('mediaUploadStatus');
-        status.textContent = 'Téléversement...';
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('_token', '{{ csrf_token() }}');
-        fetch("{{ route('admin.media.upload') }}", { method: 'POST', body: formData })
-            .then(r => r.json())
-            .then(data => {
-                status.textContent = data.success ? 'Image ajoutée.' : 'Échec du téléversement.';
-                loadMediaImages();
-                uploadInput.value = '';
-            })
-            .catch(() => {
-                status.textContent = 'Erreur réseau.';
-            });
-    });
-}
+    }
+    if (window.tinymce) initTiny(); else document.addEventListener('DOMContentLoaded', initTiny);
+})();
 </script>
 @endpush
 @endsection
