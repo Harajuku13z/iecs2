@@ -69,6 +69,7 @@
     <style>
     @media (max-width: 991px) {
         .navbar.site-navbar { position: static !important; }
+        html, body { overflow-x: hidden; }
     }
     </style>
     
