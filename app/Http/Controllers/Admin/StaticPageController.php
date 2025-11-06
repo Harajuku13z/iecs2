@@ -70,8 +70,8 @@ class StaticPageController extends Controller
             'menu_nom' => $request->menu_nom ?: $request->titre,
             'menu_parent' => $request->menu_parent ?: null,
             'menu_ordre' => $request->menu_ordre ?: 0,
-            'publie' => $request->has('publie'),
-            'afficher_menu' => $request->has('afficher_menu'),
+            'publie' => $request->boolean('publie'),
+            'afficher_menu' => $request->boolean('afficher_menu'),
         ]);
 
         return redirect()->route('admin.static-pages.index')
@@ -137,8 +137,8 @@ class StaticPageController extends Controller
             'menu_nom' => $request->menu_nom ?: $request->titre,
             'menu_parent' => $request->menu_parent ?: null,
             'menu_ordre' => $request->menu_ordre ?: 0,
-            'publie' => $request->has('publie'),
-            'afficher_menu' => $request->has('afficher_menu'),
+            'publie' => $request->boolean('publie'),
+            'afficher_menu' => $request->boolean('afficher_menu'),
         ]);
 
         return redirect()->route('admin.static-pages.index')

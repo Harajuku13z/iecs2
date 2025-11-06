@@ -156,7 +156,8 @@
                     <!-- Options -->
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="afficher_menu" name="afficher_menu" 
+                            <input type="hidden" name="afficher_menu" value="0">
+                            <input class="form-check-input" type="checkbox" id="afficher_menu" name="afficher_menu" value="1"
                                    {{ old('afficher_menu', true) ? 'checked' : '' }}>
                             <label class="form-check-label" for="afficher_menu">
                                 Afficher dans le menu
@@ -166,7 +167,8 @@
 
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="publie" name="publie" 
+                            <input type="hidden" name="publie" value="0">
+                            <input class="form-check-input" type="checkbox" id="publie" name="publie" value="1"
                                    {{ old('publie', true) ? 'checked' : '' }}>
                             <label class="form-check-label" for="publie">
                                 Publier immédiatement
