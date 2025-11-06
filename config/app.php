@@ -135,4 +135,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | TinyMCE API Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used to access TinyMCE Cloud services.
+    |
+    */
+
+    'tinymce_api_key' => env('TINYMCE_API_KEY', 'grbxl6dvxubdifkieyqx8yc91aqi18qjtyp4tefdcu1wxyyn'),
+
 ];

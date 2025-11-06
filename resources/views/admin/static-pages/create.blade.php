@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
 @endpush
 
 @push('scripts')
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 (function(){
     function initTiny(){
