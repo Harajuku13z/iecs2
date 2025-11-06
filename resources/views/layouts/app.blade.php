@@ -20,11 +20,13 @@
         $ogImage = \App\Models\Setting::get('og_image', '');
         $ogImageUrl = $ogImage ? asset('storage/' . $ogImage) : asset('storage/' . \App\Models\Setting::get('logo', ''));
         
-        // Favicon
+        // Favicon (support PNG/ICO)
         $faviconSetting = \App\Models\Setting::get('favicon', '');
-        $faviconPath = $faviconSetting 
+        $faviconUrl = $faviconSetting 
             ? asset('storage/' . $faviconSetting)
             : asset(config('app.favicon', '/favicon.ico'));
+        $faviconExt = $faviconSetting ? strtolower(pathinfo($faviconSetting, PATHINFO_EXTENSION)) : 'ico';
+        $faviconMime = $faviconExt === 'png' ? 'image/png' : 'image/x-icon';
     @endphp
     
     {{-- Meta Description --}}
@@ -54,8 +56,12 @@
     @endif
     
     {{-- Favicon --}}
-    <link rel="icon" type="image/x-icon" href="{{ $faviconPath }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ $faviconPath }}">
+    <link rel="icon" href="{{ $faviconUrl }}" type="{{ $faviconMime }}">
+    <link rel="shortcut icon" href="{{ $faviconUrl }}" type="{{ $faviconMime }}">
+    @if($faviconMime === 'image/png')
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ $faviconUrl }}">
+        <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
+    @endif
     
     @stack('head')
     
