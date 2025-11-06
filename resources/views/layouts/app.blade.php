@@ -66,6 +66,12 @@
     {{-- Font Awesome (global) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
     
+    <style>
+    @media (max-width: 991px) {
+        .navbar.site-navbar { position: static !important; }
+    }
+    </style>
+    
     @stack('head')
     
     {{-- Vite assets avec fallback CDN robuste --}}
@@ -98,7 +104,7 @@
     @endphp
     
     @if($useVite)
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
         {{-- Fallback CDN: Toujours utiliser CDN pour Bootstrap --}}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -321,7 +327,7 @@
     </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg" style="background: white; box-shadow: 0 2px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
+    <nav class="navbar navbar-expand-lg site-navbar" style="background: white; box-shadow: 0 2px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 @php
