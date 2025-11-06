@@ -62,6 +62,9 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{ $faviconUrl }}">
         <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
     @endif
+
+    {{-- Font Awesome (global) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
     
     @stack('head')
     
@@ -403,7 +406,7 @@
                         @if(auth()->user()->isAdmin())
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('admin*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                                    Admin
+                                    <i class="fa-solid fa-shield-halved" style="margin-right:.4rem;"></i> Admin
                                 </a>
                             </li>
                         @elseif(auth()->user()->isEnseignant())
@@ -469,7 +472,7 @@
                     @else
                         <li class="nav-item">
                             <a class="nav-link cta-button {{ request()->is('login*') ? 'active' : '' }}" href="{{ route('login') }}">
-                                Connexion
+                                <i class="fa-solid fa-right-to-bracket" style="margin-right:.4rem;"></i> Connexion
                             </a>
                         </li>
                     @endauth
