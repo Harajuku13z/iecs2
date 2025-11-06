@@ -94,6 +94,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     // Pages statiques
     Route::resource('static-pages', \App\Http\Controllers\Admin\StaticPageController::class);
+
+    // Gestion médias (images JSON + upload)
+    Route::get('/media/images', [\App\Http\Controllers\Admin\MediaController::class, 'images'])->name('media.images');
+    Route::post('/media/upload', [\App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('media.upload');
     
     // Routes personnalisées pour calendrier-cours (AVANT le resource pour éviter les conflits)
     Route::get('/calendrier-cours/classe/{classe}', [\App\Http\Controllers\Admin\CalendrierCoursController::class, 'show'])->name('calendrier-cours.show');

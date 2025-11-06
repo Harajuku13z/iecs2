@@ -88,8 +88,8 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertLink()" title="Lien">
                                 🔗 Lien
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertImageTag()" title="Image">
-                                🖼️ Image
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="openMediaManager()" title="Médiathèque">
+                                🖼️ Média
                             </button>
                         </div>
                         <textarea class="form-control @error('contenu') is-invalid @enderror" 
@@ -310,4 +310,108 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+@push('modals')
+<div class="modal fade" id="mediaManagerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Médiathèque</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <input type="file" id="mediaUploadInput" accept="image/*" style="display:none;">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('mediaUploadInput').click()">Ajouter une image</button>
+                        <small class="text-muted ms-2">PNG/JPG/GIF/WEBP, 5MB max</small>
+                    </div>
+                    <div id="mediaUploadStatus" class="small text-muted"></div>
+                </div>
+                <div id="mediaGrid" class="row g-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endpush
+
+@push('scripts')
+<script>
+let mediaModalInstance;
+function openMediaManager(){
+    const modalEl = document.getElementById('mediaManagerModal');
+    mediaModalInstance = new bootstrap.Modal(modalEl);
+    mediaModalInstance.show();
+    loadMediaImages();
+}
+
+function loadMediaImages(){
+    const grid = document.getElementById('mediaGrid');
+    grid.innerHTML = '<div class="text-center py-4">Chargement...</div>';
+    fetch("{{ route('admin.media.images') }}", { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+        .then(r => r.json())
+        .then(data => {
+            grid.innerHTML = '';
+            if(!data.files || data.files.length === 0){
+                grid.innerHTML = '<div class="text-center py-4 text-muted">Aucune image trouvée dans storage.</div>';
+                return;
+            }
+            data.files.forEach(file => {
+                const col = document.createElement('div');
+                col.className = 'col-6 col-md-4 col-lg-3';
+                col.innerHTML = `
+                    <div class="card h-100 shadow-sm" style="cursor:pointer;">
+                        <img src="${file.url}" class="card-img-top" style="height:120px; object-fit:cover;">
+                        <div class="card-body p-2">
+                            <div class="small text-truncate" title="${file.name}">${file.name}</div>
+                            <button type="button" class="btn btn-sm btn-outline-primary w-100 mt-2">Insérer</button>
+                        </div>
+                    </div>`;
+                col.querySelector('button').addEventListener('click', () => insertImageFromManager(file.url));
+                grid.appendChild(col);
+            });
+        })
+        .catch(() => {
+            grid.innerHTML = '<div class="text-center py-4 text-danger">Erreur lors du chargement des images.</div>';
+        });
+}
+
+function insertImageFromManager(url){
+    const textarea = document.getElementById('contenu');
+    const cursorPos = textarea.selectionStart || textarea.value.length;
+    const html = '<img src="' + url + '" alt="" class="img-fluid">';
+    textarea.value = textarea.value.substring(0, cursorPos) + html + textarea.value.substring(cursorPos);
+    textarea.focus();
+    textarea.setSelectionRange(cursorPos + html.length, cursorPos + html.length);
+    if(mediaModalInstance){ mediaModalInstance.hide(); }
+}
+
+// Upload handling
+const uploadInput = document.getElementById('mediaUploadInput');
+if(uploadInput){
+    uploadInput.addEventListener('change', function(){
+        const file = this.files && this.files[0];
+        if(!file) return;
+        const status = document.getElementById('mediaUploadStatus');
+        status.textContent = 'Téléversement...';
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('_token', '{{ csrf_token() }}');
+        fetch("{{ route('admin.media.upload') }}", { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                status.textContent = data.success ? 'Image ajoutée.' : 'Échec du téléversement.';
+                loadMediaImages();
+                uploadInput.value = '';
+            })
+            .catch(() => {
+                status.textContent = 'Erreur réseau.';
+            });
+    });
+}
+</script>
+@endpush
 
