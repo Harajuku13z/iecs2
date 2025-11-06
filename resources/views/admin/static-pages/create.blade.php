@@ -87,7 +87,7 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertLink()" title="Lien">
                                 🔗 Lien
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="openMediaManager()" title="Médiathèque">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-open-media" title="Médiathèque">
                                 🖼️ Média
                             </button>
                         </div>
@@ -332,10 +332,26 @@ document.addEventListener('DOMContentLoaded', function() {
 let mediaModalInstance;
 function openMediaManager(){
     const modalEl = document.getElementById('mediaManagerModal');
+    if (!modalEl) {
+        console.error('Modal element not found');
+        return;
+    }
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap is not loaded');
+        return;
+    }
     mediaModalInstance = new bootstrap.Modal(modalEl);
     mediaModalInstance.show();
     loadMediaImages();
 }
+
+// Attacher l'event listener au bouton
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('btn-open-media');
+    if (btn) {
+        btn.addEventListener('click', openMediaManager);
+    }
+});
 
 function loadMediaImages(){
     const grid = document.getElementById('mediaGrid');
