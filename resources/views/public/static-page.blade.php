@@ -2,6 +2,10 @@
 
 @section('title', $page->titre . ' - IESCA')
 
+@push('head')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+@endpush
+
 @section('meta_description', $page->description ?: Str::limit(strip_tags($page->contenu), 160))
 
 @section('content')
@@ -51,6 +55,10 @@
 .hero-section-static {
     position: relative;
     overflow: hidden;
+}
+
+.page-content i.fa, .page-content i.fas, .page-content i.far, .page-content i.fab {
+    margin-right: .35rem;
 }
 
 .page-content {
