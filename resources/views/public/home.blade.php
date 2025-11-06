@@ -423,44 +423,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: center;
     padding-left: 0;
-}
-
-/* Border left alignée avec le container principal */
-@media (min-width: 576px) {
-    .admission-image-container::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 15px;
-        background: white;
-        z-index: 1;
-    }
-}
-
-@media (min-width: 768px) {
-    .admission-image-container::before {
-        width: calc((100vw - 720px) / 2);
-    }
-}
-
-@media (min-width: 992px) {
-    .admission-image-container::before {
-        width: calc((100vw - 960px) / 2);
-    }
-}
-
-@media (min-width: 1200px) {
-    .admission-image-container::before {
-        width: calc((100vw - 1140px) / 2);
-    }
-}
-
-@media (min-width: 1400px) {
-    .admission-image-container::before {
-        width: calc((100vw - 1320px) / 2);
-    }
+    border-radius: 8px; /* arrondi des deux côtés */
 }
 
 .admission-process-image {
@@ -469,7 +432,7 @@ h1, h2, h3, h4, h5, h6 {
     object-fit: cover;
     display: block;
     min-height: 0;
-    border-radius: 8px;
+    border-radius: 8px; /* garde l'arrondi si le conteneur ne le clippe pas */
 }
 
 .admission-process-content {
@@ -566,6 +529,7 @@ h1, h2, h3, h4, h5, h6 {
     .admission-image-container {
         min-height: 0;
         aspect-ratio: 1 / 1;
+        border-radius: 12px; /* arrondi plus visible sur mobile */
     }
     .admission-process-image {
         min-height: 0;
@@ -576,6 +540,12 @@ h1, h2, h3, h4, h5, h6 {
         padding: 2rem 1.5rem !important;
     }
     
+    /* Ajouter des marges latérales en mobile pour éviter que l'image colle aux bords */
+    .admission-process-section .container-fluid {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
     .admission-process-title {
         font-size: 2.5rem;
     }
