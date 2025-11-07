@@ -198,8 +198,7 @@ document.getElementById('image_principale').addEventListener('change', function(
 });
 
 @push('modals')
-<!-- Modal pour gérer les images -->
-<div class="modal fade" id="tinymceImageModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="imageManagerModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -208,17 +207,13 @@ document.getElementById('image_principale').addEventListener('change', function(
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label">Uploader une nouvelle image</label>
-                    <input type="file" id="tinymceImageUpload" class="form-control" accept="image/*">
-                    <div id="tinymceUploadStatus" class="mt-2"></div>
+                    <label class="form-label">Uploader une image</label>
+                    <input type="file" id="imageUploadInput" class="form-control" accept="image/*">
+                    <div id="uploadStatus" class="mt-2"></div>
                 </div>
                 <hr>
-                <div class="mb-2">
-                    <strong>Images existantes :</strong>
-                </div>
-                <div id="tinymceImageGrid" class="row g-2" style="max-height: 400px; overflow-y: auto;">
-                    <div class="col-12 text-center py-4 text-muted">Chargement...</div>
-                </div>
+                <div class="mb-2"><strong>Images disponibles :</strong></div>
+                <div id="imageGrid" class="row g-2" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -231,119 +226,156 @@ document.getElementById('image_principale').addEventListener('change', function(
 @endsection
 
 @push('scripts')
-<script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin" onerror="console.error('Failed to load TinyMCE')"></script>
+<script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js"></script>
 <script>
-(function(){
-    let imageModalInstance = null;
-    let currentImageCallback = null;
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.getElementById('contenu');
+    if (!textarea) return;
     
-    function loadImages() {
-        const grid = document.getElementById('tinymceImageGrid');
-        grid.innerHTML = '<div class="col-12 text-center py-4 text-muted">Chargement...</div>';
+    let imageModal = null;
+    let selectedImageUrl = null;
+    
+    function openImageManager(editor) {
+        selectedImageUrl = null;
+        loadImageGrid();
+        const modalEl = document.getElementById('imageManagerModal');
+        if (!imageModal) {
+            imageModal = new bootstrap.Modal(modalEl);
+        }
+        imageModal.show();
+        
+        modalEl.addEventListener('hidden.bs.modal', function() {
+            if (selectedImageUrl && editor) {
+                editor.insertContent('<img src="' + selectedImageUrl + '" alt="" class="img-fluid" />');
+            }
+        }, { once: true });
+    }
+    
+    function loadImageGrid() {
+        const grid = document.getElementById('imageGrid');
+        grid.innerHTML = '<div class="col-12 text-center py-3">Chargement...</div>';
         
         const xhr = new XMLHttpRequest();
         xhr.open('GET', "{{ route('admin.media.images') }}");
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onload = function() {
-            if (xhr.status !== 200) {
-                grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur HTTP: ' + xhr.status + '</div>';
-                return;
-            }
-            let data;
-            try {
-                data = JSON.parse(xhr.responseText);
-            } catch (e) {
-                grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur de parsing JSON</div>';
-                return;
-            }
-            grid.innerHTML = '';
-            const files = (data && data.files) ? data.files : [];
-            
-            if (files.length === 0) {
-                grid.innerHTML = '<div class="col-12 text-center py-4 text-muted">Aucune image trouvée</div>';
-                return;
-            }
-            
-            files.forEach(file => {
-                const col = document.createElement('div');
-                col.className = 'col-6 col-md-4 col-lg-3';
-                col.innerHTML = `
-                    <div class="card h-100" style="cursor: pointer; border: 2px solid #ddd; transition: border-color 0.2s;">
-                        <img src="${file.url}" class="card-img-top" style="height: 120px; object-fit: cover;">
-                        <div class="card-body p-2">
-                            <small class="text-truncate d-block" title="${file.name}">${file.name}</small>
-                        </div>
-                    </div>
-                `;
-                col.querySelector('.card').addEventListener('click', function() {
-                    if (currentImageCallback) {
-                        currentImageCallback(file.url, {alt: file.name});
-                        if (imageModalInstance) imageModalInstance.hide();
+            if (xhr.status === 200) {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    const files = data.files || [];
+                    grid.innerHTML = '';
+                    
+                    if (files.length === 0) {
+                        grid.innerHTML = '<div class="col-12 text-center py-3 text-muted">Aucune image</div>';
+                        return;
                     }
-                });
-                col.querySelector('.card').addEventListener('mouseenter', function() {
-                    this.style.borderColor = '#007bff';
-                });
-                col.querySelector('.card').addEventListener('mouseleave', function() {
-                    this.style.borderColor = '#ddd';
-                });
-                grid.appendChild(col);
-            });
-        };
-        xhr.onerror = function() {
-            grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur réseau</div>';
+                    
+                    files.forEach(function(file) {
+                        const col = document.createElement('div');
+                        col.className = 'col-6 col-md-4 col-lg-3';
+                        col.innerHTML = '<div class="card" style="cursor:pointer;border:2px solid #ddd;" onclick="window.selectImage(\'' + file.url + '\')"><img src="' + file.url + '" class="card-img-top" style="height:100px;object-fit:cover;"><div class="card-body p-2"><small class="text-truncate d-block">' + file.name + '</small></div></div>';
+                        grid.appendChild(col);
+                    });
+                } catch(e) {
+                    grid.innerHTML = '<div class="col-12 text-center py-3 text-danger">Erreur</div>';
+                }
+            }
         };
         xhr.send();
     }
     
-    function initTiny(){
+    window.selectImage = function(url) {
+        selectedImageUrl = url;
+        if (imageModal) imageModal.hide();
+    };
+    
+    const uploadInput = document.getElementById('imageUploadInput');
+    const uploadStatus = document.getElementById('uploadStatus');
+    
+    if (uploadInput) {
+        uploadInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+            
+            uploadStatus.innerHTML = '<div class="text-info">Upload...</div>';
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', "{{ route('admin.media.upload') }}");
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (data.success && data.file && data.file.url) {
+                            uploadStatus.innerHTML = '<div class="text-success">✓ Uploadé</div>';
+                            uploadInput.value = '';
+                            loadImageGrid();
+                            setTimeout(function() { uploadStatus.innerHTML = ''; }, 2000);
+                        } else {
+                            uploadStatus.innerHTML = '<div class="text-danger">Erreur</div>';
+                        }
+                    } catch(e) {
+                        uploadStatus.innerHTML = '<div class="text-danger">Erreur</div>';
+                    }
+                } else {
+                    uploadStatus.innerHTML = '<div class="text-danger">Erreur ' + xhr.status + '</div>';
+                }
+            };
+            xhr.onerror = function() {
+                uploadStatus.innerHTML = '<div class="text-danger">Erreur réseau</div>';
+            };
+            
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('file', file);
+            xhr.send(formData);
+        });
+    }
+    
+    const modalEl = document.getElementById('imageManagerModal');
+    if (modalEl) {
+        modalEl.addEventListener('show.bs.modal', loadImageGrid);
+    }
+    
+    if (typeof tinymce !== 'undefined') {
         tinymce.init({
             selector: '#contenu',
             height: 500,
             menubar: true,
-            plugins: 'lists link image table media code codesample autoresize',
-            toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link image media table | alignleft aligncenter alignright | code | customimage',
+            plugins: 'lists link image table code',
+            toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link image table | code | myimage',
             language: 'fr_FR',
-            convert_urls: false,
             setup: function(editor) {
-                editor.ui.registry.addButton('customimage', {
+                editor.ui.registry.addButton('myimage', {
                     text: '📷 Images',
                     tooltip: 'Gérer les images',
                     onAction: function() {
-                        currentImageCallback = function(url, meta) {
-                            editor.insertContent('<img src="' + url + '" alt="' + (meta.alt || '') + '" class="img-fluid" />');
-                        };
-                        loadImages();
-                        const modalEl = document.getElementById('tinymceImageModal');
-                        imageModalInstance = new bootstrap.Modal(modalEl);
-                        imageModalInstance.show();
+                        openImageManager(editor);
                     }
                 });
             },
-            images_upload_handler: function (blobInfo, success, failure) {
+            images_upload_handler: function(blobInfo, success, failure) {
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', "{{ route('admin.media.upload') }}");
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                 xhr.onload = function() {
-                    if (xhr.status !== 200) {
-                        failure('HTTP Error: ' + xhr.status);
-                        return;
-                    }
-                    let data;
-                    try {
-                        data = JSON.parse(xhr.responseText);
-                    } catch (e) {
-                        failure('Invalid JSON: ' + e.message);
-                        return;
-                    }
-                    if (data.success && data.file && data.file.url) {
-                        success(data.file.url);
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            if (data.success && data.file && data.file.url) {
+                                success(data.file.url);
+                            } else {
+                                failure('Erreur upload');
+                            }
+                        } catch(e) {
+                            failure('Erreur JSON');
+                        }
                     } else {
-                        failure('Upload failed: ' + (data.message || 'Unknown error'));
+                        failure('Erreur ' + xhr.status);
                     }
                 };
                 xhr.onerror = function() {
-                    failure('Network error during upload');
+                    failure('Erreur réseau');
                 };
                 const formData = new FormData();
                 formData.append('_token', '{{ csrf_token() }}');
@@ -351,94 +383,10 @@ document.getElementById('image_principale').addEventListener('change', function(
                 xhr.send(formData);
             }
         });
-    }
-    
-    // Gérer l'upload dans le modal
-    document.addEventListener('DOMContentLoaded', function() {
-        const uploadInput = document.getElementById('tinymceImageUpload');
-        const uploadStatus = document.getElementById('tinymceUploadStatus');
-        
-        if (uploadInput) {
-            uploadInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (!file) return;
-                
-                uploadStatus.innerHTML = '<div class="text-info">Upload en cours...</div>';
-                
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', "{{ route('admin.media.upload') }}");
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                xhr.onload = function() {
-                    if (xhr.status !== 200) {
-                        uploadStatus.innerHTML = '<div class="text-danger">Erreur HTTP: ' + xhr.status + '</div>';
-                        return;
-                    }
-                    let data;
-                    try {
-                        data = JSON.parse(xhr.responseText);
-                    } catch (e) {
-                        uploadStatus.innerHTML = '<div class="text-danger">Erreur de parsing JSON</div>';
-                        return;
-                    }
-                    if (data.success && data.file && data.file.url) {
-                        uploadStatus.innerHTML = '<div class="text-success">✓ Image uploadée avec succès</div>';
-                        uploadInput.value = '';
-                        loadImages();
-                        setTimeout(() => {
-                            uploadStatus.innerHTML = '';
-                        }, 2000);
-                    } else {
-                        uploadStatus.innerHTML = '<div class="text-danger">Erreur: ' + (data.message || 'Upload échoué') + '</div>';
-                    }
-                };
-                xhr.onerror = function() {
-                    uploadStatus.innerHTML = '<div class="text-danger">Erreur réseau</div>';
-                };
-                const formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('file', file);
-                xhr.send(formData);
-            });
-        }
-        
-        // Recharger les images quand le modal s'ouvre
-        const modalEl = document.getElementById('tinymceImageModal');
-        if (modalEl) {
-            modalEl.addEventListener('show.bs.modal', function() {
-                loadImages();
-            });
-        }
-    });
-    
-    // Attendre que TinyMCE soit chargé
-    let tinyMCEWaitCount = 0;
-    const maxWaitCount = 50; // 5 secondes max
-    
-    function waitForTinyMCE() {
-        const textarea = document.getElementById('contenu');
-        if (!textarea) {
-            console.error('Textarea #contenu not found');
-            return;
-        }
-        
-        if (typeof tinymce !== 'undefined' && tinymce.init) {
-            initTiny();
-        } else {
-            tinyMCEWaitCount++;
-            if (tinyMCEWaitCount < maxWaitCount) {
-                setTimeout(waitForTinyMCE, 100);
-            } else {
-                console.error('TinyMCE failed to load after 5 seconds');
-            }
-        }
-    }
-    
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', waitForTinyMCE);
     } else {
-        waitForTinyMCE();
+        console.error('TinyMCE not loaded');
     }
-})();
+});
 </script>
 @endpush
 
