@@ -243,6 +243,29 @@
     margin-bottom: 1.5rem;
 }
 
+.actualite-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    display: block;
+}
+
+.actualite-body strong {
+    font-weight: 700;
+    color: var(--color-black);
+}
+
+.actualite-body ul,
+.actualite-body ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.actualite-body li {
+    margin-bottom: 0.75rem;
+}
+
 .share-buttons {
     display: flex;
     gap: 0.75rem;
@@ -445,7 +468,7 @@
                 @endif
 
                 <div class="actualite-body">
-                    {!! nl2br(e($actualite->contenu)) !!}
+                    {!! $actualite->contenu !!}
                 </div>
 
                 <!-- Boutons de partage -->
