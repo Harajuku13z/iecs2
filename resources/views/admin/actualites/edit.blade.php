@@ -185,11 +185,21 @@
         if (!grid) return;
         grid.innerHTML = '<div class="col-12 text-center py-4 text-muted">Chargement...</div>';
         
-        fetch("{{ route('admin.media.images') }}", {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(r => r.json())
-        .then(data => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "{{ route('admin.media.images') }}");
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onload = function() {
+            if (xhr.status !== 200) {
+                grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur HTTP: ' + xhr.status + '</div>';
+                return;
+            }
+            let data;
+            try {
+                data = JSON.parse(xhr.responseText);
+            } catch (e) {
+                grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur de parsing JSON</div>';
+                return;
+            }
             grid.innerHTML = '';
             const files = (data && data.files) ? data.files : [];
             
@@ -223,11 +233,11 @@
                 });
                 grid.appendChild(col);
             });
-        })
-        .catch(err => {
-            console.error('Error loading images:', err);
-            grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur lors du chargement</div>';
-        });
+        };
+        xhr.onerror = function() {
+            grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur réseau</div>';
+        };
+        xhr.send();
     }
     
     function initTiny(){
@@ -257,26 +267,34 @@
                 });
             },
             images_upload_handler: function (blobInfo, success, failure) {
-                const formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('file', blobInfo.blob(), blobInfo.filename());
-                
-                fetch("{{ route('admin.media.upload') }}", {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(r => r.json())
-                .then(data => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', "{{ route('admin.media.upload') }}");
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.onload = function() {
+                    if (xhr.status !== 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    let data;
+                    try {
+                        data = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        failure('Invalid JSON: ' + e.message);
+                        return;
+                    }
                     if (data.success && data.file && data.file.url) {
                         success(data.file.url);
                     } else {
                         failure('Upload failed: ' + (data.message || 'Unknown error'));
                     }
-                })
-                .catch(err => {
-                    failure('Network error: ' + err.message);
-                });
+                };
+                xhr.onerror = function() {
+                    failure('Network error during upload');
+                };
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
             }
         });
     }
@@ -293,17 +311,21 @@
                 
                 if (uploadStatus) uploadStatus.innerHTML = '<div class="text-info">Upload en cours...</div>';
                 
-                const formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('file', file);
-                
-                fetch("{{ route('admin.media.upload') }}", {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(r => r.json())
-                .then(data => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', "{{ route('admin.media.upload') }}");
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.onload = function() {
+                    if (xhr.status !== 200) {
+                        if (uploadStatus) uploadStatus.innerHTML = '<div class="text-danger">Erreur HTTP: ' + xhr.status + '</div>';
+                        return;
+                    }
+                    let data;
+                    try {
+                        data = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        if (uploadStatus) uploadStatus.innerHTML = '<div class="text-danger">Erreur de parsing JSON</div>';
+                        return;
+                    }
                     if (data.success && data.file && data.file.url) {
                         if (uploadStatus) uploadStatus.innerHTML = '<div class="text-success">✓ Image uploadée avec succès</div>';
                         uploadInput.value = '';
@@ -314,10 +336,14 @@
                     } else {
                         if (uploadStatus) uploadStatus.innerHTML = '<div class="text-danger">Erreur: ' + (data.message || 'Upload échoué') + '</div>';
                     }
-                })
-                .catch(err => {
+                };
+                xhr.onerror = function() {
                     if (uploadStatus) uploadStatus.innerHTML = '<div class="text-danger">Erreur réseau</div>';
-                });
+                };
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('file', file);
+                xhr.send(formData);
             });
         }
         
