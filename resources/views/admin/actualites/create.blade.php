@@ -114,11 +114,27 @@
             images_upload_handler: function (blobInfo, success, failure) {
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', "{{ route('admin.media.upload') }}");
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                 xhr.onload = function() {
-                    if (xhr.status !== 200) { failure('HTTP Error: ' + xhr.status); return; }
-                    let json; try { json = JSON.parse(xhr.responseText); } catch (e) { failure('Invalid JSON'); return; }
-                    if (!json || !json.success || !json.file || !json.file.url) { failure('Upload failed'); return; }
+                    if (xhr.status !== 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    let json;
+                    try { 
+                        json = JSON.parse(xhr.responseText); 
+                    } catch (e) { 
+                        failure('Invalid JSON: ' + e.message); 
+                        return; 
+                    }
+                    if (!json || !json.success || !json.file || !json.file.url) {
+                        failure('Upload failed: ' + (json.message || 'Unknown error'));
+                        return;
+                    }
                     success(json.file.url);
+                };
+                xhr.onerror = function() {
+                    failure('Network error during upload');
                 };
                 const formData = new FormData();
                 formData.append('_token', '{{ csrf_token() }}');
@@ -126,36 +142,104 @@
                 xhr.send(formData);
             },
             file_picker_types: 'image',
-            file_picker_callback: function(callback) {
-                fetch("{{ route('admin.media.images') }}")
-                    .then(r=>r.json())
+            file_picker_callback: function(callback, value, meta) {
+                if (meta.filetype === 'image') {
+                    fetch("{{ route('admin.media.images') }}", {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(r => {
+                        if (!r.ok) throw new Error('HTTP ' + r.status);
+                        return r.json();
+                    })
                     .then(data => {
                         const files = (data && data.files) ? data.files : [];
-                        const html = files.length ? files.map(f => '<img src="'+f.url+'" data-url="'+f.url+'" style="width:100px;height:100px;object-fit:cover;margin:6px;cursor:pointer;border-radius:6px;border:1px solid #eee;" />').join('') : '<div style="padding:1rem;">Aucune image</div>';
+                        let html = '<div style="padding:1rem;max-height:400px;overflow-y:auto;">';
+                        if (files.length > 0) {
+                            html += '<div style="display:flex;flex-wrap:wrap;gap:10px;">';
+                            files.forEach(f => {
+                                html += '<div style="position:relative;cursor:pointer;border:2px solid #ddd;border-radius:8px;overflow:hidden;transition:border-color 0.2s;" onmouseover="this.style.borderColor=\'#007bff\'" onmouseout="this.style.borderColor=\'#ddd\'" onclick="window.selectedImageCallback('+JSON.stringify(f.url)+');">';
+                                html += '<img src="'+f.url+'" style="width:120px;height:120px;object-fit:cover;display:block;" />';
+                                html += '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.7);color:white;padding:4px;font-size:11px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'+f.name+'</div>';
+                                html += '</div>';
+                            });
+                            html += '</div>';
+                        } else {
+                            html += '<div style="text-align:center;padding:2rem;color:#999;">Aucune image trouvée</div>';
+                        }
+                        html += '</div>';
+                        
                         const win = tinymce.activeEditor.windowManager.open({
                             title: 'Sélectionner une image',
-                            body: { type: 'panel', items: [{ type: 'htmlpanel', html: '<div style="display:flex;flex-wrap:wrap;max-height:300px;overflow:auto;">'+html+'</div>' }] },
-                            buttons: [{ type: 'cancel', text: 'Fermer' }]
+                            body: {
+                                type: 'panel',
+                                items: [{
+                                    type: 'htmlpanel',
+                                    html: html
+                                }]
+                            },
+                            buttons: [
+                                {
+                                    type: 'custom',
+                                    text: 'Uploader une nouvelle image',
+                                    primary: true,
+                                    onclick: function() {
+                                        const input = document.createElement('input');
+                                        input.type = 'file';
+                                        input.accept = 'image/*';
+                                        input.onchange = function() {
+                                            const file = this.files[0];
+                                            if (!file) return;
+                                            const formData = new FormData();
+                                            formData.append('_token', '{{ csrf_token() }}');
+                                            formData.append('file', file);
+                                            fetch("{{ route('admin.media.upload') }}", {
+                                                method: 'POST',
+                                                body: formData,
+                                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                                            })
+                                            .then(r => r.json())
+                                            .then(data => {
+                                                if (data.success && data.file && data.file.url) {
+                                                    callback(data.file.url, {alt: file.name});
+                                                    win.close();
+                                                } else {
+                                                    alert('Erreur lors de l\'upload');
+                                                }
+                                            })
+                                            .catch(() => alert('Erreur réseau'));
+                                        };
+                                        input.click();
+                                    }
+                                },
+                                {
+                                    type: 'cancel',
+                                    text: 'Fermer'
+                                }
+                            ]
                         });
-                        setTimeout(function(){
-                            const imgs = win.getEl().querySelectorAll('img[data-url]');
-                            imgs.forEach(function(img){
-                                img.addEventListener('click', function(){ callback(this.getAttribute('data-url')); win.close(); });
-                            });
-                        }, 0);
+                        
+                        window.selectedImageCallback = function(url) {
+                            callback(url, {alt: ''});
+                            win.close();
+                        };
                     })
-                    .catch(()=>{
+                    .catch(err => {
+                        console.error('Error loading images:', err);
                         const input = document.createElement('input');
                         input.type = 'file';
                         input.accept = 'image/*';
-                        input.onchange = function(){
+                        input.onchange = function() {
                             const file = this.files[0];
+                            if (!file) return;
                             const reader = new FileReader();
-                            reader.onload = function(){ callback(reader.result); };
+                            reader.onload = function() {
+                                callback(reader.result, {alt: file.name});
+                            };
                             reader.readAsDataURL(file);
                         };
                         input.click();
                     });
+                }
             }
         });
     }
