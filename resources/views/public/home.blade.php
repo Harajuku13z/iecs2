@@ -1279,7 +1279,11 @@ h1, h2, h3, h4, h5, h6 {
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                     <div class="news-card">
                         <div class="news-image">
-                            <img src="{{ $actu->image ?? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800' }}" alt="{{ $actu->titre }}">
+                            @if($actu->image)
+                                <img src="{{ asset('storage/' . $actu->image) }}" alt="{{ $actu->titre }}">
+                            @else
+                                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800" alt="{{ $actu->titre }}">
+                            @endif
                             <div class="news-badge">{{ $actu->categorie }}</div>
                         </div>
                         <div class="news-content">
@@ -1288,7 +1292,7 @@ h1, h2, h3, h4, h5, h6 {
                             </div>
                             <h3 class="news-title">{{ $actu->titre }}</h3>
                             <p class="news-description">{{ Str::limit($actu->description, 120) }}</p>
-                            <a href="#" class="read-more">
+                            <a href="{{ route('actualites.show', $actu) }}" class="read-more">
                                 Lire la suite →
                             </a>
                         </div>
