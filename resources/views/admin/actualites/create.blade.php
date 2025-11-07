@@ -149,14 +149,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     ['link', 'image'],
                     [{ 'align': [] }],
                     ['clean']
-                ],
-                handlers: {
-                    'image': function() {
-                        openImageManager();
-                    }
-                }
+                ]
             }
         }
+    });
+    
+    const toolbar = quill.getModule('toolbar');
+    toolbar.addHandler('image', function() {
+        openImageManager();
     });
     
     quill.root.innerHTML = textarea.value || '';
@@ -176,8 +176,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         modalEl.addEventListener('hidden.bs.modal', function() {
             if (selectedImageUrl && quill) {
-                const range = quill.getSelection(true);
-                quill.insertEmbed(range.index, 'image', selectedImageUrl, 'user');
+                const range = quill.getSelection();
+                if (range) {
+                    quill.insertEmbed(range.index, 'image', selectedImageUrl, 'user');
+                } else {
+                    quill.insertEmbed(0, 'image', selectedImageUrl, 'user');
+                }
             }
         }, { once: true });
     }
