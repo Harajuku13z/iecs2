@@ -67,43 +67,9 @@
                     <!-- Contenu -->
                     <div class="mb-3">
                         <label for="contenu" class="form-label">Contenu *</label>
-                        <div id="editor-toolbar" style="display: none;" class="mb-2 p-2 bg-light rounded">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('bold')" title="Gras">
-                                <strong>B</strong>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('italic')" title="Italique">
-                                <em>I</em>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="formatText('underline')" title="Souligné">
-                                <u>U</u>
-                            </button>
-                            <span class="mx-2">|</span>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertList('ul')" title="Liste à puces">
-                                • Liste
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertList('ol')" title="Liste numérotée">
-                                1. Liste
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertLink()" title="Lien">
-                                🔗 Lien
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-open-media" title="Médiathèque">
-                                🖼️ Média
-                            </button>
-                        </div>
                         <textarea class="form-control @error('contenu') is-invalid @enderror" 
                                   id="contenu" name="contenu" rows="15" required>{{ old('contenu') }}</textarea>
-                        <small class="text-muted">
-                            <span id="type_texte_hint" style="display: none;">
-                                Mode texte : Utilisez les boutons ci-dessus pour formater ou saisissez du texte simple.
-                            </span>
-                            <span id="type_html_hint" style="display: none;">
-                                Mode HTML : Vous pouvez utiliser du code HTML directement. Exemples : 
-                                <code>&lt;p&gt;Paragraphe&lt;/p&gt;</code>, 
-                                <code>&lt;ul&gt;&lt;li&gt;Item&lt;/li&gt;&lt;/ul&gt;</code>,
-                                <code>&lt;img src="..." alt="..."&gt;</code>
-                            </span>
-                        </small>
+                        <small class="text-muted">Utilisez l'éditeur TinyMCE ci-dessus pour formater votre contenu</small>
                         @error('contenu')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -219,121 +185,11 @@ document.getElementById('image_principale').addEventListener('change', function(
     }
 });
 
-// Fonctions de formatage
-function formatText(command) {
-    const textarea = document.getElementById('contenu');
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-    
-    let formatted = '';
-    if (command === 'bold') {
-        formatted = '<strong>' + selectedText + '</strong>';
-    } else if (command === 'italic') {
-        formatted = '<em>' + selectedText + '</em>';
-    } else if (command === 'underline') {
-        formatted = '<u>' + selectedText + '</u>';
-    }
-    
-    textarea.value = textarea.value.substring(0, start) + formatted + textarea.value.substring(end);
-    textarea.focus();
-    textarea.setSelectionRange(start + formatted.length, start + formatted.length);
-}
-
-function insertList(type) {
-    const textarea = document.getElementById('contenu');
-    const start = textarea.selectionStart;
-    const cursorPos = start;
-    
-    let listHtml = '';
-    if (type === 'ul') {
-        listHtml = '<ul>\n<li>Item 1</li>\n<li>Item 2</li>\n<li>Item 3</li>\n</ul>';
-    } else {
-        listHtml = '<ol>\n<li>Item 1</li>\n<li>Item 2</li>\n<li>Item 3</li>\n</ol>';
-    }
-    
-    textarea.value = textarea.value.substring(0, cursorPos) + listHtml + textarea.value.substring(cursorPos);
-    textarea.focus();
-    textarea.setSelectionRange(cursorPos + listHtml.length, cursorPos + listHtml.length);
-}
-
-function insertLink() {
-    const url = prompt('Entrez l\'URL du lien:');
-    if (url) {
-        const text = prompt('Texte du lien (optionnel):', url);
-        const textarea = document.getElementById('contenu');
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const selectedText = textarea.value.substring(start, end) || text || url;
-        
-        const linkHtml = '<a href="' + url + '">' + selectedText + '</a>';
-        textarea.value = textarea.value.substring(0, start) + linkHtml + textarea.value.substring(end);
-        textarea.focus();
-        textarea.setSelectionRange(start + linkHtml.length, start + linkHtml.length);
-    }
-}
-
-function insertImageTag() {
-    const url = prompt('Entrez l\'URL de l\'image (ou laissez vide pour utiliser /storage/...):');
-    if (url !== null) {
-        const alt = prompt('Texte alternatif (alt):', '');
-        const textarea = document.getElementById('contenu');
-        const cursorPos = textarea.selectionStart;
-        
-        const imageHtml = '<img src="' + (url || '/storage/...') + '" alt="' + (alt || '') + '" class="img-fluid">';
-        textarea.value = textarea.value.substring(0, cursorPos) + imageHtml + textarea.value.substring(cursorPos);
-        textarea.focus();
-        textarea.setSelectionRange(cursorPos + imageHtml.length, cursorPos + imageHtml.length);
-    }
-}
-
-// Initialiser l'affichage
-document.addEventListener('DOMContentLoaded', function() {
-    const selectedType = document.querySelector('input[name="type_contenu"]:checked').value;
-    if (selectedType === 'html') {
-        document.getElementById('editor-toolbar').style.display = 'block';
-        document.getElementById('type_html_hint').style.display = 'inline';
-    } else {
-        document.getElementById('editor-toolbar').style.display = 'block';
-        document.getElementById('type_texte_hint').style.display = 'inline';
-    }
-});
-</script>
-
-@push('modals')
-<div class="modal fade" id="mediaManagerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Médiathèque</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <input type="file" id="mediaUploadInput" accept="image/*" style="display:none;">
-                        <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('mediaUploadInput').click()">Ajouter une image</button>
-                        <small class="text-muted ms-2">PNG/JPG/GIF/WEBP, 5MB max</small>
-                    </div>
-                    <div id="mediaUploadStatus" class="small text-muted"></div>
-                </div>
-                <div id="mediaGrid" class="row g-3"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
-@endpush
-
 @push('scripts')
 <script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 (function(){
     function initTiny(){
-        const toolbarEl = document.getElementById('editor-toolbar');
-        if (toolbarEl) toolbarEl.style.display = 'none';
         tinymce.init({
             selector: '#contenu',
             height: 500,
