@@ -41,11 +41,7 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <div class="page-content">
-                @if($page->type_contenu === 'html')
-                    {!! $page->contenu !!}
-                @else
-                    <div style="white-space: pre-line; line-height: 1.8;">{{ $page->contenu }}</div>
-                @endif
+                {!! $page->contenu !!}
             </div>
         </div>
     </div>
@@ -88,6 +84,12 @@
 
 .page-content p {
     margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.page-content strong {
+    font-weight: 700;
+    color: var(--color-black, #333);
 }
 
 .page-content ul,
@@ -104,8 +106,14 @@
     max-width: 100%;
     height: auto;
     border-radius: 8px;
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: block;
+}
+
+.page-content p img {
+    margin: 1rem 0;
+    display: inline-block;
 }
 
 .page-content blockquote {
