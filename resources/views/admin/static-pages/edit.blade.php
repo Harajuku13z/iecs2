@@ -197,156 +197,193 @@ document.getElementById('image_principale').addEventListener('change', function(
     }
 });
 
+@push('modals')
+<!-- Modal pour gérer les images -->
+<div class="modal fade" id="tinymceImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Gérer les images</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Uploader une nouvelle image</label>
+                    <input type="file" id="tinymceImageUpload" class="form-control" accept="image/*">
+                    <div id="tinymceUploadStatus" class="mt-2"></div>
+                </div>
+                <hr>
+                <div class="mb-2">
+                    <strong>Images existantes :</strong>
+                </div>
+                <div id="tinymceImageGrid" class="row g-2" style="max-height: 400px; overflow-y: auto;">
+                    <div class="col-12 text-center py-4 text-muted">Chargement...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endpush
+
 @endsection
 
 @push('scripts')
 <script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 (function(){
+    let imageModalInstance = null;
+    let currentImageCallback = null;
+    
+    function loadImages() {
+        const grid = document.getElementById('tinymceImageGrid');
+        grid.innerHTML = '<div class="col-12 text-center py-4 text-muted">Chargement...</div>';
+        
+        fetch("{{ route('admin.media.images') }}", {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            grid.innerHTML = '';
+            const files = (data && data.files) ? data.files : [];
+            
+            if (files.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center py-4 text-muted">Aucune image trouvée</div>';
+                return;
+            }
+            
+            files.forEach(file => {
+                const col = document.createElement('div');
+                col.className = 'col-6 col-md-4 col-lg-3';
+                col.innerHTML = `
+                    <div class="card h-100" style="cursor: pointer; border: 2px solid #ddd; transition: border-color 0.2s;">
+                        <img src="${file.url}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                        <div class="card-body p-2">
+                            <small class="text-truncate d-block" title="${file.name}">${file.name}</small>
+                        </div>
+                    </div>
+                `;
+                col.querySelector('.card').addEventListener('click', function() {
+                    if (currentImageCallback) {
+                        currentImageCallback(file.url, {alt: file.name});
+                        if (imageModalInstance) imageModalInstance.hide();
+                    }
+                });
+                col.querySelector('.card').addEventListener('mouseenter', function() {
+                    this.style.borderColor = '#007bff';
+                });
+                col.querySelector('.card').addEventListener('mouseleave', function() {
+                    this.style.borderColor = '#ddd';
+                });
+                grid.appendChild(col);
+            });
+        })
+        .catch(err => {
+            console.error('Error loading images:', err);
+            grid.innerHTML = '<div class="col-12 text-center py-4 text-danger">Erreur lors du chargement</div>';
+        });
+    }
+    
     function initTiny(){
         tinymce.init({
             selector: '#contenu',
             height: 500,
             menubar: true,
             plugins: 'lists link image table media code codesample autoresize',
-            toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link image media table | alignleft aligncenter alignright | code',
+            toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link image media table | alignleft aligncenter alignright | code | customimage',
             language: 'fr_FR',
             convert_urls: false,
+            setup: function(editor) {
+                editor.ui.registry.addButton('customimage', {
+                    text: '📷 Images',
+                    tooltip: 'Gérer les images',
+                    onAction: function() {
+                        currentImageCallback = function(url, meta) {
+                            editor.insertContent('<img src="' + url + '" alt="' + (meta.alt || '') + '" class="img-fluid" />');
+                        };
+                        loadImages();
+                        const modalEl = document.getElementById('tinymceImageModal');
+                        imageModalInstance = new bootstrap.Modal(modalEl);
+                        imageModalInstance.show();
+                    }
+                });
+            },
             images_upload_handler: function (blobInfo, success, failure) {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', "{{ route('admin.media.upload') }}");
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                xhr.onload = function() {
-                    if (xhr.status !== 200) {
-                        failure('HTTP Error: ' + xhr.status);
-                        return;
-                    }
-                    let json;
-                    try { 
-                        json = JSON.parse(xhr.responseText); 
-                    } catch (e) { 
-                        failure('Invalid JSON: ' + e.message); 
-                        return; 
-                    }
-                    if (!json || !json.success || !json.file || !json.file.url) {
-                        failure('Upload failed: ' + (json.message || 'Unknown error'));
-                        return;
-                    }
-                    success(json.file.url);
-                };
-                xhr.onerror = function() {
-                    failure('Network error during upload');
-                };
                 const formData = new FormData();
                 formData.append('_token', '{{ csrf_token() }}');
                 formData.append('file', blobInfo.blob(), blobInfo.filename());
-                xhr.send(formData);
-            },
-            file_picker_types: 'image',
-            file_picker_callback: function(callback, value, meta) {
-                if (meta.filetype === 'image') {
-                    // Afficher les images existantes
-                    fetch("{{ route('admin.media.images') }}", {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    })
-                    .then(r => {
-                        if (!r.ok) throw new Error('HTTP ' + r.status);
-                        return r.json();
-                    })
-                    .then(data => {
-                        const files = (data && data.files) ? data.files : [];
-                        let html = '<div style="padding:1rem;max-height:400px;overflow-y:auto;">';
-                        if (files.length > 0) {
-                            html += '<div style="display:flex;flex-wrap:wrap;gap:10px;">';
-                            files.forEach(f => {
-                                html += '<div style="position:relative;cursor:pointer;border:2px solid #ddd;border-radius:8px;overflow:hidden;transition:border-color 0.2s;" onmouseover="this.style.borderColor=\'#007bff\'" onmouseout="this.style.borderColor=\'#ddd\'" onclick="window.selectedImageUrl=\''+f.url+'\';window.selectedImageCallback('+JSON.stringify(f.url)+');">';
-                                html += '<img src="'+f.url+'" style="width:120px;height:120px;object-fit:cover;display:block;" />';
-                                html += '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.7);color:white;padding:4px;font-size:11px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'+f.name+'</div>';
-                                html += '</div>';
-                            });
-                            html += '</div>';
-                        } else {
-                            html += '<div style="text-align:center;padding:2rem;color:#999;">Aucune image trouvée</div>';
-                        }
-                        html += '</div>';
-                        
-                        const win = tinymce.activeEditor.windowManager.open({
-                            title: 'Sélectionner une image',
-                            body: {
-                                type: 'panel',
-                                items: [{
-                                    type: 'htmlpanel',
-                                    html: html
-                                }]
-                            },
-                            buttons: [
-                                {
-                                    type: 'custom',
-                                    text: 'Uploader une nouvelle image',
-                                    primary: true,
-                                    onclick: function() {
-                                        const input = document.createElement('input');
-                                        input.type = 'file';
-                                        input.accept = 'image/*';
-                                        input.onchange = function() {
-                                            const file = this.files[0];
-                                            if (!file) return;
-                                            const formData = new FormData();
-                                            formData.append('_token', '{{ csrf_token() }}');
-                                            formData.append('file', file);
-                                            fetch("{{ route('admin.media.upload') }}", {
-                                                method: 'POST',
-                                                body: formData,
-                                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                                            })
-                                            .then(r => r.json())
-                                            .then(data => {
-                                                if (data.success && data.file && data.file.url) {
-                                                    callback(data.file.url, {alt: file.name});
-                                                    win.close();
-                                                } else {
-                                                    alert('Erreur lors de l\'upload');
-                                                }
-                                            })
-                                            .catch(() => alert('Erreur réseau'));
-                                        };
-                                        input.click();
-                                    }
-                                },
-                                {
-                                    type: 'cancel',
-                                    text: 'Fermer'
-                                }
-                            ]
-                        });
-                        
-                        // Stocker le callback globalement pour les clics
-                        window.selectedImageCallback = function(url) {
-                            callback(url, {alt: ''});
-                            win.close();
-                        };
-                    })
-                    .catch(err => {
-                        console.error('Error loading images:', err);
-                        // Fallback: ouvrir un input file local
-                        const input = document.createElement('input');
-                        input.type = 'file';
-                        input.accept = 'image/*';
-                        input.onchange = function() {
-                            const file = this.files[0];
-                            if (!file) return;
-                            const reader = new FileReader();
-                            reader.onload = function() {
-                                callback(reader.result, {alt: file.name});
-                            };
-                            reader.readAsDataURL(file);
-                        };
-                        input.click();
-                    });
-                }
+                
+                fetch("{{ route('admin.media.upload') }}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.file && data.file.url) {
+                        success(data.file.url);
+                    } else {
+                        failure('Upload failed: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    failure('Network error: ' + err.message);
+                });
             }
         });
     }
+    
+    // Gérer l'upload dans le modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadInput = document.getElementById('tinymceImageUpload');
+        const uploadStatus = document.getElementById('tinymceUploadStatus');
+        
+        if (uploadInput) {
+            uploadInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+                
+                uploadStatus.innerHTML = '<div class="text-info">Upload en cours...</div>';
+                
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('file', file);
+                
+                fetch("{{ route('admin.media.upload') }}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.file && data.file.url) {
+                        uploadStatus.innerHTML = '<div class="text-success">✓ Image uploadée avec succès</div>';
+                        uploadInput.value = '';
+                        loadImages();
+                        setTimeout(() => {
+                            uploadStatus.innerHTML = '';
+                        }, 2000);
+                    } else {
+                        uploadStatus.innerHTML = '<div class="text-danger">Erreur: ' + (data.message || 'Upload échoué') + '</div>';
+                    }
+                })
+                .catch(err => {
+                    uploadStatus.innerHTML = '<div class="text-danger">Erreur réseau</div>';
+                });
+            });
+        }
+        
+        // Recharger les images quand le modal s'ouvre
+        const modalEl = document.getElementById('tinymceImageModal');
+        if (modalEl) {
+            modalEl.addEventListener('show.bs.modal', function() {
+                loadImages();
+            });
+        }
+    });
+    
     if (window.tinymce) initTiny(); else document.addEventListener('DOMContentLoaded', initTiny);
 })();
 </script>
