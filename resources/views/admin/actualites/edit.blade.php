@@ -182,33 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedImageUrl = null;
     let quill = null;
     
-    quill = new Quill('#editor-container', {
-        theme: 'snow',
-        modules: {
-            toolbar: {
-                container: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['link', 'image'],
-                    [{ 'align': [] }],
-                    ['clean']
-                ]
-            }
-        }
-    });
-    
-    const toolbar = quill.getModule('toolbar');
-    toolbar.addHandler('image', function() {
-        openImageManager();
-    });
-    
-    quill.root.innerHTML = textarea.value || '';
-    
-    quill.on('text-change', function() {
-        textarea.value = quill.root.innerHTML;
-    });
-    
     function openImageManager() {
         selectedImageUrl = null;
         loadImageGrid();
@@ -229,6 +202,43 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, { once: true });
     }
+    
+    quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: {
+                container: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image'],
+                    [{ 'align': [] }],
+                    ['clean']
+                ]
+            }
+        }
+    });
+    
+    setTimeout(function() {
+        const toolbarEl = container.parentElement.querySelector('.ql-toolbar');
+        if (toolbarEl) {
+            const imageButton = toolbarEl.querySelector('.ql-image');
+            if (imageButton) {
+                imageButton.onmousedown = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openImageManager();
+                    return false;
+                };
+            }
+        }
+    }, 200);
+    
+    quill.root.innerHTML = textarea.value || '';
+    
+    quill.on('text-change', function() {
+        textarea.value = quill.root.innerHTML;
+    });
     
     function loadImageGrid() {
         const grid = document.getElementById('imageGrid');
