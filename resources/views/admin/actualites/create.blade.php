@@ -36,8 +36,9 @@
 
             <div class="mb-3">
                 <label for="contenu" class="form-label">Contenu *</label>
-                <textarea class="form-control @error('contenu') is-invalid @enderror" 
-                          id="contenu" name="contenu" rows="10" required>{{ old('contenu') }}</textarea>
+                <div id="editor-container" style="height: 400px; background: white; border: 1px solid #ced4da; border-radius: 0.375rem;"></div>
+                <textarea class="form-control @error('contenu') is-invalid @enderror d-none" 
+                          id="contenu" name="contenu" required>{{ old('contenu') }}</textarea>
                 <small class="text-muted">Contenu complet de l'actualité</small>
                 @error('contenu')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -125,16 +126,46 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('editor-container');
     const textarea = document.getElementById('contenu');
-    if (!textarea) return;
+    if (!container || !textarea) return;
     
     let imageModal = null;
     let selectedImageUrl = null;
+    let quill = null;
     
-    function openImageManager(editor) {
+    quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: {
+                container: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image'],
+                    [{ 'align': [] }],
+                    ['clean']
+                ],
+                handlers: {
+                    'image': function() {
+                        openImageManager();
+                    }
+                }
+            }
+        }
+    });
+    
+    quill.root.innerHTML = textarea.value || '';
+    
+    quill.on('text-change', function() {
+        textarea.value = quill.root.innerHTML;
+    });
+    
+    function openImageManager() {
         selectedImageUrl = null;
         loadImageGrid();
         const modalEl = document.getElementById('imageManagerModal');
@@ -144,14 +175,16 @@ document.addEventListener('DOMContentLoaded', function() {
         imageModal.show();
         
         modalEl.addEventListener('hidden.bs.modal', function() {
-            if (selectedImageUrl && editor) {
-                editor.insertContent('<img src="' + selectedImageUrl + '" alt="" class="img-fluid" />');
+            if (selectedImageUrl && quill) {
+                const range = quill.getSelection(true);
+                quill.insertEmbed(range.index, 'image', selectedImageUrl, 'user');
             }
         }, { once: true });
     }
     
     function loadImageGrid() {
         const grid = document.getElementById('imageGrid');
+        if (!grid) return;
         grid.innerHTML = '<div class="col-12 text-center py-3">Chargement...</div>';
         
         const xhr = new XMLHttpRequest();
@@ -172,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     files.forEach(function(file) {
                         const col = document.createElement('div');
                         col.className = 'col-6 col-md-4 col-lg-3';
-                        col.innerHTML = '<div class="card" style="cursor:pointer;border:2px solid #ddd;" onclick="window.selectImage(\'' + file.url + '\')"><img src="' + file.url + '" class="card-img-top" style="height:100px;object-fit:cover;"><div class="card-body p-2"><small class="text-truncate d-block">' + file.name + '</small></div></div>';
+                        col.innerHTML = '<div class="card" style="cursor:pointer;border:2px solid #ddd;" onclick="window.selectImage(\'' + file.url.replace(/'/g, "\\'") + '\')"><img src="' + file.url + '" class="card-img-top" style="height:100px;object-fit:cover;"><div class="card-body p-2"><small class="text-truncate d-block">' + file.name + '</small></div></div>';
                         grid.appendChild(col);
                     });
                 } catch(e) {
@@ -236,54 +269,11 @@ document.addEventListener('DOMContentLoaded', function() {
         modalEl.addEventListener('show.bs.modal', loadImageGrid);
     }
     
-    if (typeof tinymce !== 'undefined') {
-        tinymce.init({
-            selector: '#contenu',
-            height: 500,
-            menubar: true,
-            plugins: 'lists link image table code',
-            toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link image table | code | myimage',
-            language: 'fr_FR',
-            setup: function(editor) {
-                editor.ui.registry.addButton('myimage', {
-                    text: '📷 Images',
-                    tooltip: 'Gérer les images',
-                    onAction: function() {
-                        openImageManager(editor);
-                    }
-                });
-            },
-            images_upload_handler: function(blobInfo, success, failure) {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', "{{ route('admin.media.upload') }}");
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        try {
-                            const data = JSON.parse(xhr.responseText);
-                            if (data.success && data.file && data.file.url) {
-                                success(data.file.url);
-                            } else {
-                                failure('Erreur upload');
-                            }
-                        } catch(e) {
-                            failure('Erreur JSON');
-                        }
-                    } else {
-                        failure('Erreur ' + xhr.status);
-                    }
-                };
-                xhr.onerror = function() {
-                    failure('Erreur réseau');
-                };
-                const formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('file', blobInfo.blob(), blobInfo.filename());
-                xhr.send(formData);
-            }
+    const form = textarea.closest('form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            textarea.value = quill.root.innerHTML;
         });
-    } else {
-        console.error('TinyMCE not loaded');
     }
 });
 </script>
