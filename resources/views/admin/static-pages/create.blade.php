@@ -217,7 +217,7 @@ document.getElementById('image_principale').addEventListener('change', function(
 @endpush
 
 @push('scripts')
-<script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin" onerror="console.error('Failed to load TinyMCE')"></script>
 <script>
 (function(){
     let imageModalInstance = null;
@@ -396,7 +396,34 @@ document.getElementById('image_principale').addEventListener('change', function(
         }
     });
     
-    if (window.tinymce) initTiny(); else document.addEventListener('DOMContentLoaded', initTiny);
+    // Attendre que TinyMCE soit chargé
+    let tinyMCEWaitCount = 0;
+    const maxWaitCount = 50; // 5 secondes max
+    
+    function waitForTinyMCE() {
+        const textarea = document.getElementById('contenu');
+        if (!textarea) {
+            console.error('Textarea #contenu not found');
+            return;
+        }
+        
+        if (typeof tinymce !== 'undefined' && tinymce.init) {
+            initTiny();
+        } else {
+            tinyMCEWaitCount++;
+            if (tinyMCEWaitCount < maxWaitCount) {
+                setTimeout(waitForTinyMCE, 100);
+            } else {
+                console.error('TinyMCE failed to load after 5 seconds');
+            }
+        }
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', waitForTinyMCE);
+    } else {
+        waitForTinyMCE();
+    }
 })();
 </script>
 @endpush
