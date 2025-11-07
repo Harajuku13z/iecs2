@@ -166,38 +166,6 @@
     </div>
 </div>
 
-<script>
-// Même script que dans create.blade.php
-document.querySelectorAll('input[name="type_contenu"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-        const toolbar = document.getElementById('editor-toolbar');
-        const texteHint = document.getElementById('type_texte_hint');
-        const htmlHint = document.getElementById('type_html_hint');
-        
-        if (this.value === 'html') {
-            toolbar.style.display = 'block';
-            texteHint.style.display = 'none';
-            htmlHint.style.display = 'inline';
-        } else {
-            toolbar.style.display = 'block';
-            texteHint.style.display = 'inline';
-            htmlHint.style.display = 'none';
-        }
-    });
-});
-
-document.getElementById('image_principale').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('preview-img').src = e.target.result;
-            document.getElementById('image-preview').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
 @push('modals')
 <div class="modal fade" id="imageManagerModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -276,6 +244,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Charger le contenu dans Quill après l'initialisation
+    const initialContent = textarea.value || '';
+    if (initialContent) {
+        // Utiliser setTimeout pour s'assurer que Quill est complètement initialisé
+        setTimeout(function() {
+            quill.root.innerHTML = initialContent;
+        }, 100);
+    }
+    
+    quill.on('text-change', function() {
+        textarea.value = quill.root.innerHTML;
+    });
+    
+    // Configurer le bouton image après que la toolbar soit créée
     setTimeout(function() {
         const toolbarEl = container.parentElement.querySelector('.ql-toolbar');
         if (toolbarEl) {
@@ -289,13 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
             }
         }
-    }, 200);
-    
-    quill.root.innerHTML = textarea.value || '';
-    
-    quill.on('text-change', function() {
-        textarea.value = quill.root.innerHTML;
-    });
+    }, 300);
     
     function loadImageGrid() {
         const grid = document.getElementById('imageGrid');
@@ -388,6 +364,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function() {
             textarea.value = quill.root.innerHTML;
+        });
+    }
+    
+    // Script pour l'aperçu de l'image principale
+    const imageInput = document.getElementById('image_principale');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImg = document.getElementById('preview-img');
+                    const previewDiv = document.getElementById('image-preview');
+                    if (previewImg && previewDiv) {
+                        previewImg.src = e.target.result;
+                        previewDiv.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
         });
     }
 });
